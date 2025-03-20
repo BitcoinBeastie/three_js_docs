@@ -1,0 +1,23 @@
+LightProbeGenerator
+Utility class for creating instances of LightProbe.
+
+Import
+LightProbeGenerator is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
+Examples
+WebGL / light probe
+WebGL / light probe / cube camera
+
+Static Methods
+.fromCubeTexture ( cubeTexture : CubeTexture ) : LightProbe
+Creates a light probe from the given (radiance) environment map. The method expects that the environment map is represented as a cube texture.
+
+.fromCubeRenderTarget ( renderer : WebGLRenderer, cubeRenderTarget : WebGLCubeRenderTarget ) : LightProbe
+Creates a light probe from the given (radiance) environment map. The method expects that the environment map is represented as a cube render target.
+
+The format of the cube render target must be set to RGBA.
+
+Source
+examples/jsm/lights/LightProbeGenerator.js
+

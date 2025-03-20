@@ -1,0 +1,106 @@
+EffectComposer
+Used to implement post-processing effects in three.js. The class manages a chain of post-processing passes to produce the final visual result. Post-processing passes are executed in order of their addition/insertion. The last pass is automatically rendered to screen.
+
+Import
+EffectComposer is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+Examples
+postprocessing
+postprocessing advanced
+postprocessing backgrounds
+postprocessing transition
+postprocessing depth-of-field
+postprocessing depth-of-field 2
+postprocessing fxaa
+postprocessing glitch
+postprocessing godrays
+postprocessing gtao
+postprocessing masking
+postprocessing material ao
+postprocessing outline
+postprocessing pixelate
+postprocessing procedural
+postprocessing rgb halftone
+postprocessing sao
+postprocessing smaa
+postprocessing sobel
+postprocessing ssaa
+postprocessing ssao
+postprocessing taa
+postprocessing unreal bloom
+postprocessing unreal bloom selective
+
+Constructor
+EffectComposer( renderer : WebGLRenderer, renderTarget : WebGLRenderTarget )
+renderer -- The renderer used to render the scene.
+renderTarget -- (optional) A preconfigured render target internally used by EffectComposer.
+
+Properties
+.passes : Array
+An array representing the (ordered) chain of post-processing passes.
+
+.readBuffer : WebGLRenderTarget
+A reference to the internal read buffer. Passes usually read the previous render result from this buffer.
+
+.renderer : WebGLRenderer
+A reference to the internal renderer.
+
+.renderToScreen : Boolean
+Whether the final pass is rendered to the screen (default framebuffer) or not.
+
+.writeBuffer : WebGLRenderTarget
+A reference to the internal write buffer. Passes usually write their result into this buffer.
+
+Methods
+.addPass ( pass : Pass ) : undefined
+pass -- The pass to add to the pass chain.
+
+Adds the given pass to the pass chain.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.insertPass ( pass : Pass, index : Integer ) : undefined
+pass -- The pass to insert into the pass chain.
+index -- Defines the position in the pass chain where the pass should be inserted.
+
+Inserts the given pass into the pass chain at the given index.
+
+.isLastEnabledPass ( passIndex : Integer ) : Boolean
+passIndex -- The pass to check.
+
+Returns true if the pass for the given index is the last enabled pass in the pass chain. Used by EffectComposer to determine when a pass should be rendered to screen.
+
+.removePass ( pass : Pass ) : undefined
+pass -- The pass to remove from the pass chain.
+
+Removes the given pass from the pass chain.
+
+.render ( deltaTime : Float ) : undefined
+deltaTime -- The delta time value.
+
+Executes all enabled post-processing passes in order to produce the final frame.
+
+.reset ( renderTarget : WebGLRenderTarget ) : undefined
+renderTarget -- (optional) A preconfigured render target internally used by EffectComposer..
+
+Resets the internal state of the EffectComposer.
+
+.setPixelRatio ( pixelRatio : Float ) : undefined
+pixelRatio -- The device pixel ratio.
+
+Sets device pixel ratio. This is usually used for HiDPI device to prevent blurring output. Thus, the semantic of the method is similar to WebGLRenderer.setPixelRatio().
+
+.setSize ( width : Integer, height : Integer ) : undefined
+width -- The width of the EffectComposer.
+height -- The height of the EffectComposer.
+
+Resizes the internal render buffers and passes to (width, height) with device pixel ratio taken into account. Thus, the semantic of the method is similar to WebGLRenderer.setSize().
+
+.swapBuffers () : undefined
+Swaps the internal read/write buffers.
+
+Source
+examples/jsm/postprocessing/EffectComposer.js
+

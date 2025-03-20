@@ -1,0 +1,72 @@
+Group →
+XREstimatedLight
+XREstimatedLight uses WebXR's light estimation to create a light probe, a directional light, and (optionally) an environment map that model the user's real-world environment and lighting.
+As WebXR updates the light and environment estimation, XREstimatedLight automatically updates the light probe, directional light, and environment map.
+
+It's important to specify light-estimation as an optional or required feature when creating the WebXR session, otherwise the light estimation can't work.
+
+See here for browser compatibility information, as this is still an experimental feature in WebXR.
+
+To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
+
+Import
+XREstimatedLight is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
+Code Example
+renderer.xr.enabled = true;
+
+// Don't add the XREstimatedLight to the scene initially.
+// It doesn't have any estimated lighting values until an AR session starts.
+const xrLight = new XREstimatedLight( renderer );
+
+xrLight.addEventListener( 'estimationstart' , () => {
+
+	scene.add( xrLight );
+
+	if ( xrLight.environment ) {
+
+		scene.environment = xrLight.environment;
+
+	}
+
+} );
+
+xrLight.addEventListener( 'estimationend', () => {
+
+	scene.remove( xrLight );
+
+	scene.environment = null;
+
+} );
+
+// In order for lighting estimation to work, 'light-estimation' must be included as either
+// an optional or required feature.
+document.body.appendChild( XRButton.createButton( renderer, {
+	optionalFeatures: [ 'light-estimation' ]
+} ) );
+Examples
+webxr / light estimation
+
+Constructor
+XREstimatedLight( renderer : WebGLRenderer, environmentEstimation : Boolean )
+renderer: (required) The renderer used to render the Scene. Mainly used to interact with WebXRManager.
+
+environmentEstimation: If true, use WebXR to estimate an environment map.
+
+Events
+estimationstart
+Fires when the estimated lighting values start being updated.
+
+estimationend
+Fires when the estimated lighting values stop being updated.
+
+Properties
+.environment : Texture
+The environment map estimated by WebXR. This is only available if environmentEstimation is true.
+
+It can be used as the Scene.environment, for MeshStandardMaterial.envMap, or as the Scene.background.
+
+Source
+examples/jsm/webxr/XREstimatedLight.js
+

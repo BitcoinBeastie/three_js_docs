@@ -1,0 +1,128 @@
+Interpolant →
+CubicInterpolant
+Code Example
+const interpolant = new THREE.CubicInterpolant(
+		new Float32Array( 2 ),
+		new Float32Array( 2 ),
+		1,
+		new Float32Array( 1 )
+);
+
+interpolant.evaluate( 0.5 );
+Constructor
+CubicInterpolant( parameterPositions, sampleValues, sampleSize, resultBuffer )
+parameterPositions -- array of positions
+sampleValues -- array of samples
+sampleSize -- number of samples
+resultBuffer -- buffer to store the interpolation results.
+
+
+Properties
+.parameterPositions : null
+.resultBuffer : null
+.sampleValues : null
+.settings : Object
+.valueSize : null
+Methods
+.evaluate ( t : Number ) : Array
+Evaluate the interpolant at position t.
+
+Source
+src/math/interpolants/CubicInterpolant.js
+
+Interpolant →
+DiscreteInterpolant
+Code Example
+const interpolant = new THREE.DiscreteInterpolant(
+		new Float32Array( 2 ),
+		new Float32Array( 2 ),
+		1,
+		new Float32Array( 1 )
+);
+
+interpolant.evaluate( 0.5 );
+Constructor
+DiscreteInterpolant( parameterPositions, sampleValues, sampleSize, resultBuffer )
+parameterPositions -- array of positions
+sampleValues -- array of samples
+sampleSize -- number of samples
+resultBuffer -- buffer to store the interpolation results.
+
+
+Properties
+.parameterPositions : null
+.resultBuffer : null
+.sampleValues : null
+.settings : Object
+.valueSize : null
+Methods
+.evaluate ( t : Number ) : Array
+Evaluate the interpolant at position t.
+
+Source
+src/math/interpolants/DiscreteInterpolant.js
+
+Interpolant →
+LinearInterpolant
+Code Example
+const interpolant = new THREE.LinearInterpolant(
+		new Float32Array( 2 ),
+		new Float32Array( 2 ),
+		1,
+		new Float32Array( 1 )
+);
+
+interpolant.evaluate( 0.5 );
+Constructor
+LinearInterpolant( parameterPositions, sampleValues, sampleSize, resultBuffer )
+parameterPositions -- array of positions
+sampleValues -- array of samples
+sampleSize -- number of samples
+resultBuffer -- buffer to store the interpolation results.
+
+
+Properties
+.parameterPositions : null
+.resultBuffer : null
+.sampleValues : null
+.settings : Object
+.valueSize : null
+Methods
+.evaluate ( t : Number ) : Array
+Evaluate the interpolant at position t.
+
+Source
+src/math/interpolants/LinearInterpolant.js
+
+Interpolant →
+QuaternionLinearInterpolant
+Code Example
+const interpolant = new THREE.QuaternionLinearInterpolant(
+		new Float32Array( 2 ),
+		new Float32Array( 2 ),
+		1,
+		new Float32Array( 1 )
+);
+
+interpolant.evaluate( 0.5 );
+Constructor
+QuaternionLinearInterpolant( parameterPositions, sampleValues, sampleSize, resultBuffer )
+parameterPositions -- array of positions
+sampleValues -- array of samples
+sampleSize -- number of samples
+resultBuffer -- buffer to store the interpolation results.
+
+
+Properties
+.parameterPositions : null
+.resultBuffer : null
+.sampleValues : null
+.settings : Object
+.valueSize : null
+Methods
+.evaluate ( t : Number ) : Array
+Evaluate the interpolant at position t.
+
+Source
+src/math/interpolants/QuaternionLinearInterpolant.js
+

@@ -1,0 +1,1695 @@
+Material →
+LineBasicMaterial
+A material for drawing wireframe-style geometries.
+
+Code Example
+const material = new THREE.LineBasicMaterial( {
+	color: 0xffffff,
+	linewidth: 1,
+	linecap: 'round', //ignored by WebGLRenderer
+	linejoin:  'round' //ignored by WebGLRenderer
+} );
+Examples
+WebGL / buffergeometry / drawrange
+WebGL / buffergeometry / lines
+WebGL / buffergeometry / lines / indexed
+WebGL / decals
+WebGL / geometry / nurbs
+WebGL / geometry / shapes
+WebGL / geometry / spline / editor
+WebGL / interactive / buffergeometry
+WebGL / interactive / voxelpainter
+WebGL / lines / colors
+WebGL / lines / dashed
+physics / ammo / rope
+
+Constructor
+LineBasicMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.linewidth : Float
+Controls line thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+If you need wider lines, consider using Line2 or LineSegments2 with LineMaterial.
+
+.linecap : String
+Define appearance of line ends. Possible values are 'butt', 'round' and 'square'. Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.linejoin : String
+Define appearance of line joints. Possible values are 'round', 'bevel' and 'miter'. Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.map : Texture
+Sets the color of the lines using data from a Texture.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/LineBasicMaterial.js
+
+Material → LineBasicMaterial →
+LineDashedMaterial
+A material for drawing wireframe-style geometries with dashed lines.
+Note: You must call Line.computeLineDistances() when using LineDashedMaterial.
+
+Code Example
+const material = new THREE.LineDashedMaterial( {
+	color: 0xffffff,
+	linewidth: 1,
+	scale: 1,
+	dashSize: 3,
+	gapSize: 1,
+} );
+Examples
+WebGL / lines / dashed
+
+Constructor
+LineDashedMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from LineBasicMaterial) can be passed in here.
+
+Properties
+See the base LineBasicMaterial class for common properties.
+
+.dashSize : number
+The size of the dash. This is both the gap with the stroke. Default is 3.
+
+.gapSize : number
+The size of the gap. Default is 1.
+
+.isLineDashedMaterial : Boolean
+Read-only flag to check if a given object is of type LineDashedMaterial.
+
+.scale : number
+The scale of the dashed part of a line. Default is 1.
+
+Methods
+See the base LineBasicMaterial class for common methods.
+
+Source
+src/materials/LineDashedMaterial.js
+
+Material
+Abstract base class for materials.
+
+Materials describe the appearance of objects. They are defined in a (mostly) renderer-independent way, so you don't have to rewrite materials if you decide to use a different renderer.
+
+The following properties and methods are inherited by all other material types (although they may have different defaults).
+
+Constructor
+Material()
+This creates a generic material.
+
+Properties
+.alphaHash : Boolean
+Enables alpha hashed transparency, an alternative to .transparent or .alphaTest. The material will not be rendered if opacity is lower than a random threshold. Randomization introduces some grain or noise, but approximates alpha blending without the associated problems of sorting. Using TAARenderPass can reduce the resulting noise.
+
+.alphaTest : Float
+Sets the alpha value to be used when running an alpha test. The material will not be rendered if the opacity is lower than this value. Default is 0.
+
+.alphaToCoverage : Boolean
+Enables alpha to coverage. Can only be used with MSAA-enabled contexts (meaning when the renderer was created with antialias parameter set to true). Enabling this will smooth aliasing on clip plane edges and alphaTest-clipped edges. Default is false.
+
+.blendAlpha : Float
+Represents the alpha value of the constant blend color. Default is 0. This property has only an effect when using custom blending with ConstantAlpha or OneMinusConstantAlpha.
+
+.blendColor : Color
+Represent the RGB values of the constant blend color. Default is 0x000000.
+This property has only an effect when using custom blending with ConstantColor or OneMinusConstantColor.
+
+.blendDst : Integer
+Blending destination. Default is OneMinusSrcAlphaFactor. See the destination factors constants for all possible values.
+The material's blending must be set to CustomBlending for this to have any effect.
+
+.blendDstAlpha : Integer
+The transparency of the .blendDst. Uses .blendDst value if null. Default is null.
+
+.blendEquation : Integer
+Blending equation to use when applying blending. Default is AddEquation. See the blending equation constants for all possible values.
+The material's blending must be set to CustomBlending for this to have any effect.
+
+.blendEquationAlpha : Integer
+The transparency of the .blendEquation. Uses .blendEquation value if null. Default is null.
+
+.blending : Blending
+Which blending to use when displaying objects with this material.
+This must be set to CustomBlending to use custom blendSrc, blendDst or blendEquation.
+See the blending mode constants for all possible values. Default is NormalBlending.
+
+.blendSrc : Integer
+Blending source. Default is SrcAlphaFactor. See the source factors constants for all possible values.
+The material's blending must be set to CustomBlending for this to have any effect.
+
+.blendSrcAlpha : Integer
+The transparency of the .blendSrc. Uses .blendSrc value if null. Default is null.
+
+.clipIntersection : Boolean
+Changes the behavior of clipping planes so that only their intersection is clipped, rather than their union. Default is false.
+
+.clippingPlanes : Array
+User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects this material is attached to. Points in space whose signed distance to the plane is negative are clipped (not rendered). This requires WebGLRenderer.localClippingEnabled to be true. See the WebGL / clipping /intersection example. Default is null.
+
+.clipShadows : Boolean
+Defines whether to clip shadows according to the clipping planes specified on this material. Default is false.
+
+.colorWrite : Boolean
+Whether to render the material's color. This can be used in conjunction with a mesh's renderOrder property to create invisible objects that occlude other objects. Default is true.
+
+.defines : Object
+Custom defines to be injected into the shader. These are passed in form of an object literal, with key/value pairs. { MY_CUSTOM_DEFINE: '' , PI2: Math.PI * 2 }. The pairs are defined in both vertex and fragment shaders. Default is undefined.
+
+.depthFunc : Integer
+Which depth function to use. Default is LessEqualDepth. See the depth mode constants for all possible values.
+
+.depthTest : Boolean
+Whether to have depth test enabled when rendering this material. Default is true. When the depth test is disabled, the depth write will also be implicitly disabled.
+
+.depthWrite : Boolean
+Whether rendering this material has any effect on the depth buffer. Default is true.
+
+When drawing 2D overlays it can be useful to disable the depth writing in order to layer several things together without creating z-index artifacts.
+
+.forceSinglePass : Boolean
+Whether double-sided, transparent objects should be rendered with a single pass or not. Default is false.
+
+The engine renders double-sided, transparent objects with two draw calls (back faces first, then front faces) to mitigate transparency artifacts. There are scenarios however where this approach produces no quality gains but still doubles draw calls e.g. when rendering flat vegetation like grass sprites. In these cases, set the forceSinglePass flag to true to disable the two pass rendering to avoid performance issues.
+
+.isMaterial : Boolean
+Read-only flag to check if a given object is of type Material.
+
+.stencilWrite : Boolean
+Whether stencil operations are performed against the stencil buffer. In order to perform writes or comparisons against the stencil buffer this value must be true. Default is false.
+
+.stencilWriteMask : Integer
+The bit mask to use when writing to the stencil buffer. Default is 0xFF.
+
+.stencilFunc : Integer
+The stencil comparison function to use. Default is AlwaysStencilFunc. See stencil function constants for all possible values.
+
+.stencilRef : Integer
+The value to use when performing stencil comparisons or stencil operations. Default is 0.
+
+.stencilFuncMask : Integer
+The bit mask to use when comparing against the stencil buffer. Default is 0xFF.
+
+.stencilFail : Integer
+Which stencil operation to perform when the comparison function returns false. Default is KeepStencilOp. See the stencil operations constants for all possible values.
+
+.stencilZFail : Integer
+Which stencil operation to perform when the comparison function returns true but the depth test fails. Default is KeepStencilOp. See the stencil operations constants for all possible values.
+
+.stencilZPass : Integer
+Which stencil operation to perform when the comparison function returns true and the depth test passes. Default is KeepStencilOp. See the stencil operations constants for all possible values.
+
+.id : Integer
+Unique number for this material instance.
+
+.name : String
+Optional name of the object (doesn't need to be unique). Default is an empty string.
+
+.needsUpdate : Boolean
+Specifies that the material needs to be recompiled.
+
+.opacity : Float
+Float in the range of 0.0 - 1.0 indicating how transparent the material is. A value of 0.0 indicates fully transparent, 1.0 is fully opaque.
+If the material's transparent property is not set to true, the material will remain fully opaque and this value will only affect its color.
+Default is 1.0.
+
+.polygonOffset : Boolean
+Whether to use polygon offset. Default is false. This corresponds to the GL_POLYGON_OFFSET_FILL WebGL feature.
+
+.polygonOffsetFactor : Integer
+Sets the polygon offset factor. Default is 0.
+
+.polygonOffsetUnits : Integer
+Sets the polygon offset units. Default is 0.
+
+.precision : String
+Override the renderer's default precision for this material. Can be "highp", "mediump" or "lowp". Default is null.
+
+.premultipliedAlpha : Boolean
+Whether to premultiply the alpha (transparency) value. See WebGL / Materials / Physical / Transmission for an example of the difference. Default is false.
+
+.dithering : Boolean
+Whether to apply dithering to the color to remove the appearance of banding. Default is false.
+
+.shadowSide : Integer
+Defines which side of faces cast shadows. When set, can be THREE.FrontSide, THREE.BackSide, or THREE.DoubleSide. Default is null.
+If null, the side casting shadows is determined as follows:
+
+Material.side	Side casting shadows
+THREE.FrontSide	back side
+THREE.BackSide	front side
+THREE.DoubleSide	both sides
+.side : Integer
+Defines which side of faces will be rendered - front, back or both. Default is THREE.FrontSide. Other options are THREE.BackSide or THREE.DoubleSide.
+
+.toneMapped : Boolean
+Defines whether this material is tone mapped according to the renderer's toneMapping setting. It is ignored when rendering to a render target or using post processing. Default is true.
+
+.transparent : Boolean
+Defines whether this material is transparent. This has an effect on rendering as transparent objects need special treatment and are rendered after non-transparent objects.
+When set to true, the extent to which the material is transparent is controlled by setting its opacity property. Default is false.
+
+.type : String
+Value is the string 'Material'. This shouldn't be changed, and can be used to find all objects of this type in a scene.
+
+.uuid : String
+UUID of this material instance. This gets automatically assigned, so this shouldn't be edited.
+
+.version : Integer
+This starts at 0 and counts how many times .needsUpdate is set to true.
+
+.vertexColors : Boolean
+Defines whether vertex coloring is used. Default is false. The engine supports RGB and RGBA vertex colors depending on whether a three (RGB) or four (RGBA) component color buffer attribute is used.
+
+.visible : Boolean
+Defines whether this material is visible. Default is true.
+
+.userData : Object
+An object that can be used to store custom data about the Material. It should not hold references to functions as these will not be cloned. Default is an empty object {}.
+
+Methods
+EventDispatcher methods are available on this class.
+
+.clone ( ) : Material
+Return a new material with the same parameters as this material.
+
+.copy ( material : material ) : this
+Copy the parameters from the passed material into this material.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Material textures must be disposed of by the dispose() method of Texture.
+
+.onBeforeCompile ( shader : Shader, renderer : WebGLRenderer ) : undefined
+An optional callback that is executed immediately before the shader program is compiled. This function is called with the shader source code as a parameter. Useful for the modification of built-in materials, but the recommended approach moving forward is to use WebGPURenderer with the new Node Material system and TSL.
+
+Unlike properties, the callback is not supported by .clone(), .copy() and .toJSON().
+
+This callback is only supported in WebGLRenderer (not WebGPURenderer).
+
+WebGL / materials / modified
+WebGL / shadow / contact
+
+.onBeforeRender ( renderer : WebGLRenderer, scene : Scene, camera : Camera, geometry : BufferGeometry, object : Object3D, group : Group ) : undefined
+An optional callback that is executed immediately before the material is used to render a 3D object.
+
+Unlike properties, the callback is not supported by .clone(), .copy() and .toJSON().
+
+This callback is only supported in WebGLRenderer (not WebGPURenderer).
+
+.customProgramCacheKey () : String
+In case onBeforeCompile is used, this callback can be used to identify values of settings used in onBeforeCompile, so three.js can reuse a cached shader or recompile the shader for this material as needed.
+
+For example, if onBeforeCompile contains a conditional statement like:
+if ( black ) { 
+	shader.fragmentShader = shader.fragmentShader.replace('gl_FragColor = vec4(1)', 
+	'gl_FragColor = vec4(0)') 
+}
+then customProgramCacheKey should be set like this:
+material.customProgramCacheKey = function() { 
+	return black ? '1' : '0';
+}
+
+Unlike properties, the callback is not supported by .clone(), .copy() and .toJSON().
+
+.setValues ( values : Object ) : undefined
+values -- a container with parameters.
+Sets the properties based on the values.
+
+.toJSON ( meta : Object ) : Object
+meta -- object containing metadata such as textures or images for the material.
+Convert the material to three.js JSON Object/Scene format.
+
+Source
+src/materials/Material.js
+
+Material →
+MeshBasicMaterial
+A material for drawing geometries in a simple shaded (flat or wireframe) way.
+
+This material is not affected by lights.
+
+
+Constructor
+MeshBasicMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.aoMap : Texture
+The red channel of this texture is used as the ambient occlusion map. Default is null. The aoMap requires a second set of UVs.
+
+.aoMapIntensity : Float
+Intensity of the ambient occlusion effect. Range is 0-1, where 0 disables ambient occlusion. Where intensity is 1 and the .aoMap red channel is also 1, ambient light is fully occluded on a surface. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.combine : Integer
+How to combine the result of the surface's color with the environment map, if any.
+
+Options are THREE.MultiplyOperation (default), THREE.MixOperation, THREE.AddOperation. If mix is chosen, the .reflectivity is used to blend between the two colors.
+
+.envMap : Texture
+The environment map. Default is null.
+
+.envMapRotation : Euler
+The rotation of the environment map in radians. Default is (0,0,0).
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.lightMap : Texture
+The light map. Default is null. The lightMap requires a second set of UVs.
+
+.lightMapIntensity : Float
+Intensity of the baked light. Default is 1.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null.
+
+.reflectivity : Float
+How much the environment map affects the surface; also see .combine. The default value is 1 and the valid range is between 0 (no reflections) and 1 (full reflections).
+
+.refractionRatio : Float
+The index of refraction (IOR) of air (approximately 1) divided by the index of refraction of the material. It is used with environment mapping modes THREE.CubeRefractionMapping and THREE.EquirectangularRefractionMapping. The refraction ratio should not exceed 1. Default is 0.98.
+
+.specularMap : Texture
+Specular map used by the material. Default is null.
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as flat polygons).
+
+.wireframeLinecap : String
+Define appearance of line ends. Possible values are "butt", "round" and "square". Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.wireframeLinejoin : String
+Define appearance of line joints. Possible values are "round", "bevel" and "miter". Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshBasicMaterial.js
+
+Material →
+MeshDepthMaterial
+A material for drawing geometry by depth. Depth is based off of the camera near and far plane. White is nearest, black is farthest.
+
+
+Constructor
+MeshDepthMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.depthPacking : Constant
+Type for depth packing. Default is BasicDepthPacking.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null.
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as smooth shaded).
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshDepthMaterial.js
+
+Material →
+MeshDistanceMaterial
+MeshDistanceMaterial is internally used for implementing shadow mapping with PointLights.
+
+Can also be used to customize the shadow casting of an object by assigning an instance of MeshDistanceMaterial to Object3D.customDistanceMaterial. The following examples demonstrates this approach in order to ensure transparent parts of objects do no cast shadows.
+
+Examples
+WebGL / shadowmap / pointlight
+
+Constructor
+MeshDistanceMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshDistanceMaterial.js
+
+Material →
+MeshLambertMaterial
+A material for non-shiny surfaces, without specular highlights.
+
+The material uses a non-physically based Lambertian model for calculating reflectance. This can simulate some surfaces (such as untreated wood or stone) well, but cannot simulate shiny surfaces with specular highlights (such as varnished wood). MeshLambertMaterial uses per-fragment shading.
+
+Due to the simplicity of the reflectance and illumination models, performance will be greater when using this material over the MeshPhongMaterial, MeshStandardMaterial or MeshPhysicalMaterial, at the cost of some graphical accuracy.
+
+
+Constructor
+MeshLambertMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.aoMap : Texture
+The red channel of this texture is used as the ambient occlusion map. Default is null. The aoMap requires a second set of UVs.
+
+.aoMapIntensity : Float
+Intensity of the ambient occlusion effect. Range is 0-1, where 0 disables ambient occlusion. Where intensity is 1 and the .aoMap red channel is also 1, ambient light is fully occluded on a surface. Default is 1.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.combine : Integer
+How to combine the result of the surface's color with the environment map, if any.
+
+Options are THREE.MultiplyOperation (default), THREE.MixOperation, THREE.AddOperation. If mix is chosen, the .reflectivity is used to blend between the two colors.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.emissive : Color
+Emissive (light) color of the material, essentially a solid color unaffected by other lighting. Default is black.
+
+.emissiveMap : Texture
+Set emissive (glow) map. Default is null. The emissive map color is modulated by the emissive color and the emissive intensity. If you have an emissive map, be sure to set the emissive color to something other than black.
+
+.emissiveIntensity : Float
+Intensity of the emissive light. Modulates the emissive color. Default is 1.
+
+.envMap : Texture
+The environment map. Default is null.
+
+.envMapRotation : Euler
+The rotation of the environment map in radians. Default is (0,0,0).
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.lightMap : Texture
+The light map. Default is null. The lightMap requires a second set of UVs.
+
+.lightMapIntensity : Float
+Intensity of the baked light. Default is 1.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+.reflectivity : Float
+How much the environment map affects the surface; also see .combine.
+
+.refractionRatio : Float
+The index of refraction (IOR) of air (approximately 1) divided by the index of refraction of the material. It is used with environment mapping modes THREE.CubeRefractionMapping and THREE.EquirectangularRefractionMapping. The refraction ratio should not exceed 1. Default is 0.98.
+
+.specularMap : Texture
+Specular map used by the material. Default is null.
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as flat polygons).
+
+.wireframeLinecap : String
+Define appearance of line ends. Possible values are "butt", "round" and "square". Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.wireframeLinejoin : String
+Define appearance of line joints. Possible values are "round", "bevel" and "miter". Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshLambertMaterial.js
+
+Material →
+MeshMatcapMaterial
+MeshMatcapMaterial is defined by a MatCap (or Lit Sphere) texture, which encodes the material color and shading.
+
+MeshMatcapMaterial does not respond to lights since the matcap image file encodes baked lighting. It will cast a shadow onto an object that receives shadows (and shadow clipping works), but it will not self-shadow or receive shadows.
+
+
+Constructor
+MeshMatcapMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null. The texture map color is modulated by the diffuse .color.
+
+.matcap : Texture
+The matcap map. Default is null.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshMatcapMaterial.js
+
+Material →
+MeshNormalMaterial
+A material that maps the normal vectors to RGB colors.
+
+
+Constructor
+MeshNormalMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+Properties
+See the base Material class for common properties.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as smooth shaded).
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshNormalMaterial.js
+
+Material →
+MeshPhongMaterial
+A material for shiny surfaces with specular highlights.
+
+The material uses a non-physically based Blinn-Phong model for calculating reflectance. Unlike the Lambertian model used in the MeshLambertMaterial this can simulate shiny surfaces with specular highlights (such as varnished wood). MeshPhongMaterial uses per-fragment shading.
+
+Performance will generally be greater when using this material over the MeshStandardMaterial or MeshPhysicalMaterial, at the cost of some graphical accuracy.
+
+
+Constructor
+MeshPhongMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.aoMap : Texture
+The red channel of this texture is used as the ambient occlusion map. Default is null. The aoMap requires a second set of UVs.
+
+.aoMapIntensity : Float
+Intensity of the ambient occlusion effect. Range is 0-1, where 0 disables ambient occlusion. Where intensity is 1 and the .aoMap red channel is also 1, ambient light is fully occluded on a surface. Default is 1.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.combine : Integer
+How to combine the result of the surface's color with the environment map, if any.
+
+Options are THREE.MultiplyOperation (default), THREE.MixOperation, THREE.AddOperation. If mix is chosen, the .reflectivity is used to blend between the two colors.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.emissive : Color
+Emissive (light) color of the material, essentially a solid color unaffected by other lighting. Default is black.
+
+.emissiveMap : Texture
+Set emissive (glow) map. Default is null. The emissive map color is modulated by the emissive color and the emissive intensity. If you have an emissive map, be sure to set the emissive color to something other than black.
+
+.emissiveIntensity : Float
+Intensity of the emissive light. Modulates the emissive color. Default is 1.
+
+.envMap : Texture
+The environment map. Default is null.
+
+.envMapRotation : Euler
+The rotation of the environment map in radians. Default is (0,0,0).
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.lightMap : Texture
+The light map. Default is null. The lightMap requires a second set of UVs.
+
+.lightMapIntensity : Float
+Intensity of the baked light. Default is 1.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null. The texture map color is modulated by the diffuse .color.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+.reflectivity : Float
+How much the environment map affects the surface; also see .combine. The default value is 1 and the valid range is between 0 (no reflections) and 1 (full reflections).
+
+.refractionRatio : Float
+The index of refraction (IOR) of air (approximately 1) divided by the index of refraction of the material. It is used with environment mapping modes THREE.CubeRefractionMapping and THREE.EquirectangularRefractionMapping. The refraction ratio should not exceed 1. Default is 0.98.
+
+.shininess : Float
+How shiny the .specular highlight is; a higher value gives a sharper highlight. Default is 30.
+
+.specular : Color
+Specular color of the material. Default is a Color set to 0x111111 (very dark grey).
+
+This defines how shiny the material is and the color of its shine.
+
+.specularMap : Texture
+The specular map value affects both how much the specular surface highlight contributes and how much of the environment map affects the surface. Default is null.
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as flat polygons).
+
+.wireframeLinecap : String
+Define appearance of line ends. Possible values are "butt", "round" and "square". Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.wireframeLinejoin : String
+Define appearance of line joints. Possible values are "round", "bevel" and "miter". Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshPhongMaterial.js
+
+Material → MeshStandardMaterial →
+MeshPhysicalMaterial
+An extension of the MeshStandardMaterial, providing more advanced physically-based rendering properties:
+
+Anisotropy: Ability to represent the anisotropic property of materials as observable with brushed metals.
+Clearcoat: Some materials — like car paints, carbon fiber, and wet surfaces — require a clear, reflective layer on top of another layer that may be irregular or rough. Clearcoat approximates this effect, without the need for a separate transparent surface.
+Iridescence: Allows to render the effect where hue varies depending on the viewing angle and illumination angle. This can be seen on soap bubbles, oil films, or on the wings of many insects.
+Physically-based transparency: One limitation of .opacity is that highly transparent materials are less reflective. Physically-based .transmission provides a more realistic option for thin, transparent surfaces like glass.
+Advanced reflectivity: More flexible reflectivity for non-metallic materials.
+Sheen: Can be used for representing cloth and fabric materials.
+As a result of these complex shading features, MeshPhysicalMaterial has a higher performance cost, per pixel, than other three.js materials. Most effects are disabled by default, and add cost as they are enabled. For best results, always specify an environment map when using this material.
+
+
+Examples
+loader / gltf / anisotropy
+materials / physical / clearcoat
+loader / gltf / iridescence
+loader / gltf / sheen
+materials / physical / transmission
+
+Constructor
+MeshPhysicalMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material and MeshStandardMaterial) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material and MeshStandardMaterial classes for common properties.
+
+.anisotropy : Float
+The anisotropy strength. Default is 0.0.
+
+.anisotropyMap : Texture
+Red and green channels represent the anisotropy direction in [-1, 1] tangent, bitangent space, to be rotated by .anisotropyRotation. The blue channel contains strength as [0, 1] to be multiplied by .anisotropy. Default is null.
+
+.anisotropyRotation : Float
+The rotation of the anisotropy in tangent, bitangent space, measured in radians counter-clockwise from the tangent. When .anisotropyMap is present, this property provides additional rotation to the vectors in the texture. Default is 0.0.
+
+.attenuationColor : Color
+The color that white light turns into due to absorption when reaching the attenuation distance. Default is white (0xffffff).
+
+.attenuationDistance : Float
+Density of the medium given as the average distance that light travels in the medium before interacting with a particle. The value is given in world space units, and must be greater than zero. Default is Infinity.
+
+.clearcoat : Float
+Represents the intensity of the clear coat layer, from 0.0 to 1.0. Use clear coat related properties to enable multilayer materials that have a thin translucent layer over the base layer. Default is 0.0.
+
+.clearcoatMap : Texture
+The red channel of this texture is multiplied against .clearcoat, for per-pixel control over a coating's intensity. Default is null.
+
+.clearcoatNormalMap : Texture
+Can be used to enable independent normals for the clear coat layer. Default is null.
+
+.clearcoatNormalScale : Vector2
+How much .clearcoatNormalMap affects the clear coat layer, from (0,0) to (1,1). Default is (1,1).
+
+.clearcoatRoughness : Float
+Roughness of the clear coat layer, from 0.0 to 1.0. Default is 0.0.
+
+.clearcoatRoughnessMap : Texture
+The green channel of this texture is multiplied against .clearcoatRoughness, for per-pixel control over a coating's roughness. Default is null.
+
+.defines : Object
+An object of the form:
+{ 
+	'STANDARD': '',
+	'PHYSICAL': '', 
+};
+This is used by the WebGLRenderer for selecting shaders.
+
+.dispersion : Float
+Defines the strength of the angular separation of colors (chromatic aberration) transmitting through a relatively clear volume. Any value zero or larger is valid, the typical range of realistic values is [0, 1]. Default is 0 (no dispersion). This property can be only be used with transmissive objects, see .transmission.
+
+.ior : Float
+Index-of-refraction for non-metallic materials, from 1.0 to 2.333. Default is 1.5.
+
+.reflectivity : Float
+Degree of reflectivity, from 0.0 to 1.0. Default is 0.5, which corresponds to an index-of-refraction of 1.5.
+This models the reflectivity of non-metallic materials. It has no effect when metalness is 1.0
+
+.iridescence : Float
+The intensity of the iridescence layer, simulating RGB color shift based on the angle between the surface and the viewer, from 0.0 to 1.0. Default is 0.0.
+
+.iridescenceMap : Texture
+The red channel of this texture is multiplied against .iridescence, for per-pixel control over iridescence. Default is null.
+
+.iridescenceIOR : Float
+Strength of the iridescence RGB color shift effect, represented by an index-of-refraction. Between 1.0 to 2.333. Default is 1.3.
+
+.iridescenceThicknessRange : Array
+Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer. Thickness of iridescence layer has an equivalent effect of the one .thickness has on .ior. Default is [100, 400].
+If .iridescenceThicknessMap is not defined, iridescence thickness will use only the second element of the given array.
+
+.iridescenceThicknessMap : Texture
+A texture that defines the thickness of the iridescence layer, stored in the green channel. Minimum and maximum values of thickness are defined by .iridescenceThicknessRange array:
+
+0.0 in the green channel will result in thickness equal to first element of the array.
+1.0 in the green channel will result in thickness equal to second element of the array.
+Values in-between will linearly interpolate between the elements of the array.
+Default is null.
+.sheen : Float
+The intensity of the sheen layer, from 0.0 to 1.0. Default is 0.0.
+
+.sheenRoughness : Float
+Roughness of the sheen layer, from 0.0 to 1.0. Default is 1.0.
+
+.sheenRoughnessMap : Texture
+The alpha channel of this texture is multiplied against .sheenRoughness, for per-pixel control over sheen roughness. Default is null.
+
+.sheenColor : Color
+The sheen tint. Default is 0x000000, black.
+
+.sheenColorMap : Texture
+The RGB channels of this texture are multiplied against .sheenColor, for per-pixel control over sheen tint. Default is null.
+
+.specularIntensity : Float
+A float that scales the amount of specular reflection for non-metals only. When set to zero, the model is effectively Lambertian. From 0.0 to 1.0. Default is 1.0.
+
+.specularIntensityMap : Texture
+The alpha channel of this texture is multiplied against .specularIntensity, for per-pixel control over specular intensity. Default is null.
+
+.specularColor : Color
+A Color that tints the specular reflection at normal incidence for non-metals only. Default is 0xffffff, white.
+
+.specularColorMap : Texture
+The RGB channels of this texture are multiplied against .specularColor, for per-pixel control over specular color. Default is null.
+
+.thickness : Float
+The thickness of the volume beneath the surface. The value is given in the coordinate space of the mesh. If the value is 0 the material is thin-walled. Otherwise the material is a volume boundary. Default is 0.
+
+.thicknessMap : Texture
+A texture that defines the thickness, stored in the green channel. This will be multiplied by .thickness. Default is null.
+
+.transmission : Float
+Degree of transmission (or optical transparency), from 0.0 to 1.0. Default is 0.0.
+Thin, transparent or semitransparent, plastic or glass materials remain largely reflective even if they are fully transmissive. The transmission property can be used to model these materials.
+When transmission is non-zero, opacity should be set to 1.
+
+.transmissionMap : Texture
+The red channel of this texture is multiplied against .transmission, for per-pixel control over optical transparency. Default is null.
+
+Methods
+See the base Material and MeshStandardMaterial classes for common methods.
+
+Source
+src/materials/MeshPhysicalMaterial.js
+
+Material →
+MeshStandardMaterial
+A standard physically based material, using Metallic-Roughness workflow.
+
+Physically based rendering (PBR) has recently become the standard in many 3D applications, such as Unity, Unreal and 3D Studio Max.
+
+This approach differs from older approaches in that instead of using approximations for the way in which light interacts with a surface, a physically correct model is used. The idea is that, instead of tweaking materials to look good under specific lighting, a material can be created that will react 'correctly' under all lighting scenarios.
+
+In practice this gives a more accurate and realistic looking result than the MeshLambertMaterial or MeshPhongMaterial, at the cost of being somewhat more computationally expensive. MeshStandardMaterial uses per-fragment shading.
+
+Note that for best results you should always specify an environment map when using this material.
+
+For a non-technical introduction to the concept of PBR and how to set up a PBR material, check out these articles by the people at marmoset:
+
+Basic Theory of Physically Based Rendering
+Physically Based Rendering and You Can Too
+Technical details of the approach used in three.js (and most other PBR systems) can be found is this paper from Disney (pdf), by Brent Burley.
+
+
+Constructor
+MeshStandardMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.aoMap : Texture
+The red channel of this texture is used as the ambient occlusion map. Default is null. The aoMap requires a second set of UVs.
+
+.aoMapIntensity : Float
+Intensity of the ambient occlusion effect. Range is 0-1, where 0 disables ambient occlusion. Where intensity is 1 and the .aoMap red channel is also 1, ambient light is fully occluded on a surface. Default is 1.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.defines : Object
+An object of the form:
+ { 'STANDARD': '' }; 
+This is used by the WebGLRenderer for selecting shaders.
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.emissive : Color
+Emissive (light) color of the material, essentially a solid color unaffected by other lighting. Default is black.
+
+.emissiveMap : Texture
+Set emissive (glow) map. Default is null. The emissive map color is modulated by the emissive color and the emissive intensity. If you have an emissive map, be sure to set the emissive color to something other than black.
+
+.emissiveIntensity : Float
+Intensity of the emissive light. Modulates the emissive color. Default is 1.
+
+.envMap : Texture
+The environment map. To ensure a physically correct rendering, you should only add environment maps which were preprocessed by PMREMGenerator. Default is null.
+
+.envMapRotation : Euler
+The rotation of the environment map in radians. Default is (0,0,0).
+
+.envMapIntensity : Float
+Scales the effect of the environment map by multiplying its color.
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.isMeshStandardMaterial : Boolean
+Read-only flag to check if a given object is of type MeshStandardMaterial.
+
+.lightMap : Texture
+The light map. Default is null. The lightMap requires a second set of UVs.
+
+.lightMapIntensity : Float
+Intensity of the baked light. Default is 1.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null. The texture map color is modulated by the diffuse .color.
+
+.metalness : Float
+How much the material is like a metal. Non-metallic materials such as wood or stone use 0.0, metallic use 1.0, with nothing (usually) in between. Default is 0.0. A value between 0.0 and 1.0 could be used for a rusty metal look. If metalnessMap is also provided, both values are multiplied.
+
+.metalnessMap : Texture
+The blue channel of this texture is used to alter the metalness of the material.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+.roughness : Float
+How rough the material appears. 0.0 means a smooth mirror reflection, 1.0 means fully diffuse. Default is 1.0. If roughnessMap is also provided, both values are multiplied.
+
+.roughnessMap : Texture
+The green channel of this texture is used to alter the roughness of the material.
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as flat polygons).
+
+.wireframeLinecap : String
+Define appearance of line ends. Possible values are "butt", "round" and "square". Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.wireframeLinejoin : String
+Define appearance of line joints. Possible values are "round", "bevel" and "miter". Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshStandardMaterial.js
+
+Material →
+MeshToonMaterial
+A material implementing toon shading.
+
+Examples
+materials / toon
+
+Constructor
+MeshToonMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.aoMap : Texture
+The red channel of this texture is used as the ambient occlusion map. Default is null. The aoMap requires a second set of UVs.
+
+.aoMapIntensity : Float
+Intensity of the ambient occlusion effect. Range is 0-1, where 0 disables ambient occlusion. Where intensity is 1 and the .aoMap red channel is also 1, ambient light is fully occluded on a surface. Default is 1.
+
+.bumpMap : Texture
+The texture to create a bump map. The black and white values map to the perceived depth in relation to the lights. Bump doesn't actually affect the geometry of the object, only the lighting. If a normal map is defined this will be ignored.
+
+.bumpScale : Float
+How much the bump map affects the material. Typical ranges are 0-1. Default is 1.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.displacementMap : Texture
+The displacement map affects the position of the mesh's vertices. Unlike other maps which only affect the light and shade of the material the displaced vertices can cast shadows, block other objects, and otherwise act as real geometry. The displacement texture is an image where the value of each pixel (white being the highest) is mapped against, and repositions, the vertices of the mesh.
+
+.displacementScale : Float
+How much the displacement map affects the mesh (where black is no displacement, and white is maximum displacement). Without a displacement map set, this value is not applied. Default is 1.
+
+.displacementBias : Float
+The offset of the displacement map's values on the mesh's vertices. The bias is added to the scaled sample of the displacement map. Without a displacement map set, this value is not applied. Default is 0.
+
+.emissive : Color
+Emissive (light) color of the material, essentially a solid color unaffected by other lighting. Default is black.
+
+.emissiveMap : Texture
+Set emissive (glow) map. Default is null. The emissive map color is modulated by the emissive color and the emissive intensity. If you have an emissive map, be sure to set the emissive color to something other than black.
+
+.emissiveIntensity : Float
+Intensity of the emissive light. Modulates the emissive color. Default is 1.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.gradientMap : Texture
+Gradient map for toon shading. It's required to set Texture.minFilter and Texture.magFilter to THREE.NearestFilter when using this type of texture. Default is null.
+
+.lightMap : Texture
+The light map. Default is null. The lightMap requires a second set of UVs.
+
+.lightMapIntensity : Float
+Intensity of the baked light. Default is 1.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null. The texture map color is modulated by the diffuse .color.
+
+.normalMap : Texture
+The texture to create a normal map. The RGB values affect the surface normal for each pixel fragment and change the way the color is lit. Normal maps do not change the actual shape of the surface, only the lighting. In case the material has a normal map authored using the left handed convention, the y component of normalScale should be negated to compensate for the different handedness.
+
+.normalMapType : Integer
+The type of normal map.
+
+Options are THREE.TangentSpaceNormalMap (default), and THREE.ObjectSpaceNormalMap.
+
+.normalScale : Vector2
+How much the normal map affects the material. Typical ranges are 0-1. Default is a Vector2 set to (1,1).
+
+.wireframe : Boolean
+Render geometry as wireframe. Default is false (i.e. render as flat polygons).
+
+.wireframeLinecap : String
+Define appearance of line ends. Possible values are "butt", "round" and "square". Default is 'round'.
+
+This corresponds to the 2D Canvas lineCap property and it is ignored by the WebGL renderer.
+
+.wireframeLinejoin : String
+Define appearance of line joints. Possible values are "round", "bevel" and "miter". Default is 'round'.
+
+This corresponds to the 2D Canvas lineJoin property and it is ignored by the WebGL renderer.
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/MeshToonMaterial.js
+
+Material →
+PointsMaterial
+The default material used by Points.
+
+Code Example
+const vertices = [];
+
+for ( let i = 0; i < 10000; i ++ ) {
+	const x = THREE.MathUtils.randFloatSpread( 2000 );
+	const y = THREE.MathUtils.randFloatSpread( 2000 );
+	const z = THREE.MathUtils.randFloatSpread( 2000 );
+
+	vertices.push( x, y, z );
+}
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+const material = new THREE.PointsMaterial( { color: 0x888888 } );
+const points = new THREE.Points( geometry, material );
+scene.add( points );
+Examples
+misc / controls / fly
+WebGL / BufferGeometry / drawrange
+WebGL / BufferGeometry / points
+WebGL / BufferGeometry / points / interleaved
+WebGL / camera
+WebGL / geometry / convex
+WebGL / geometry / shapes
+WebGL / interactive / raycasting / points
+WebGL / multiple / elements / text
+WebGL / points / billboards
+WebGL / points / dynamic
+WebGL / points / sprites
+
+Constructor
+PointsMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.map : Texture
+Sets the color of the points using data from a Texture. May optionally include an alpha channel, typically combined with .transparent or .alphaTest.
+
+.size : Number
+Defines the size of the points in pixels. Default is 1.0.
+Will be capped if it exceeds the hardware dependent parameter gl.ALIASED_POINT_SIZE_RANGE.
+
+.sizeAttenuation : Boolean
+Specify whether points' size is attenuated by the camera depth. (Perspective camera only.) Default is true.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/PointsMaterial.js
+
+Material → ShaderMaterial →
+RawShaderMaterial
+This class works just like ShaderMaterial, except that definitions of built-in uniforms and attributes are not automatically prepended to the GLSL shader code.
+
+Code Example
+const material = new THREE.RawShaderMaterial( {
+
+	uniforms: {
+		time: { value: 1.0 }
+	},
+	vertexShader: document.getElementById( 'vertexShader' ).textContent,
+	fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
+
+} );
+Examples
+WebGL / buffergeometry / rawshader
+WebGL / buffergeometry / instancing / billboards
+WebGL / buffergeometry / instancing
+WebGL / volume / cloud
+WebGL / volume / instancing
+WebGL / volume / perlin
+
+Constructor
+RawShaderMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material and ShaderMaterial) can be passed in here.
+
+
+Properties
+See the base Material and ShaderMaterial classes for common properties.
+
+Methods
+See the base Material and ShaderMaterial classes for common methods.
+
+Source
+src/materials/RawShaderMaterial.js
+
+Material →
+ShaderMaterial
+A material rendered with custom shaders. A shader is a small program written in GLSL that runs on the GPU. You may want to use a custom shader if you need to:
+
+implement an effect not included with any of the built-in materials
+combine many objects into a single BufferGeometry in order to improve performance
+There are the following notes to bear in mind when using a ShaderMaterial:
+A ShaderMaterial will only be rendered properly by WebGLRenderer, since the GLSL code in the vertexShader and fragmentShader properties must be compiled and run on the GPU using WebGL.
+As of THREE r72, directly assigning attributes in a ShaderMaterial is no longer supported. A BufferGeometry instance must be used instead, using BufferAttribute instances to define custom attributes.
+As of THREE r77, WebGLRenderTarget or WebGLCubeRenderTarget instances are no longer supposed to be used as uniforms. Their texture property must be used instead.
+Built in attributes and uniforms are passed to the shaders along with your code. If you don't want the WebGLProgram to add anything to your shader code, you can use RawShaderMaterial instead of this class.
+You can use the directive #pragma unroll_loop_start and #pragma unroll_loop_end in order to unroll a for loop in GLSL by the shader preprocessor. The directive has to be placed right above the loop. The loop formatting has to correspond to a defined standard.
+The loop has to be normalized.
+The loop variable has to be i.
+The value UNROLLED_LOOP_INDEX will be replaced with the explicitly value of i for the given iteration and can be used in preprocessor statements.
+#pragma unroll_loop_start 
+for ( int i = 0; i < 10; i ++ ) {
+	 // ... 
+ }
+#pragma unroll_loop_end
+Code Example
+const material = new THREE.ShaderMaterial( {
+
+	uniforms: {
+		time: { value: 1.0 },
+		resolution: { value: new THREE.Vector2() }
+	},
+
+	vertexShader: document.getElementById( 'vertexShader' ).textContent,
+	fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+
+} );
+Examples
+webgl / buffergeometry / custom / attributes / particles
+webgl / buffergeometry / selective / draw
+webgl / custom / attributes
+webgl / custom / attributes / lines
+webgl / custom / attributes / points
+webgl / custom / attributes / points2
+webgl / custom / attributes / points3
+webgl / depth / texture
+webgl / gpgpu / birds
+webgl / gpgpu / protoplanet
+webgl / gpgpu / water
+webgl / interactive / points
+webgl / video / kinect
+webgl / lights / hemisphere
+webgl / marchingcubes
+webgl / materials / envmaps
+webgl / materials / wireframe
+webgl / modifier / tessellation
+webgl / postprocessing / dof2
+webgl / postprocessing / godrays
+
+Vertex shaders and fragment shaders
+You can specify two different types of shaders for each material:
+
+The vertex shader runs first; it receives attributes, calculates / manipulates the position of each individual vertex, and passes additional data (varyings) to the fragment shader.
+The fragment ( or pixel ) shader runs second; it sets the color of each individual "fragment" (pixel) rendered to the screen.
+There are three types of variables in shaders: uniforms, attributes, and varyings:
+
+Uniforms are variables that have the same value for all vertices - lighting, fog, and shadow maps are examples of data that would be stored in uniforms. Uniforms can be accessed by both the vertex shader and the fragment shader.
+Attributes are variables associated with each vertex---for instance, the vertex position, face normal, and vertex color are all examples of data that would be stored in attributes. Attributes can only be accessed within the vertex shader.
+Varyings are variables that are passed from the vertex shader to the fragment shader. For each fragment, the value of each varying will be smoothly interpolated from the values of adjacent vertices.
+Note that within the shader itself, uniforms and attributes act like constants; you can only modify their values by passing different values to the buffers from your JavaScript code.
+
+Built-in attributes and uniforms
+The WebGLRenderer provides many attributes and uniforms to shaders by default; definitions of these variables are prepended to your fragmentShader and vertexShader code by the WebGLProgram when the shader is compiled; you don't need to declare them yourself. See WebGLProgram for details of these variables.
+
+Some of these uniforms or attributes (e.g. those pertaining lighting, fog, etc.) require properties to be set on the material in order for WebGLRenderer to copy the appropriate values to the GPU - make sure to set these flags if you want to use these features in your own shader.
+
+If you don't want WebGLProgram to add anything to your shader code, you can use RawShaderMaterial instead of this class.
+
+Custom attributes and uniforms
+Both custom attributes and uniforms must be declared in your GLSL shader code (within vertexShader and/or fragmentShader). Custom uniforms must be defined in both the uniforms property of your ShaderMaterial, whereas any custom attributes must be defined via BufferAttribute instances. Note that varyings only need to be declared within the shader code (not within the material).
+
+To declare a custom attribute, please reference the BufferGeometry page for an overview, and the BufferAttribute page for a detailed look at the BufferAttribute API.
+
+When creating your attributes, each typed array that you create to hold your attribute's data must be a multiple of your data type's size. For example, if your attribute is a THREE.Vector3 type, and you have 3000 vertices in your BufferGeometry, your typed array value must be created with a length of 3000 * 3, or 9000 (one value per-component). A table of each data type's size is shown below for reference:
+
+Attribute sizes
+GLSL type	JavaScript type	Size
+float	Number	1
+vec2	THREE.Vector2	2
+vec3	THREE.Vector3	3
+vec3	THREE.Color	3
+vec4	THREE.Vector4	4
+Note that attribute buffers are not refreshed automatically when their values change. To update custom attributes, set the needsUpdate flag to true on the BufferAttribute of the geometry (see BufferGeometry for further details).
+
+To declare a custom Uniform, use the uniforms property:
+uniforms: { 
+	time: { value: 1.0 },
+	resolution: { value: new THREE.Vector2() } 
+}
+
+You're recommended to update custom Uniform values depending on object and camera in Object3D.onBeforeRender because Material can be shared among meshes, matrixWorld of Scene and Camera are updated in WebGLRenderer.render, and some effects render a scene with their own private cameras.
+
+Constructor
+ShaderMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+Properties
+See the base Material class for common properties.
+
+.clipping : Boolean
+Defines whether this material supports clipping; true to let the renderer pass the clippingPlanes uniform. Default is false.
+
+.defaultAttributeValues : Object
+When the rendered geometry doesn't include these attributes but the material does, these default values will be passed to the shaders. This avoids errors when buffer data is missing.
+this.defaultAttributeValues = { 
+	'color': [ 1, 1, 1 ], 
+	'uv': [ 0, 0 ],
+	'uv1': [ 0, 0 ] 
+};
+
+.defines : Object
+Defines custom constants using #define directives within the GLSL code for both the vertex shader and the fragment shader; each key/value pair yields another directive:
+defines: { 
+	FOO: 15, 
+	BAR: true 
+}
+yields the lines
+#define FOO 15 
+#define BAR true
+in the GLSL code.
+
+.extensions : Object
+An object with the following properties:
+this.extensions = { 
+	clipCullDistance: false, // set to use vertex shader clipping
+	multiDraw: false // set to use vertex shader multi_draw / enable gl_DrawID
+};
+
+.fog : Boolean
+Define whether the material color is affected by global fog settings; true to pass fog uniforms to the shader. Default is false.
+
+.fragmentShader : String
+Fragment shader GLSL code. This is the actual code for the shader. In the example above, the vertexShader and fragmentShader code is extracted from the DOM; it could be passed as a string directly or loaded via AJAX instead.
+
+.glslVersion : String
+Defines the GLSL version of custom shader code. Valid values are THREE.GLSL1 or THREE.GLSL3. Default is null.
+
+.index0AttributeName : String
+If set, this calls gl.bindAttribLocation to bind a generic vertex index to an attribute variable. Default is undefined.
+
+.isShaderMaterial : Boolean
+Read-only flag to check if a given object is of type ShaderMaterial.
+
+.lights : Boolean
+Defines whether this material uses lighting; true to pass uniform data related to lighting to this shader. Default is false.
+
+.linewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+.flatShading : Boolean
+Define whether the material is rendered with flat shading. Default is false.
+
+.uniforms : Object
+An object of the form:
+{ 
+	"uniform1": { value: 1.0 }, 
+	"uniform2": { value: 2 } 
+}
+specifying the uniforms to be passed to the shader code; keys are uniform names, values are definitions of the form
+{
+	value: 1.0 
+}
+where value is the value of the uniform. Names must match the name of the uniform, as defined in the GLSL code. Note that uniforms are refreshed on every frame, so updating the value of the uniform will immediately update the value available to the GLSL code.
+
+.uniformsNeedUpdate : Boolean
+Can be used to force a uniform update while changing uniforms in Object3D.onBeforeRender(). Default is false.
+
+.vertexColors : Boolean
+Defines whether vertex coloring is used. Default is false.
+
+.vertexShader : String
+Vertex shader GLSL code. This is the actual code for the shader. In the example above, the vertexShader and fragmentShader code is extracted from the DOM; it could be passed as a string directly or loaded via AJAX instead.
+
+.wireframe : Boolean
+Render geometry as wireframe (using GL_LINES instead of GL_TRIANGLES). Default is false (i.e. render as flat polygons).
+
+.wireframeLinewidth : Float
+Controls wireframe thickness. Default is 1.
+
+Due to limitations of the OpenGL Core Profile with the WebGL renderer on most platforms linewidth will always be 1 regardless of the set value.
+
+Methods
+See the base Material class for common methods.
+
+.clone () : ShaderMaterial
+Generates a shallow copy of this material. Note that the vertexShader and fragmentShader are copied by reference, as are the definitions of the attributes; this means that clones of the material will share the same compiled WebGLProgram. However, the uniforms are copied by value, which allows you to have different sets of uniforms for different copies of the material.
+
+Source
+src/materials/ShaderMaterial.js
+
+Material →
+ShadowMaterial
+This material can receive shadows, but otherwise is completely transparent.
+
+Code Example
+const geometry = new THREE.PlaneGeometry( 2000, 2000 );
+geometry.rotateX( - Math.PI / 2 );
+
+const material = new THREE.ShadowMaterial();
+material.opacity = 0.2;
+
+const plane = new THREE.Mesh( geometry, material );
+plane.position.y = -200;
+plane.receiveShadow = true;
+scene.add( plane );
+Examples
+geometry / spline / editor
+
+Constructor
+ShadowMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+
+Properties
+See the base Material classes for common properties.
+
+.color : Color
+Color of the material, by default set to black (0x000000).
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.transparent : Boolean
+Defines whether this material is transparent. Default is true.
+
+Methods
+See the base Material classes for common methods.
+
+Source
+src/materials/ShadowMaterial.js
+
+Material →
+SpriteMaterial
+A material for a use with a Sprite.
+
+Code Example
+const map = new THREE.TextureLoader().load( 'textures/sprite.png' );
+const material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+
+const sprite = new THREE.Sprite( material );
+sprite.scale.set(200, 200, 1)
+scene.add( sprite );
+Examples
+WebGL / raycast / sprite
+WebGL / sprites
+SVG / sandbox
+
+Constructor
+SpriteMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from Material) can be passed in here.
+
+The exception is the property color, which can be passed in as a hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally. SpriteMaterials are not clipped by using Material.clippingPlanes.
+
+Properties
+See the base Material class for common properties.
+
+.alphaMap : Texture
+The alpha map is a grayscale texture that controls the opacity across the surface (black: fully transparent; white: fully opaque). Default is null.
+
+Only the color of the texture is used, ignoring the alpha channel if one exists. For RGB and RGBA textures, the WebGL renderer will use the green channel when sampling this texture due to the extra bit of precision provided for green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and luminance/alpha textures will also still work as expected.
+
+.color : Color
+Color of the material, by default set to white (0xffffff). The .map is multiplied by the color.
+
+.fog : Boolean
+Whether the material is affected by fog. Default is true.
+
+.isSpriteMaterial : Boolean
+Read-only flag to check if a given object is of type SpriteMaterial.
+
+.map : Texture
+The color map. May optionally include an alpha channel, typically combined with .transparent or .alphaTest. Default is null.
+
+.rotation : Radians
+The rotation of the sprite in radians. Default is 0.
+
+.sizeAttenuation : Boolean
+Whether the size of the sprite is attenuated by the camera depth. (Perspective camera only.) Default is true.
+
+.transparent : Boolean
+Defines whether this material is transparent. Default is true.
+
+Methods
+See the base Material class for common methods.
+
+Source
+src/materials/SpriteMaterial.js
+

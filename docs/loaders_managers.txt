@@ -1,0 +1,175 @@
+DefaultLoadingManager
+A global instance of the LoadingManager, used by most loaders when no custom manager has been specified.
+
+This will be sufficient for most purposes, however there may be times when you desire separate loading managers for say, textures and models.
+
+Code Example
+You can optionally set the onStart, onLoad, onProgress, onError functions for the manager. These will then apply to any loaders using the DefaultLoadingManager.
+
+Note that these shouldn't be confused with the similarly named functions of individual loaders, as they are intended for displaying information about the overall status of loading, rather than dealing with the data that has been loaded.
+
+THREE.DefaultLoadingManager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+THREE.DefaultLoadingManager.onLoad = function ( ) {
+	console.log( 'Loading Complete!');
+};
+
+THREE.DefaultLoadingManager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+THREE.DefaultLoadingManager.onError = function ( url ) {
+	console.log( 'There was an error loading ' + url );
+};
+Properties
+See the LoadingManager page for details of properties.
+
+Methods
+See the LoadingManager page for details of methods.
+
+Source
+src/loaders/LoadingManager.js
+
+LoadingManager
+Handles and keeps track of loaded and pending data. A default global instance of this class is created and used by loaders if not supplied manually - see DefaultLoadingManager.
+
+In general that should be sufficient, however there are times when it can be useful to have separate loaders - for example if you want to show separate loading bars for objects and textures.
+
+Code Example
+This example shows how to use LoadingManager to track the progress of OBJLoader.
+
+const manager = new THREE.LoadingManager();
+manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+manager.onLoad = function ( ) {
+	console.log( 'Loading complete!');
+};
+
+manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+manager.onError = function ( url ) {
+	console.log( 'There was an error loading ' + url );
+};
+
+const loader = new OBJLoader( manager );
+loader.load( 'file.obj', function ( object ) {
+	//
+} );
+In addition to observing progress, a LoadingManager can be used to override resource URLs during loading. This may be helpful for assets coming from drag-and-drop events, WebSockets, WebRTC, or other APIs. An example showing how to load an in-memory model using Blob URLs is below.
+
+// Blob or File objects created when dragging files into the webpage.
+const blobs = {'fish.gltf': blob1, 'diffuse.png': blob2, 'normal.png': blob3};
+
+const manager = new THREE.LoadingManager();
+
+// Initialize loading manager with URL callback.
+const objectURLs = [];
+manager.setURLModifier( ( url ) => {
+
+	url = URL.createObjectURL( blobs[ url ] );
+	objectURLs.push( url );
+	return url;
+
+} );
+
+// Load as usual, then revoke the blob URLs.
+const loader = new GLTFLoader( manager );
+loader.load( 'fish.gltf', (gltf) => {
+
+	scene.add( gltf.scene );
+	objectURLs.forEach( ( url ) => URL.revokeObjectURL( url ) );
+
+});
+Examples
+WebGL / loader / obj
+WebGL / postprocessing / outline
+
+Constructor
+LoadingManager( onLoad : Function, onProgress : Function, onError : Function )
+onLoad — (optional) this function will be called when all loaders are done.
+onProgress — (optional) this function will be called when an item is complete.
+onError — (optional) this function will be called a loader encounters errors.
+Creates a new LoadingManager.
+
+Properties
+.onStart : Function
+This function will be called when loading starts. The arguments are:
+url — The url of the item just loaded.
+itemsLoaded — the number of items already loaded so far.
+itemsTotal — the total amount of items to be loaded.
+
+By default this is undefined.
+
+.onLoad : Function
+This function will be called when all loading is completed. By default this is undefined, unless passed in the constructor.
+
+.onProgress : Function
+This function will be called when an item is complete. The arguments are:
+url — The url of the item just loaded.
+itemsLoaded — the number of items already loaded so far.
+itemsTotal — the total amount of items to be loaded.
+
+By default this is undefined, unless passed in the constructor.
+
+.onError : Function
+This function will be called when any item errors, with the argument:
+url — The url of the item that errored.
+
+By default this is undefined, unless passed in the constructor.
+
+Methods
+.addHandler ( regex : Object, loader : Loader ) : this
+regex — A regular expression.
+loader — The loader.
+
+Registers a loader with the given regular expression. Can be used to define what loader should be used in order to load specific files. A typical use case is to overwrite the default loader for textures.
+
+// add handler for TGA textures 
+manager.addHandler( /\.tga$/i, new TGALoader() );
+.getHandler ( file : String ) : Loader
+file — The file path.
+
+Can be used to retrieve the registered loader for the given file path.
+
+.removeHandler ( regex : Object ) : this
+regex — A regular expression.
+
+Removes the loader for the given regular expression.
+
+.resolveURL ( url : String ) : String
+url — the url to load
+
+Given a URL, uses the URL modifier callback (if any) and returns a resolved URL. If no URL modifier is set, returns the original URL.
+
+.setURLModifier ( callback : Function ) : this
+callback — URL modifier callback. Called with url argument, and must return resolvedURL.
+
+If provided, the callback will be passed each resource URL before a request is sent. The callback may return the original URL, or a new URL to override loading behavior. This behavior can be used to load assets from .ZIP files, drag-and-drop APIs, and Data URIs.
+
+
+Note: The following methods are designed to be called internally by loaders. You shouldn't call them directly.
+
+.itemStart ( url : String ) : undefined
+url — the url to load
+
+This should be called by any loader using the manager when the loader starts loading an url.
+
+.itemEnd ( url : String ) : undefined
+url — the loaded url
+
+This should be called by any loader using the manager when the loader ended loading an url.
+
+.itemError ( url : String ) : undefined
+url — the loaded url
+
+This should be called by any loader using the manager when the loader errors loading an url.
+
+Source
+src/loaders/LoadingManager.js
+

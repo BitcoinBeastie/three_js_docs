@@ -1,0 +1,230 @@
+Object3D → Mesh →
+LightProbeHelper
+Renders a sphere to visualize a light probe in the scene.
+
+
+Import
+LightProbeHelper is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
+Code Example
+const helper = new LightProbeHelper( lightProbe, 1 );
+scene.add( helper );
+Examples
+WebGL / lightprobe / cubecamera
+
+Constructor
+LightProbeHelper( lightProbe : LightProbe, size : Number )
+lightProbe -- the light probe.
+size -- size of the helper sphere
+
+Properties
+See the base Mesh class for common properties.
+
+.lightProbe : LightProbe
+The light probe.
+
+.size : Number
+The size of the helper sphere.
+
+Methods
+See the base Mesh class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+examples/jsm/helpers/LightProbeHelper.js
+
+Object3D → Line →
+PositionalAudioHelper
+This helper displays the directional cone of a PositionalAudio.
+
+Import
+PositionalAudioHelper is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
+Code Example
+const positionalAudio = new THREE.PositionalAudio( listener );
+positionalAudio.setDirectionalCone( 180, 230, 0.1 );
+
+const helper = new PositionalAudioHelper( positionalAudio );
+positionalAudio.add( helper );
+Examples
+webaudio / orientation
+Constructor
+PositionalAudioHelper( audio : PositionalAudio, range : Number )
+audio -- The PositionalAudio to be visualized.
+
+range -- (optional) The range of the directional cone.
+
+divisionsInnerAngle -- (optional) The amount of divisions of the inner part of the directional cone.
+
+divisionsOuterAngle -- (optional) The amount of divisions of the outer part of the directional cone.
+
+
+Properties
+See the base Object3D class for common properties.
+
+.audio : PositionalAudio
+PositionalAudio to be visualized.
+
+.range : Number
+The range of the directional cone.
+
+.divisionsInnerAngle : Number
+The amount of divisions of the inner part of the directional cone.
+
+.divisionsOuterAngle : Number
+The amount of divisions of the outer part of the directional cone.
+
+Methods
+See the base Line class for common methods.
+
+.update () : undefined
+Updates the helper.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+examples/jsm/helpers/PositionalAudioHelper.js
+
+Object3D → Line →
+RectAreaLightHelper
+Creates a visual aid for a RectAreaLight.
+
+Import
+RectAreaLightHelper is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+Code Example
+const light = new THREE.RectAreaLight( 0xffffbb, 1.0, 5, 5 );
+const helper = new RectAreaLightHelper( light );
+light.add( helper ); // helper must be added as a child of the light
+Constructor
+RectAreaLightHelper( light : RectAreaLight, color : Hex )
+light -- The light being visualized.
+
+color -- (optional) if this is not the set the helper will take the color of the light.
+
+Properties
+See the base Object3D class for common properties.
+
+.light : RectAreaLight
+Reference to the RectAreaLight being visualized.
+
+.color : hex
+The color parameter passed in the constructor. Default is undefined. If this is changed, the helper's color will update the next time update is called.
+
+Methods
+See the base Line class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+examples/jsm/helpers/RectAreaLightHelper.js
+
+Object3D → Line → LineSegments →
+VertexNormalsHelper
+Visualizes an object's vertex normals. Requires that normals have been specified in a custom attribute or have been calculated using computeVertexNormals.
+
+
+Import
+VertexNormalsHelper is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
+Code Example
+const geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
+const material = new THREE.MeshStandardMaterial();
+const mesh = new THREE.Mesh( geometry, material );
+
+const helper = new VertexNormalsHelper( mesh, 1, 0xff0000 );
+
+scene.add( mesh );
+scene.add( helper );
+Examples
+WebGL / helpers
+
+Constructor
+VertexNormalsHelper( object : Object3D, size : Number, color : Hex )
+object -- object for which to render vertex normals.
+size -- (optional) length of the arrows. Default is 1.
+color -- (optional) hex color of the arrows. Default is 0xff0000.
+
+Properties
+See the base LineSegments class for common properties.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the object's matrixWorld.
+
+.object : Object3D
+The object for which the vertex normals are being visualized.
+
+.size : Number
+Length of the arrows. Default is 1.
+
+Methods
+See the base LineSegments class for common methods.
+
+.update () : undefined
+Updates the vertex tangents preview based on the object's world transform.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+examples/jsm/helpers/VertexNormalsHelper.js
+
+Object3D → Line → LineSegments →
+VertexTangentsHelper
+Visualizes an object's vertex tangents. Requires that tangents have been specified in a custom attribute or have been calculated using computeTangents.
+
+
+Import
+VertexTangentsHelper is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { VertexTangentsHelper } from 'three/addons/helpers/VertexTangentsHelper.js';
+Code Example
+const geometry = new THREE.BoxGeometry( 10, 10, 10, 2, 2, 2 );
+const material = new THREE.MeshStandardMaterial();
+const mesh = new THREE.Mesh( geometry, material );
+
+const helper = new VertexTangentsHelper( mesh, 1, 0x00ffff );
+
+scene.add( mesh );
+scene.add( helper );
+Examples
+WebGL / helpers
+
+Constructor
+VertexTangentsHelper( object : Object3D, size : Number, color : Hex )
+object -- object for which to render vertex tangents.
+size -- (optional) length of the arrows. Default is 1.
+color -- (optional) hex color of the arrows. Default is 0x00ffff.
+
+Properties
+See the base LineSegments class for common properties.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the object's matrixWorld.
+
+.object : Object3D
+The object for which the vertex tangents are being visualized.
+
+.size : Number
+Length of the arrows. Default is 1.
+
+Methods
+See the base LineSegments class for common methods.
+
+.update () : undefined
+Updates the vertex tangents preview based on the object's world transform.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+examples/jsm/helpers/VertexTangentsHelper.js
+

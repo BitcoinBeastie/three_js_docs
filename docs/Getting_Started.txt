@@ -1,0 +1,467 @@
+Installation
+Project structure
+Every three.js project needs at least one HTML file to define the webpage, and a JavaScript file to run your three.js code. The structure and naming choices below aren't required, but will be used throughout this guide for consistency.
+
+index.html
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="module" src="/main.js"></script>
+	</body>
+</html>
+main.js
+import * as THREE from 'three';
+
+...
+public/
+The public/ folder is sometimes also called a "static" folder, because the files it contains are pushed to the website unchanged. Usually textures, audio, and 3D models will go here.
+Now that we've set up the basic project structure, we need a way to run the project locally and access it through a web browser. Installation and local development can be accomplished with npm and a build tool, or by importing three.js from a CDN. Both options are explained in the sections below.
+
+Option 1: Install with NPM and a build tool
+Development
+Installing from the npm package registry and using a build tool is the recommended approach for most users — the more dependencies your project needs, the more likely you are to run into problems that the static hosting cannot easily resolve. With a build tool, importing local JavaScript files and npm packages should work out of the box, without import maps.
+
+Install Node.js. We'll need it to load manage dependencies and to run our build tool.
+Install three.js and a build tool, Vite, using a terminal in your project folder. Vite will be used during development, but it isn't part of the final webpage. If you prefer to use another build tool, that's fine — we support modern build tools that can import ES Modules.
+
+# three.js
+npm install --save three
+
+# vite
+npm install --save-dev vite
+Installation added node_modules/ and package.json to my project. What are they?
+Improve your editor auto-completion with jsconfig or tsconfig
+From your terminal, run:
+npx vite
+What is npx?
+If everything went well, you'll see a URL like http://localhost:5173 appear in your terminal, and can open that URL to see your web application.
+The page will be blank — you're ready to create a scene.
+
+If you want to learn more about these tools before you continue, see:
+
+three.js journey: Local Server
+Vite: Command Line Interface
+MDN: Package management basics
+Production
+Later, when you're ready to deploy your web application, you'll just need to tell Vite to run a production build — npx vite build. Everything used by the application will be compiled, optimized, and copied into the dist/ folder. The contents of that folder are ready to be hosted on your website.
+
+Option 2: Import from a CDN
+Development
+Installing without build tools will require some changes to the project structure given above.
+
+We imported code from 'three' (an npm package) in main.js, and web browsers don't know what that means. In index.html we'll need to add an import map defining where to get the package. Put the code below inside the <head></head> tag, after the styles.
+
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
+    }
+  }
+</script>
+Don't forget to replace <version> with an actual version of three.js, like "v0.149.0". The most recent version can be found on the npm version list.
+
+We'll also need to run a local server to host these files at URL where the web browser can access them. While it's technically possible to double-click an HTML file and open it in your browser, important features that we'll later implement, do not work when the page is opened this way, for security reasons.
+
+Install Node.js, then run serve to start a local server in the project's directory:
+
+npx serve .
+If everything went well, you'll see a URL like http://localhost:3000 appear in your terminal, and can open that URL to see your web application.
+The page will be blank — you're ready to create a scene.
+
+Many other local static servers are available — some use different languages instead of Node.js, and others are desktop applications. They all work basically the same way, and we've provided a few alternatives below.
+
+More local servers
+Production
+When you're ready to deploy your web application, push the source files to your web hosting provider — no need to build or compile anything. The downside of that tradeoff is that you'll need to be careful to keep the import map updated with any dependencies (and dependencies of dependencies!) that your application requires. If the CDN hosting your dependencies goes down temporarily, your website will stop working too.
+
+IMPORTANT: Import all dependencies from the same version of three.js, and from the same CDN. Mixing files from different sources may cause duplicate code to be included, or even break the application in unexpected ways.
+
+Addons
+Out of the box, three.js includes the fundamentals of a 3D engine. Other three.js components — such as controls, loaders, and post-processing effects — are part of the addons/ directory. Addons do not need to be installed separately, but do need to be imported separately.
+
+The example below shows how to import three.js with the OrbitControls and GLTFLoader addons. Where necessary, this will also be mentioned in each addon's documentation or examples.
+
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const controls = new OrbitControls( camera, renderer.domElement );
+const loader = new GLTFLoader();
+Some excellent third-party projects are available for three.js, too. These need to be installed separately — see Libraries and Plugins.
+
+Next Steps
+You're now ready to create a scene.
+
+Creating a scene
+The goal of this section is to give a brief introduction to three.js. We will start by setting up a scene, with a spinning cube. A working example is provided at the bottom of the page in case you get stuck and need help.
+
+Before we start
+If you haven't yet, go through the Installation guide. We'll assume you've already set up the same project structure (including index.html and main.js), have installed three.js, and are either running a build tool, or using a local server with a CDN and import maps.
+
+Creating the scene
+To actually be able to display anything with three.js, we need three things: scene, camera and renderer, so that we can render the scene with camera.
+
+main.js —
+
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+Let's take a moment to explain what's going on here. We have now set up the scene, our camera and the renderer.
+
+There are a few different cameras in three.js. For now, let's use a PerspectiveCamera.
+
+The first attribute is the field of view. FOV is the extent of the scene that is seen on the display at any given moment. The value is in degrees.
+
+The second one is the aspect ratio. You almost always want to use the width of the element divided by the height, or you'll get the same result as when you play old movies on a widescreen TV - the image looks squished.
+
+The next two attributes are the near and far clipping plane. What that means, is that objects further away from the camera than the value of far or closer than near won't be rendered. You don't have to worry about this now, but you may want to use other values in your apps to get better performance.
+
+Next up is the renderer. In addition to creating the renderer instance, we also need to set the size at which we want it to render our app. It's a good idea to use the width and height of the area we want to fill with our app - in this case, the width and height of the browser window. For performance intensive apps, you can also give setSize smaller values, like window.innerWidth/2 and window.innerHeight/2, which will make the app render at quarter size.
+
+If you wish to keep the size of your app but render it at a lower resolution, you can do so by calling setSize with false as updateStyle (the third argument). For example, setSize(window.innerWidth/2, window.innerHeight/2, false) will render your app at half resolution, given that your <canvas> has 100% width and height.
+
+Last but not least, we add the renderer element to our HTML document. This is a <canvas> element the renderer uses to display the scene to us.
+
+"That's all good, but where's that cube you promised?" Let's add it now.
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
+To create a cube, we need a BoxGeometry. This is an object that contains all the points (vertices) and fill (faces) of the cube. We'll explore this more in the future.
+
+In addition to the geometry, we need a material to color it. Three.js comes with several materials, but we'll stick to the MeshBasicMaterial for now. All materials take an object of properties which will be applied to them. To keep things very simple, we only supply a color attribute of 0x00ff00, which is green. This works the same way that colors work in CSS or Photoshop (hex colors).
+
+The third thing we need is a Mesh. A mesh is an object that takes a geometry, and applies a material to it, which we then can insert to our scene, and move freely around.
+
+By default, when we call scene.add(), the thing we add will be added to the coordinates (0,0,0). This would cause both the camera and the cube to be inside each other. To avoid this, we simply move the camera out a bit.
+
+Rendering the scene
+If you copied the code from above into the main.js file we created earlier, you wouldn't be able to see anything. This is because we're not actually rendering anything yet. For that, we need what's called a render or animation loop.
+
+function animate() {
+	renderer.render( scene, camera );
+}
+renderer.setAnimationLoop( animate );
+This will create a loop that causes the renderer to draw the scene every time the screen is refreshed (on a typical screen this means 60 times per second). If you're new to writing games in the browser, you might say "why don't we just create a setInterval ?" The thing is - we could, but requestAnimationFrame which is internally used in WebGLRenderer has a number of advantages. Perhaps the most important one is that it pauses when the user navigates to another browser tab, hence not wasting their precious processing power and battery life.
+
+Animating the cube
+If you insert all the code above into the file you created before we began, you should see a green box. Let's make it all a little more interesting by rotating it.
+
+Add the following code right above the renderer.render call in your animate function:
+
+cube.rotation.x += 0.01;
+cube.rotation.y += 0.01;
+This will be run every frame (normally 60 times per second), and give the cube a nice rotation animation. Basically, anything you want to move or change while the app is running has to go through the animation loop. You can of course call other functions from there, so that you don't end up with an animate function that's hundreds of lines.
+
+The result
+Congratulations! You have now completed your first three.js application. It's simple, but you have to start somewhere.
+
+The full code is available below and as an editable live example. Play around with it to get a better understanding of how it works.
+
+index.html —
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script type="module" src="/main.js"></script>
+	</body>
+</html>
+main.js —
+
+import * as THREE from 'three';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setAnimationLoop( animate );
+document.body.appendChild( renderer.domElement );
+
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const cube = new THREE.Mesh( geometry, material );
+scene.add( cube );
+
+camera.position.z = 5;
+
+function animate() {
+
+	cube.rotation.x += 0.01;
+	cube.rotation.y += 0.01;
+
+	renderer.render( scene, camera );
+
+}
+WebGL compatibility check
+Even though this is becoming less and less of a problem, some devices or browsers may still not support WebGL 2. The following method allows you to check if it is supported and display a message to the user if it is not. Import the WebGL support detection module, and run the following before attempting to render anything.
+
+import WebGL from 'three/addons/capabilities/WebGL.js';
+
+if ( WebGL.isWebGL2Available() ) {
+
+	// Initiate function or other initializations here
+	animate();
+
+} else {
+
+	const warning = WebGL.getWebGL2ErrorMessage();
+	document.getElementById( 'container' ).appendChild( warning );
+
+}
+Drawing lines
+Let's say you want to draw a line or a circle, not a wireframe Mesh. First we need to set up the renderer, scene and camera (see the Creating a scene page).
+
+Here is the code that we will use:
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+camera.position.set( 0, 0, 100 );
+camera.lookAt( 0, 0, 0 );
+
+const scene = new THREE.Scene();
+Next thing we will do is define a material. For lines we have to use LineBasicMaterial or LineDashedMaterial.
+
+//create a blue LineBasicMaterial
+const material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+After material we will need a geometry with some vertices:
+
+const points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+Note that lines are drawn between each consecutive pair of vertices, but not between the first and last (the line is not closed.)
+
+Now that we have points for two lines and a material, we can put them together to form a line.
+
+const line = new THREE.Line( geometry, material );
+All that's left is to add it to the scene and call render.
+
+scene.add( line );
+renderer.render( scene, camera );
+You should now be seeing an arrow pointing upwards, made from two blue lines.
+
+Creating text
+There are often times when you might need to use text in your three.js application - here are a couple of ways that you can do so.
+
+1. DOM + CSS
+Using HTML is generally the easiest and fastest manner to add text. This is the method used for descriptive overlays in most three.js examples.
+
+You can add content to a
+
+<div id="info">Description</div>
+and use CSS markup to position absolutely at a position above all others with a z-index especially if you are running three.js full screen.
+
+#info {
+	position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+2. Use CSS2DRenderer or CSS3DRenderer
+Use these renderers to draw high-quality text contained in DOM elements to your three.js scene. This is similar to 1. except that with these renderers elements can be integrated more tightly and dynamically into the scene.
+
+3. Draw text to canvas and use as a Texture
+Use this method if you wish to draw text easily on a plane in your three.js scene.
+
+4. Create a model in your favourite 3D application and export to three.js
+Use this method if you prefer working with your 3d applications and importing the models to three.js.
+
+5. Procedural Text Geometry
+If you prefer to work purely in THREE.js or to create procedural and dynamic 3D text geometries, you can create a mesh whose geometry is an instance of THREE.TextGeometry:
+
+new THREE.TextGeometry( text, parameters );
+
+In order for this to work, however, your TextGeometry will need an instance of THREE.Font to be set on its "font" parameter. See the TextGeometry page for more info on how this can be done, descriptions of each accepted parameter, and a list of the JSON fonts that come with the THREE.js distribution itself.
+
+Examples
+WebGL / geometry / text
+WebGL / shadowmap
+
+If Typeface is down, or you want to use a font that is not there, there's a tutorial with a python script for blender that allows you to export text to Three.js's JSON format: http://www.jaanga.com/2012/03/blender-to-threejs-create-3d-text-with.html
+
+6. Bitmap Fonts
+BMFonts (bitmap fonts) allow batching glyphs into a single BufferGeometry. BMFont rendering supports word-wrapping, letter spacing, kerning, signed distance fields with standard derivatives, multi-channel signed distance fields, multi-texture fonts, and more. See three-mesh-ui or three-bmfont-text.
+
+Stock fonts are available in projects like A-Frame Fonts, or you can create your own from any .TTF font, optimizing to include only characters required for a project.
+
+Some helpful tools:
+
+msdf-bmfont-web (web-based)
+msdf-bmfont-xml (commandline)
+hiero (desktop app)
+7. Troika Text
+The troika-three-text package renders quality antialiased text using a similar technique as BMFonts, but works directly with any .TTF or .WOFF font file so you don't have to pregenerate a glyph texture offline. It also adds capabilities including:
+
+Effects like strokes, drop shadows, and curvature
+The ability to apply any three.js Material, even a custom ShaderMaterial
+Support for font ligatures, scripts with joined letters, and right-to-left/bidirectional layout
+Optimization for large amounts of dynamic text, performing most work off the main thread in a web worker
+Loading 3D models
+3D models are available in hundreds of file formats, each with different purposes, assorted features, and varying complexity. Although three.js provides many loaders, choosing the right format and workflow will save time and frustration later on. Some formats are difficult to work with, inefficient for realtime experiences, or simply not fully supported at this time.
+
+This guide provides a workflow recommended for most users, and suggestions for what to try if things don't go as expected.
+
+Before we start
+If you're new to running a local server, begin with installation first. Many common errors viewing 3D models can be avoided by hosting files correctly.
+
+Recommended workflow
+Where possible, we recommend using glTF (GL Transmission Format). Both .GLB and .GLTF versions of the format are well supported. Because glTF is focused on runtime asset delivery, it is compact to transmit and fast to load. Features include meshes, materials, textures, skins, skeletons, morph targets, animations, lights, and cameras.
+
+Public-domain glTF files are available on sites like Sketchfab, or various tools include glTF export:
+
+Blender by the Blender Foundation
+Substance Painter by Allegorithmic
+Modo by Foundry
+Toolbag by Marmoset
+Houdini by SideFX
+Cinema 4D by MAXON
+COLLADA2GLTF by the Khronos Group
+FBX2GLTF by Facebook
+OBJ2GLTF by Analytical Graphics Inc
+…and many more
+If your preferred tools do not support glTF, consider requesting glTF export from the authors, or posting on the glTF roadmap thread.
+
+When glTF is not an option, popular formats such as FBX, OBJ, or COLLADA are also available and regularly maintained.
+
+Loading
+Only a few loaders (e.g. ObjectLoader) are included by default with three.js — others should be added to your app individually.
+
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+Once you've imported a loader, you're ready to add a model to your scene. Syntax varies among different loaders — when using another format, check the examples and documentation for that loader. For glTF, usage with global scripts would be:
+
+const loader = new GLTFLoader();
+
+loader.load( 'path/to/model.glb', function ( gltf ) {
+
+	scene.add( gltf.scene );
+
+}, undefined, function ( error ) {
+
+	console.error( error );
+
+} );
+See GLTFLoader documentation for further details.
+
+Troubleshooting
+You've spent hours modeling an artisanal masterpiece, you load it into the webpage, and — oh no! 😭 It's distorted, miscolored, or missing entirely. Start with these troubleshooting steps:
+
+Check the JavaScript console for errors, and make sure you've used an onError callback when calling .load() to log the result.
+View the model in another application. For glTF, drag-and-drop viewers are available for three.js and babylon.js. If the model appears correctly in one or more applications, file a bug against three.js. If the model cannot be shown in any application, we strongly encourage filing a bug with the application used to create the model.
+Try scaling the model up or down by a factor of 1000. Many models are scaled differently, and large models may not appear if the camera is inside the model.
+Try to add and position a light source. The model may be hidden in the dark.
+Look for failed texture requests in the network tab, like "C:\\Path\To\Model\texture.jpg". Use paths relative to your model instead, such as images/texture.jpg — this may require editing the model file in a text editor.
+Asking for help
+If you've gone through the troubleshooting process above and your model still isn't working, the right approach to asking for help will get you to a solution faster. Post a question on the three.js forum and, whenever possible, include your model (or a simpler model with the same problem) in any formats you have available. Include enough information for someone else to reproduce the issue quickly — ideally, a live demo.
+
+Libraries and Plugins
+Listed here are externally developed compatible libraries and plugins for three.js. This list and the associated packages are maintained by the community and not guaranteed to be up to date. If you'd like to update this list make a PR!
+
+Physics
+Oimo.js
+enable3d
+ammo.js
+cannon-es
+rapier
+Jolt
+Postprocessing
+In addition to the official three.js postprocessing effects, support for some additional effects and frameworks are available through external libraries.
+
+postprocessing
+Intersection and Raycast Performance
+three-mesh-bvh
+Path Tracing
+three-gpu-pathtracer
+File Formats
+In addition to the official three.js loaders, support for some additional formats is available through external libraries.
+
+urdf-loader
+3d-tiles-renderer-js
+WebWorker OBJLoader
+IFC.js
+Geometry
+THREE.MeshLine
+3D Text and Layout
+troika-three-text
+three-mesh-ui
+Particle Systems
+three.quarks
+three-nebula
+Inverse Kinematics
+THREE.IK
+fullik
+closed-chain-ik
+Game AI
+yuka
+three-pathfinding
+recast-navigation-js
+Wrappers and Frameworks
+A-Frame
+Lume - HTML elements for 3D graphics built on Three.
+react-three-fiber - React components for 3D graphics built on Three.
+threepipe - A versatile 3D viewer framework using three.js for rendering.
+ECSY
+Threlte - Svelte components for 3D graphics built on Three.
+Needle Engine
+tresjs - Vue components for 3D graphics built on Three.
+Giro3D - Versatile framework built on Three for visualizing and interacting with Geospatial 2D, 2.5D and 3D data.
+Mattercraft - Browser-based visual editor for AR, WebXR and 3D web content, built on three.js with real-time preview and physics engine.
+FAQ
+Which 3D model format is best supported?
+The recommended format for importing and exporting assets is glTF (GL Transmission Format). Because glTF is focused on runtime asset delivery, it is compact to transmit and fast to load.
+
+three.js provides loaders for many other popular formats like FBX, Collada or OBJ as well. Nevertheless, you should always try to establish a glTF based workflow in your projects first. For more information, see loading 3D models.
+
+Why are there meta viewport tags in examples?
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+These tags control viewport size and scale for mobile browsers (where page content may be rendered at different size than visible viewport).
+
+Safari: Using the Viewport
+
+MDN: Using the viewport meta tag
+
+How can scene scale be preserved on resize?
+We want all objects, regardless of their distance from the camera, to appear the same size, even as the window is resized. The key equation to solving this is this formula for the visible height at a given distance:
+visible_height = 2 * Math.tan( ( Math.PI / 180 ) * camera.fov / 2 ) * distance_from_camera;
+If we increase the window height by a certain percentage, then what we want is the visible height at all distances to increase by the same percentage. This can not be done by changing the camera position. Instead you have to change the camera field-of-view. Example.
+
+Why is part of my object invisible?
+This could be because of face culling. Faces have an orientation that decides which side is which. And the culling removes the backside in normal circumstances. To see if this is your problem, change the material side to THREE.DoubleSide.
+material.side = THREE.DoubleSide
+
+Why does three.js sometimes return strange results for invalid inputs?
+For performance reasons, three.js doesn't validate inputs in most cases. It's your app's responsibility to make sure that all inputs are valid.
+
+Can I use three.js in Node.js?
+Because three.js is built for the web, it depends on browser and DOM APIs that don't always exist in Node.js. Some of these issues can be avoided by using shims like headless-gl and jsdom-global, or by replacing components like TextureLoader with custom alternatives. Other DOM APIs may be deeply intertwined with the code that uses them, and will be harder to work around. We welcome simple and maintainable pull requests to improve Node.js support, but recommend opening an issue to discuss your improvements first.
+

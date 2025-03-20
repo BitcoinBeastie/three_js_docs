@@ -1,0 +1,126 @@
+Fog
+This class contains the parameters that define linear fog, i.e., that grows linearly denser with the distance.
+
+Code Example
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog( 0xcccccc, 10, 15 );
+Constructor
+Fog( color : Integer, near : Float, far : Float )
+The color parameter is passed to the Color constructor to set the color property. Color can be a hexadecimal integer or a CSS-style string.
+
+Properties
+.isFog : Boolean
+Read-only flag to check if a given object is of type Fog.
+
+.name : String
+Optional name of the object (doesn't need to be unique). Default is an empty string.
+
+.color : Color
+Fog color. Example: If set to black, far away objects will be rendered black.
+
+.near : Float
+The minimum distance to start applying fog. Objects that are less than 'near' units from the active camera won't be affected by fog.
+
+Default is 1.
+
+.far : Float
+The maximum distance at which fog stops being calculated and applied. Objects that are more than 'far' units away from the active camera won't be affected by fog.
+
+Default is 1000.
+
+Methods
+.clone () : Fog
+Returns a new fog instance with the same parameters as this one.
+
+.toJSON () : Object
+Return fog data in JSON format.
+
+Source
+src/scenes/Fog.js
+
+FogExp2
+This class contains the parameters that define exponential squared fog, which gives a clear view near the camera and a faster than exponentially densening fog farther from the camera.
+
+Code Example
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+Constructor
+FogExp2( color : Integer, density : Float )
+The color parameter is passed to the Color constructor to set the color property. Color can be a hexadecimal integer or a CSS-style string.
+
+Properties
+.isFogExp2 : Boolean
+Read-only flag to check if a given object is of type FogExp2.
+
+.name : String
+Optional name of the object (doesn't need to be unique). Default is an empty string.
+
+.color : Color
+Fog color. Example: If set to black, far away objects will be rendered black.
+
+.density : Float
+Defines how fast the fog will grow dense.
+
+Default is 0.00025.
+
+Methods
+.clone () : FogExp2
+Returns a new FogExp2 instance with the same parameters as this one.
+
+.toJSON () : Object
+Return FogExp2 data in JSON format.
+
+Source
+src/scenes/FogExp2.js
+
+Object3D →
+Scene
+Scenes allow you to set up what is to be rendered and where by three.js. This is where you place objects, lights and cameras.
+
+Constructor
+Scene()
+Create a new scene object.
+
+Properties
+.background : Object
+Defines the background of the scene. Default is null. Valid inputs are:
+
+A Color for defining a uniform colored background.
+A Texture for defining a (flat) textured background.
+Texture cubes (CubeTexture) or equirectangular textures for defining a skybox.
+Note: Any camera related configurations like zoom or view are ignored.
+.backgroundBlurriness : Float
+Sets the blurriness of the background. Only influences environment maps assigned to Scene.background. Valid input is a float between 0 and 1. Default is 0.
+
+.backgroundIntensity : Float
+Attenuates the color of the background. Only applies to background textures. Default is 1.
+
+.backgroundRotation : Euler
+The rotation of the background in radians. Only influences environment maps assigned to Scene.background. Default is (0,0,0).
+
+.environment : Texture
+Sets the environment map for all physical materials in the scene. However, it's not possible to overwrite an existing texture assigned to MeshStandardMaterial.envMap. Default is null.
+
+.environmentIntensity : Float
+Attenuates the color of the environment. Only influences environment maps assigned to Scene.environment. Default is 1.
+
+.environmentRotation : Euler
+The rotation of the environment map in radians. Only influences physical materials in the scene when .environment is used. Default is (0,0,0).
+
+.fog : Fog
+A fog instance defining the type of fog that affects everything rendered in the scene. Default is null.
+
+.isScene : Boolean
+Read-only flag to check if a given object is of type Scene.
+
+.overrideMaterial : Material
+Forces everything in the scene to be rendered with the defined material. Default is null.
+
+Methods
+.toJSON ( meta : Object ) : Object
+meta -- object containing metadata such as textures or images for the scene.
+Convert the scene to three.js JSON Object/Scene format.
+
+Source
+src/scenes/Scene.js
+

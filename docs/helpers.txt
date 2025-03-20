@@ -1,0 +1,550 @@
+Object3D →
+ArrowHelper
+An 3D arrow object for visualizing directions.
+
+Code Example
+const dir = new THREE.Vector3( 1, 2, 0 );
+
+//normalize the direction vector (convert to vector of length 1)
+dir.normalize();
+
+const origin = new THREE.Vector3( 0, 0, 0 );
+const length = 1;
+const hex = 0xffff00;
+
+const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+scene.add( arrowHelper );
+Examples
+WebGL / shadowmesh
+
+Constructor
+ArrowHelper(dir : Vector3, origin : Vector3, length : Number, hex : Number, headLength : Number, headWidth : Number )
+dir -- direction from origin. Must be a unit vector.
+origin -- Point at which the arrow starts.
+length -- length of the arrow. Default is 1.
+hex -- hexadecimal value to define color. Default is 0xffff00.
+headLength -- The length of the head of the arrow. Default is 0.2 * length.
+headWidth -- The width of the head of the arrow. Default is 0.2 * headLength.
+
+Properties
+See the base Object3D class for common properties.
+
+.line : Line
+Contains the line part of the arrowHelper.
+
+.cone : Mesh
+Contains the cone part of the arrowHelper.
+
+Methods
+See the base Object3D class for common methods.
+
+.setColor (color : Color) : undefined
+color -- The desired color.
+
+Sets the color of the arrowHelper.
+
+.setLength (length : Number, headLength : Number, headWidth : Number) : undefined
+length -- The desired length.
+headLength -- The length of the head of the arrow.
+headWidth -- The width of the head of the arrow.
+
+Sets the length of the arrowhelper.
+
+.setDirection (dir : Vector3) : undefined
+dir -- The desired direction. Must be a unit vector.
+
+Sets the direction of the arrowhelper.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/ArrowHelper.js
+
+Object3D → Line → LineSegments →
+AxesHelper
+An axis object to visualize the 3 axes in a simple way.
+The X axis is red. The Y axis is green. The Z axis is blue.
+
+Code Example
+const axesHelper = new THREE.AxesHelper( 5 );
+scene.add( axesHelper );
+Examples
+WebGL / buffergeometry / compression
+WebGL / geometry / convex
+WebGL / loader / nrrd
+
+Constructor
+AxesHelper( size : Number )
+size -- (optional) size of the lines representing the axes. Default is 1.
+
+Properties
+See the base LineSegments class for common properties.
+
+Methods
+See the base LineSegments class for common methods.
+
+.setColors ( xAxisColor : Color, yAxisColor : Color, zAxisColor : Color ) : this
+Sets the axes colors to xAxisColor, yAxisColor, zAxisColor.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/AxesHelper.js
+
+Object3D → Line → LineSegments →
+BoxHelper
+Helper object to graphically show the world-axis-aligned bounding box around an object. The actual bounding box is handled with Box3, this is just a visual helper for debugging. It can be automatically resized with the BoxHelper.update method when the object it's created from is transformed. Note that the object must have a BufferGeometry for this to work, so it won't work with Sprites.
+
+Code Example
+const sphere = new THREE.SphereGeometry();
+const object = new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( 0xff0000 ) );
+const box = new THREE.BoxHelper( object, 0xffff00 );
+scene.add( box );
+Examples
+WebGL / helpers
+WebGL / loader / nrrd
+WebGL / buffergeometry / drawrange
+
+Constructor
+BoxHelper( object : Object3D, color : Color )
+object -- (optional) the object3D to show the world-axis-aligned boundingbox.
+color -- (optional) hexadecimal value that defines the box's color. Default is 0xffff00.
+
+Creates a new wireframe box that bounds the passed object. Internally this uses Box3.setFromObject to calculate the dimensions. Note that this includes any children.
+
+Properties
+See the base LineSegments class for common properties.
+
+Methods
+See the base LineSegments class for common methods.
+
+.update () : undefined
+Updates the helper's geometry to match the dimensions of the object, including any children. See Box3.setFromObject.
+
+.setFromObject ( object : Object3D ) : this
+object - Object3D to create the helper of.
+
+Updates the wireframe box for the passed object.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/BoxHelper.js
+
+Object3D → Line → LineSegments →
+Box3Helper
+Helper object to visualize a Box3.
+
+Code Example
+const box = new THREE.Box3();
+box.setFromCenterAndSize( new THREE.Vector3( 1, 1, 1 ), new THREE.Vector3( 2, 1, 3 ) );
+
+const helper = new THREE.Box3Helper( box, 0xffff00 );
+scene.add( helper );
+Constructor
+Box3Helper( box : Box3, color : Color )
+box -- the Box3 to show.
+color -- (optional) the box's color. Default is 0xffff00.
+
+Creates a new wireframe box that represents the passed Box3.
+
+Properties
+See the base LineSegments class for common properties.
+
+.box : Box3
+The Box3 being visualized.
+
+Methods
+See the base LineSegments class for common methods.
+
+.updateMatrixWorld ( force : Boolean ) : undefined
+This overrides the method in the base Object3D class so that it also updates the wireframe box to the extent of the .box property.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/Box3Helper.js
+
+Object3D → Line → LineSegments →
+CameraHelper
+This helps with visualizing what a camera contains in its frustum. It visualizes the frustum of a camera using a LineSegments.
+
+CameraHelper must be a child of the scene.
+
+Code Example
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const helper = new THREE.CameraHelper( camera );
+scene.add( helper );
+Examples
+WebGL / camera
+WebGL / extrude / splines
+
+Constructor
+CameraHelper( camera : Camera )
+camera -- The camera to visualize.
+
+This create a new CameraHelper for the specified camera.
+
+Properties
+See the base LineSegments class for common properties.
+
+.camera : Camera
+The camera being visualized.
+
+.pointMap : Object
+This contains the points used to visualize the camera.
+
+.matrix : Object
+Reference to the camera.matrixWorld.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the camera's matrixWorld.
+
+Methods
+See the base LineSegments class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.setColors ( frustum : Color, cone : Color, up : Color, target : Color, cross : Color ) : this
+Defines the colors of the helper.
+
+.update () : undefined
+Updates the helper based on the projectionMatrix of the camera.
+
+Source
+src/helpers/CameraHelper.js
+
+Object3D →
+DirectionalLightHelper
+Helper object to assist with visualizing a DirectionalLight's effect on the scene. This consists of plane and a line representing the light's position and direction.
+
+Code Example
+const light = new THREE.DirectionalLight( 0xFFFFFF );
+scene.add( light );
+
+const helper = new THREE.DirectionalLightHelper( light, 5 );
+scene.add( helper );
+Constructor
+DirectionalLightHelper( light : DirectionalLight, size : Number, color : Hex )
+light-- The light to be visualized.
+
+size -- (optional) dimensions of the plane. Default is 1.
+
+color -- (optional) if this is not the set the helper will take the color of the light.
+
+Properties
+See the base Object3D class for common properties.
+
+.lightPlane : Line
+Contains the line mesh showing the location of the directional light.
+
+.light : DirectionalLight
+Reference to the directionalLight being visualized.
+
+.matrix : Object
+Reference to the light's matrixWorld.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the light's matrixWorld.
+
+.color : hex
+The color parameter passed in the constructor. Default is undefined. If this is changed, the helper's color will update the next time update is called.
+
+Methods
+See the base Object3D class for common properties.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.update () : undefined
+Updates the helper to match the position and direction of the directionalLight being visualized.
+
+Source
+src/helpers/DirectionalLightHelper.js
+
+Object3D → Line → LineSegments →
+GridHelper
+The GridHelper is an object to define grids. Grids are two-dimensional arrays of lines.
+
+Code Example
+const size = 10;
+const divisions = 10;
+
+const gridHelper = new THREE.GridHelper( size, divisions );
+scene.add( gridHelper );
+Examples
+WebGL / helpers
+
+Constructor
+GridHelper( size : number, divisions : Number, colorCenterLine : Color, colorGrid : Color )
+size -- The size of the grid. Default is 10.
+divisions -- The number of divisions across the grid. Default is 10.
+colorCenterLine -- The color of the centerline. This can be a Color, a hexadecimal value and an CSS-Color name. Default is 0x444444
+colorGrid -- The color of the lines of the grid. This can be a Color, a hexadecimal value and an CSS-Color name. Default is 0x888888
+
+Creates a new GridHelper of size 'size' and divided into 'divisions' segments per side. Colors are optional.
+
+Methods
+See the base LineSegments class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/GridHelper.js
+
+Object3D → Line → LineSegments →
+PolarGridHelper
+The PolarGridHelper is an object to define polar grids. Grids are two-dimensional arrays of lines.
+
+Code Example
+const radius = 10;
+const sectors = 16;
+const rings = 8;
+const divisions = 64;
+
+const helper = new THREE.PolarGridHelper( radius, sectors, rings, divisions );
+scene.add( helper );
+Examples
+WebGL / helpers
+
+Constructor
+PolarGridHelper( radius : Number, sectors : Number, rings : Number, divisions : Number, color1 : Color, color2 : Color )
+radius -- The radius of the polar grid. This can be any positive number. Default is 10.
+sectors -- The number of sectors the grid will be divided into. This can be any positive integer. Default is 16.
+rings -- The number of rings. This can be any positive integer. Default is 8.
+divisions -- The number of line segments used for each circle. This can be any positive integer that is 3 or greater. Default is 64.
+color1 -- The first color used for grid elements. This can be a Color, a hexadecimal value and an CSS-Color name. Default is 0x444444
+color2 -- The second color used for grid elements. This can be a Color, a hexadecimal value and an CSS-Color name. Default is 0x888888
+
+Creates a new PolarGridHelper of radius 'radius' with 'sectors' number of sectors and 'rings' number of rings, where each circle is smoothed into 'divisions' number of line segments. Colors are optional.
+
+Methods
+See the base LineSegments class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/PolarGridHelper.js
+
+Object3D →
+HemisphereLightHelper
+Creates a visual aid consisting of a spherical Mesh for a HemisphereLight.
+
+Code Example
+const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+const helper = new THREE.HemisphereLightHelper( light, 5 );
+scene.add( helper );
+Constructor
+HemisphereLightHelper( light : HemisphereLight, sphereSize : Number, color : Hex )
+light -- The light being visualized.
+
+size -- The size of the mesh used to visualize the light.
+
+color -- (optional) if this is not the set the helper will take the color of the light.
+
+Properties
+See the base Object3D class for common properties.
+
+.light : HemisphereLight
+Reference to the HemisphereLight being visualized.
+
+.matrix : Object
+Reference to the hemisphereLight's matrixWorld.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the hemisphereLight's matrixWorld.
+
+.color : hex
+The color parameter passed in the constructor. Default is undefined. If this is changed, the helper's color will update the next time update is called.
+
+Methods
+See the base Object3D class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.update () : undefined
+Updates the helper to match the position and direction of the .light.
+
+Source
+src/helpers/HemisphereLightHelper.js
+
+Object3D → Line → LineSegments →
+PlaneHelper
+Helper object to visualize a Plane.
+
+Code Example
+const plane = new THREE.Plane( new THREE.Vector3( 1, 1, 0.2 ), 3 );
+const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
+scene.add( helper );
+Constructor
+PlaneHelper( plane : Plane, size : Float, hex : Color )
+plane -- the plane to visualize.
+size -- (optional) side length of plane helper. Default is 1.
+color -- (optional) the color of the helper. Default is 0xffff00.
+
+Creates a new wireframe representation of the passed plane.
+
+Properties
+See the base Line class for common properties.
+
+.plane : Plane
+The plane being visualized.
+
+.size : Float
+The side lengths of plane helper.
+
+Methods
+See the base LineSegments class for common methods.
+
+.updateMatrixWorld ( force : Boolean ) : undefined
+This overrides the method in the base Object3D class so that it also updates the helper object according to the .plane and .size properties.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/PlaneHelper.js
+
+Object3D → Mesh →
+PointLightHelper
+This displays a helper object consisting of a spherical Mesh for visualizing a PointLight.
+
+Code Example
+const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
+pointLight.position.set( 10, 10, 10 );
+scene.add( pointLight );
+
+const sphereSize = 1;
+const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+scene.add( pointLightHelper );
+Examples
+WebGL / helpers
+
+Constructor
+PointLightHelper( light : PointLight, sphereSize : Float, color : Hex )
+light -- The light to be visualized.
+
+sphereSize -- (optional) The size of the sphere helper. Default is 1.
+
+color -- (optional) if this is not the set the helper will take the color of the light.
+
+Properties
+See the base Mesh class for common properties.
+
+.light : PointLight
+The PointLight that is being visualized.
+
+.matrix : Object
+Reference to the pointLight's matrixWorld.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the pointLight's matrixWorld.
+
+.color : hex
+The color parameter passed in the constructor. Default is undefined. If this is changed, the helper's color will update the next time update is called.
+
+Methods
+See the base Mesh class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.update () : undefined
+Updates the helper to match the position of the .light.
+
+Source
+src/helpers/PointLightHelper.js
+
+Object3D → Line → LineSegments →
+SkeletonHelper
+A helper object to assist with visualizing a Skeleton. The helper is rendered using a LineBasicMaterial.
+
+Code Example
+const helper = new THREE.SkeletonHelper( skinnedMesh );
+scene.add( helper );
+Examples
+WebGL / animation / skinning / blending
+WebGL / animation / skinning / morph
+WebGL / loader / bvh
+
+Constructor
+SkeletonHelper( object : Object3D )
+object -- Usually an instance of SkinnedMesh. However, any instance of Object3D can be used if it represents a hierarchy of Bones (via Object3D.children).
+
+Properties
+.bones : Array
+The list of bones that the helper renders as Lines.
+
+.isSkeletonHelper : Boolean
+Read-only flag to check if a given object is of type SkeletonHelper.
+
+.root : Object3D
+The object passed in the constructor.
+
+Methods
+See the base LineSegments class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/helpers/SkeletonHelper.js
+
+Object3D →
+SpotLightHelper
+This displays a cone shaped helper object for a SpotLight.
+
+Code Example
+const spotLight = new THREE.SpotLight( 0xffffff );
+spotLight.position.set( 10, 10, 10 );
+scene.add( spotLight );
+
+const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+scene.add( spotLightHelper );
+Examples
+WebGL/ lights / spotlights
+
+Constructor
+SpotLightHelper( light : SpotLight, color : Hex )
+light -- The SpotLight to be visualized.
+
+color -- (optional) if this is not the set the helper will take the color of the light.
+
+Properties
+See the base Object3D class for common properties.
+
+.cone : LineSegments
+LineSegments used to visualize the light.
+
+.light : SpotLight
+Reference to the SpotLight being visualized.
+
+.matrix : Object
+Reference to the spotLight's matrixWorld.
+
+.matrixAutoUpdate : Object
+See Object3D.matrixAutoUpdate. Set to false here as the helper is using the spotLight's matrixWorld.
+
+.color : hex
+The color parameter passed in the constructor. Default is undefined. If this is changed, the helper's color will update the next time update is called.
+
+Methods
+See the base Object3D class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.update () : undefined
+Updates the light helper.
+
+Source
+src/helpers/SpotLightHelper.js
+

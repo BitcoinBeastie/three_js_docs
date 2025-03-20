@@ -1,0 +1,1393 @@
+BufferAttribute
+This class stores data for an attribute (such as vertex positions, face indices, normals, colors, UVs, and any custom attributes ) associated with a BufferGeometry, which allows for more efficient passing of data to the GPU. See that page for details and a usage example. When working with vector-like data, the .fromBufferAttribute( attribute, index ) helper methods on Vector2, Vector3, Vector4, and Color classes may be helpful.
+
+Constructor
+BufferAttribute( array : TypedArray, itemSize : Integer, normalized : Boolean )
+array -- Must be a TypedArray. Used to instantiate the buffer.
+This array should have
+itemSize * numVertices
+elements, where numVertices is the number of vertices in the associated BufferGeometry.
+
+itemSize -- the number of values of the array that should be associated with a particular vertex. For instance, if this attribute is storing a 3-component vector (such as a position, normal, or color), then itemSize should be 3.
+
+normalized -- (optional) Applies to integer data only. Indicates how the underlying data in the buffer maps to the values in the GLSL code. For instance, if array is an instance of UInt16Array, and normalized is true, the values 0 - +65535 in the array data will be mapped to 0.0f - +1.0f in the GLSL attribute. An Int16Array (signed) would map from -32768 - +32767 to -1.0f - +1.0f. If normalized is false, the values will be converted to floats unmodified, i.e. 32767 becomes 32767.0f.
+
+Properties
+.array : TypedArray
+The array holding data stored in the buffer.
+
+.count : Integer
+Represents the number of items this buffer attribute stores. It is internally computed by dividing the array's length by the itemSize. Read-only property.
+
+.gpuType : Number
+Configures the bound GPU type for use in shaders. Either THREE.FloatType or THREE.IntType, default is THREE.FloatType. Note: this only has an effect for integer arrays and is not configurable for float arrays. For lower precision float types, see THREE.Float16BufferAttribute.
+
+.isBufferAttribute : Boolean
+Read-only flag to check if a given object is of type BufferAttribute.
+
+.id : Integer
+Unique number for this attribute instance.
+
+.itemSize : Integer
+The length of vectors that are being stored in the array.
+
+.name : String
+Optional name for this attribute instance. Default is an empty string.
+
+.needsUpdate : Boolean
+Flag to indicate that this attribute has changed and should be re-sent to the GPU. Set this to true when you modify the value of the array.
+
+Setting this to true also increments the version.
+
+.normalized : Boolean
+Indicates how the underlying data in the buffer maps to the values in the GLSL shader code. See the constructor above for details.
+
+.onUploadCallback : Function
+A callback function that is executed after the Renderer has transferred the attribute array data to the GPU.
+
+.updateRanges : Object
+Array of objects containing:
+start: Position at which to start update.
+count: The number of components to update.
+
+This can be used to only update some components of stored vectors (for example, just the component related to color). Use the addUpdateRange function to add ranges to this array.
+
+.usage : Usage
+Defines the intended usage pattern of the data store for optimization purposes. Corresponds to the usage parameter of WebGLRenderingContext.bufferData(). Default is StaticDrawUsage. See usage constants for all possible values.
+
+Note: After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
+
+.version : Integer
+A version number, incremented every time the needsUpdate property is set to true.
+
+Methods
+.applyMatrix3 ( m : Matrix3 ) : this
+Applies matrix m to every Vector3 element of this BufferAttribute.
+
+.applyMatrix4 ( m : Matrix4 ) : this
+Applies matrix m to every Vector3 element of this BufferAttribute.
+
+.applyNormalMatrix ( m : Matrix3 ) : this
+Applies normal matrix m to every Vector3 element of this BufferAttribute.
+
+.transformDirection ( m : Matrix4 ) : this
+Applies matrix m to every Vector3 element of this BufferAttribute, interpreting the elements as a direction vectors.
+
+.addUpdateRange ( start : Integer, count : Integer ) : this
+Adds a range of data in the data array to be updated on the GPU. Adds an object describing the range to the updateRanges array.
+
+.clearUpdateRanges () : this
+Clears the updateRanges array.
+
+.clone () : BufferAttribute
+Return a copy of this bufferAttribute.
+
+.copy ( bufferAttribute : BufferAttribute ) : this
+Copies another BufferAttribute to this BufferAttribute.
+
+.copyArray ( array ) : this
+Copy the array given here (which can be a normal array or TypedArray) into array.
+
+See TypedArray.set for notes on requirements if copying a TypedArray.
+
+.copyAt ( index1 : Integer, bufferAttribute : BufferAttribute, index2 : Integer ) : this
+Copy a vector from bufferAttribute[index2] to array[index1].
+
+.getComponent ( index : Integer, component : Integer ) : Number
+Returns the given component of the vector at the given index.
+
+.getX ( index : Integer ) : Number
+Returns the x component of the vector at the given index.
+
+.getY ( index : Integer ) : Number
+Returns the y component of the vector at the given index.
+
+.getZ ( index : Integer ) : Number
+Returns the z component of the vector at the given index.
+
+.getW ( index : Integer ) : Number
+Returns the w component of the vector at the given index.
+
+.onUpload ( callback : Function ) : this
+Sets the value of the onUploadCallback property.
+
+In the WebGL / Buffergeometry this is used to free memory after the buffer has been transferred to the GPU.
+
+.set ( value : Array, offset : Integer ) : this
+value -- an Array or TypedArray from which to copy values.
+offset -- (optional) index of the array at which to start copying.
+
+Calls TypedArray.set( value, offset ) on the array.
+
+In particular, see that page for requirements on value being a TypedArray.
+
+.setUsage ( value : Usage ) : this
+Set usage to value. See usage constants for all possible input values.
+
+Note: After the initial use of a buffer, its usage cannot be changed. Instead, instantiate a new one and set the desired usage before the next render.
+
+.setComponent ( index : Integer, component : Integer, value : Float ) : Number
+Sets the given component of the vector at the given index.
+
+.setX ( index : Integer, x : Float ) : this
+Sets the x component of the vector at the given index.
+
+.setY ( index : Integer, y : Float ) : this
+Sets the y component of the vector at the given index.
+
+.setZ ( index : Integer, z : Float ) : this
+Sets the z component of the vector at the given index.
+
+.setW ( index : Integer, w : Float ) : this
+Sets the w component of the vector at the given index.
+
+.setXY ( index : Integer, x : Float, y : Float ) : this
+Sets the x and y components of the vector at the given index.
+
+.setXYZ ( index : Integer, x : Float, y : Float, z : Float ) : this
+Sets the x, y and z components of the vector at the given index.
+
+.setXYZW ( index : Integer, x : Float, y : Float, z : Float, w : Float ) : this
+Sets the x, y, z and w components of the vector at the given index.
+
+Source
+src/core/BufferAttribute.js
+
+BufferGeometry
+A representation of mesh, line, or point geometry. Includes vertex positions, face indices, normals, colors, UVs, and custom attributes within buffers, reducing the cost of passing all this data to the GPU.
+
+To read and edit data in BufferGeometry attributes, see BufferAttribute documentation.
+
+Code Example
+const geometry = new THREE.BufferGeometry();
+
+// create a simple square shape. We duplicate the top left and bottom right
+// vertices because each vertex needs to appear once per triangle.
+const vertices = new Float32Array( [
+	-1.0, -1.0,  1.0, // v0
+	 1.0, -1.0,  1.0, // v1
+	 1.0,  1.0,  1.0, // v2
+
+	 1.0,  1.0,  1.0, // v3
+	-1.0,  1.0,  1.0, // v4
+	-1.0, -1.0,  1.0  // v5
+] );
+
+// itemSize = 3 because there are 3 values (components) per vertex
+geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+const mesh = new THREE.Mesh( geometry, material );
+Code Example (Index)
+const geometry = new THREE.BufferGeometry();
+
+const vertices = new Float32Array( [
+	-1.0, -1.0,  1.0, // v0
+	 1.0, -1.0,  1.0, // v1
+	 1.0,  1.0,  1.0, // v2
+	-1.0,  1.0,  1.0, // v3
+] );
+
+const indices = [
+	0, 1, 2,
+	2, 3, 0,
+];
+
+geometry.setIndex( indices );
+geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+const material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+const mesh = new THREE.Mesh( geometry, material );
+Examples
+Mesh with non-indexed faces
+Mesh with indexed faces
+Lines
+Indexed Lines
+Particles
+Raw Shaders
+
+Constructor
+BufferGeometry()
+This creates a new BufferGeometry. It also sets several properties to a default value.
+Properties
+.attributes : Object
+This hashmap has as id the name of the attribute to be set and as value the buffer to set it to. Rather than accessing this property directly, use .setAttribute and .getAttribute to access attributes of this geometry.
+
+.boundingBox : Box3
+Bounding box for the bufferGeometry, which can be calculated with .computeBoundingBox(). Default is null.
+
+.boundingSphere : Sphere
+Bounding sphere for the bufferGeometry, which can be calculated with .computeBoundingSphere(). Default is null.
+
+.drawRange : Object
+Determines the part of the geometry to render. This should not be set directly, instead use .setDrawRange. Default is
+{ start: 0, count: Infinity }
+For non-indexed BufferGeometry, count is the number of vertices to render. For indexed BufferGeometry, count is the number of indices to render.
+
+.groups : Array
+Split the geometry into groups, each of which will be rendered in a separate WebGL draw call. This allows an array of materials to be used with the geometry.
+
+Each group is an object of the form:
+{ start: Integer, count: Integer, materialIndex: Integer }
+where start specifies the first element in this draw call – the first vertex for non-indexed geometry, otherwise the first triangle index. Count specifies how many vertices (or indices) are included, and materialIndex specifies the material array index to use.
+
+Use .addGroup to add groups, rather than modifying this array directly.
+
+Every vertex and index must belong to exactly one group — groups must not share vertices or indices, and must not leave vertices or indices unused.
+
+.id : Integer
+Unique number for this bufferGeometry instance.
+
+.index : BufferAttribute
+Allows for vertices to be re-used across multiple triangles; this is called using "indexed triangles". Each triangle is associated with the indices of three vertices. This attribute therefore stores the index of each vertex for each triangular face. If this attribute is not set, the renderer assumes that each three contiguous positions represent a single triangle. Default is null.
+
+.isBufferGeometry : Boolean
+Read-only flag to check if a given object is of type BufferGeometry.
+
+.morphAttributes : Object
+Hashmap of BufferAttributes holding details of the geometry's morph targets.
+Note: Once the geometry has been rendered, the morph attribute data cannot be changed. You will have to call .dispose(), and create a new instance of BufferGeometry.
+
+.morphTargetsRelative : Boolean
+Used to control the morph target behavior; when set to true, the morph target data is treated as relative offsets, rather than as absolute positions/normals. Default is false.
+
+.name : String
+Optional name for this bufferGeometry instance. Default is an empty string.
+
+.userData : Object
+An object that can be used to store custom data about the BufferGeometry. It should not hold references to functions as these will not be cloned. Default is an empty object {}.
+
+.uuid : String
+UUID of this object instance. This gets automatically assigned and shouldn't be edited.
+
+Methods
+EventDispatcher methods are available on this class.
+
+.addGroup ( start : Integer, count : Integer, materialIndex : Integer ) : undefined
+Adds a group to this geometry; see the groups property for details.
+
+.applyMatrix4 ( matrix : Matrix4 ) : this
+Applies the matrix transform to the geometry.
+
+.applyQuaternion ( quaternion : Quaternion ) : this
+Applies the rotation represented by the quaternion to the geometry.
+
+.center () : this
+Center the geometry based on the bounding box.
+
+.clearGroups ( ) : undefined
+Clears all groups.
+
+.clone () : BufferGeometry
+Creates a clone of this BufferGeometry.
+
+.computeBoundingBox () : undefined
+Computes the bounding box of the geometry, and updates the .boundingBox attribute. The bounding box is not computed by the engine; it must be computed by your app. You may need to recompute the bounding box if the geometry vertices are modified.
+
+.computeBoundingSphere () : undefined
+Computes the bounding sphere of the geometry, and updates the .boundingSphere attribute. The engine automatically computes the bounding sphere when it is needed, e.g., for ray casting or view frustum culling. You may need to recompute the bounding sphere if the geometry vertices are modified.
+
+.computeTangents () : undefined
+Calculates and adds a tangent attribute to this geometry.
+The computation is only supported for indexed geometries and if position, normal, and uv attributes are defined. When using a tangent space normal map, prefer the MikkTSpace algorithm provided by BufferGeometryUtils.computeMikkTSpaceTangents instead.
+
+.computeVertexNormals () : undefined
+Computes vertex normals for the given vertex data. For indexed geometries, the method sets each vertex normal to be the average of the face normals of the faces that share that vertex. For non-indexed geometries, vertices are not shared, and the method sets each vertex normal to be the same as the face normal.
+
+.copy ( bufferGeometry : BufferGeometry ) : this
+Copies another BufferGeometry to this BufferGeometry.
+
+.deleteAttribute ( name : String ) : BufferAttribute
+Deletes the attribute with the specified name.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.getAttribute ( name : String ) : BufferAttribute
+Returns the attribute with the specified name.
+
+.getIndex () : BufferAttribute
+Return the .index buffer.
+
+.hasAttribute ( name : String ) : Boolean
+Returns true if the attribute with the specified name exists.
+
+.lookAt ( vector : Vector3 ) : this
+vector - A world vector to look at.
+
+Rotates the geometry to face a point in space. This is typically done as a one time operation, and not during a loop. Use Object3D.lookAt for typical real-time mesh usage.
+
+.normalizeNormals () : undefined
+Every normal vector in a geometry will have a magnitude of 1. This will correct lighting on the geometry surfaces.
+
+.rotateX ( radians : Float ) : this
+Rotate the geometry about the X axis. This is typically done as a one time operation, and not during a loop. Use Object3D.rotation for typical real-time mesh rotation.
+
+.rotateY ( radians : Float ) : this
+Rotate the geometry about the Y axis. This is typically done as a one time operation, and not during a loop. Use Object3D.rotation for typical real-time mesh rotation.
+
+.rotateZ ( radians : Float ) : this
+Rotate the geometry about the Z axis. This is typically done as a one time operation, and not during a loop. Use Object3D.rotation for typical real-time mesh rotation.
+
+.scale ( x : Float, y : Float, z : Float ) : this
+Scale the geometry data. This is typically done as a one time operation, and not during a loop. Use Object3D.scale for typical real-time mesh scaling.
+
+.setAttribute ( name : String, attribute : BufferAttribute ) : this
+Sets an attribute to this geometry. Use this rather than the attributes property, because an internal hashmap of .attributes is maintained to speed up iterating over attributes.
+
+.setDrawRange ( start : Integer, count : Integer ) : undefined
+Set the .drawRange property. For non-indexed BufferGeometry, count is the number of vertices to render. For indexed BufferGeometry, count is the number of indices to render.
+
+.setFromPoints ( points : Array ) : this
+Defines a geometry by creating a position attribute based on the given array of points. The array can hold instances of Vector2 or Vector3. When using two-dimensional data, the z coordinate for all vertices is set to 0.
+If the method is used with an existing position attribute, the vertex data are overwritten with the data from the array. The length of the array must match the vertex count.
+
+.setIndex ( index : BufferAttribute ) : this
+Set the .index buffer.
+
+.toJSON () : Object
+Convert the buffer geometry to three.js JSON Object/Scene format.
+
+.toNonIndexed () : BufferGeometry
+Return a non-index version of an indexed BufferGeometry.
+
+.translate ( x : Float, y : Float, z : Float ) : this
+Translate the geometry. This is typically done as a one time operation, and not during a loop. Use Object3D.position for typical real-time mesh translation.
+
+Source
+src/core/BufferGeometry.js
+
+Clock
+Object for keeping track of time. This uses performance.now.
+
+Constructor
+Clock( autoStart : Boolean )
+autoStart — (optional) whether to automatically start the clock when .getDelta() is called for the first time. Default is true.
+
+Properties
+.autoStart : Boolean
+If set, starts the clock automatically when .getDelta() is called for the first time. Default is true.
+
+.startTime : Float
+Holds the time at which the clock's start method was last called. Default is 0.
+
+.oldTime : Float
+Holds the time at which the clock's start, .getElapsedTime() or .getDelta() methods were last called. Default is 0.
+
+.elapsedTime : Float
+Keeps track of the total time that the clock has been running. Default is 0.
+
+.running : Boolean
+Whether the clock is running or not. Default is false.
+
+Methods
+.start () : undefined
+Starts clock. Also sets the .startTime and .oldTime to the current time, sets .elapsedTime to 0 and .running to true.
+
+.stop () : undefined
+Stops clock and sets oldTime to the current time.
+
+.getElapsedTime () : Float
+Get the seconds passed since the clock started and sets .oldTime to the current time.
+If .autoStart is true and the clock is not running, also starts the clock.
+
+.getDelta () : Float
+Get the seconds passed since the time .oldTime was set and sets .oldTime to the current time.
+If .autoStart is true and the clock is not running, also starts the clock.
+
+Source
+src/core/Clock.js
+
+EventDispatcher
+JavaScript events for custom objects.
+EventDispatcher on GitHub
+
+Code Example
+// Adding events to a custom object
+class Car extends EventDispatcher {
+	start() {
+		this.dispatchEvent( { type: 'start', message: 'vroom vroom!' } );
+	}
+};
+
+// Using events with the custom object
+const car = new Car();
+car.addEventListener( 'start', function ( event ) {
+	alert( event.message );
+} );
+
+car.start();
+Constructor
+EventDispatcher()
+Creates EventDispatcher object.
+
+Methods
+.addEventListener ( type : String, listener : Function ) : undefined
+type - The type of event to listen to.
+listener - The function that gets called when the event is fired.
+
+Adds a listener to an event type.
+
+.hasEventListener ( type : String, listener : Function ) : Boolean
+type - The type of event to listen to.
+listener - The function that gets called when the event is fired.
+
+Checks if listener is added to an event type.
+
+.removeEventListener ( type : String, listener : Function ) : undefined
+type - The type of the listener that gets removed.
+listener - The listener function that gets removed.
+
+Removes a listener from an event type.
+
+.dispatchEvent ( event : Object ) : undefined
+event - The event that gets fired.
+
+Fire an event type.
+
+Source
+src/core/EventDispatcher.js
+
+GLBufferAttribute
+This buffer attribute class does not construct a VBO. Instead, it uses whatever VBO is passed in constructor and can later be altered via the buffer property.
+
+It is required to pass additional params alongside the VBO. Those are: the GL context, the GL data type, the number of components per vertex, the number of bytes per component, and the number of vertices.
+
+The most common use case for this class is when some kind of GPGPU calculation interferes or even produces the VBOs in question.
+
+Constructor
+GLBufferAttribute( buffer : WebGLBuffer, type : GLenum, itemSize : Integer, elementSize : Integer, count : Integer )
+buffer — Must be a WebGLBuffer.
+type — One of WebGL Data Types.
+itemSize — The number of values of the array that should be associated with a particular vertex. For instance, if this attribute is storing a 3-component vector (such as a position, normal, or color), then itemSize should be 3.
+elementSize — 1, 2 or 4. The corresponding size (in bytes) for the given "type" param.
+
+gl.FLOAT: 4
+gl.UNSIGNED_SHORT: 2
+gl.SHORT: 2
+gl.UNSIGNED_INT: 4
+gl.INT: 4
+gl.BYTE: 1
+gl.UNSIGNED_BYTE: 1
+count — The expected number of vertices in VBO.
+Properties
+.buffer : WebGLBuffer
+The current WebGLBuffer instance.
+
+.count : Integer
+The expected number of vertices in VBO.
+
+.isGLBufferAttribute : Boolean
+Read-only. Always true.
+
+.itemSize : Integer
+How many values make up each item (vertex).
+
+.elementSize : Integer
+Stores the corresponding size in bytes for the current type property value.
+
+See above (constructor) for a list of known type sizes.
+
+.name : String
+Optional name for this attribute instance. Default is an empty string.
+
+.type : GLenum
+A WebGL Data Type describing the underlying VBO contents.
+
+Set this property together with elementSize. The recommended way is using the setType method.
+
+Methods
+.setBuffer ( buffer ) : this
+Sets the buffer property.
+
+.setType ( type, elementSize ) : this
+Sets the both type and elementSize properties.
+
+.setItemSize ( itemSize ) : this
+Sets the itemSize property.
+
+.setCount ( count ) : this
+Sets the count property.
+
+.version : Integer
+A version number, incremented every time the needsUpdate property is set to true.
+
+.needsUpdate : Boolean
+Default is false. Setting this to true increments version.
+
+Source
+src/core/GLBufferAttribute.js
+
+BufferAttribute →
+InstancedBufferAttribute
+An instanced version of BufferAttribute.
+
+Constructor
+InstancedBufferAttribute( array : TypedArray, itemSize : Integer, normalized : Boolean, meshPerAttribute : Number )
+Properties
+See BufferAttribute for inherited properties.
+
+.meshPerAttribute : Number
+Defines how often a value of this buffer attribute should be repeated. A value of one means that each value of the instanced attribute is used for a single instance. A value of two means that each value is used for two consecutive instances (and so on). Default is 1.
+
+Methods
+See BufferAttribute for inherited methods.
+
+Source
+src/core/InstancedBufferAttribute.js
+
+BufferGeometry →
+InstancedBufferGeometry
+An instanced version of BufferGeometry.
+
+Constructor
+InstancedBufferGeometry( )
+Properties
+See BufferGeometry for inherited properties.
+
+.instanceCount : Number
+Default is Infinity.
+
+.isInstancedBufferGeometry : Boolean
+Read-only flag to check if a given object is of type InstancedBufferGeometry.
+
+Methods
+See BufferGeometry for inherited methods.
+
+.copy ( source : InstancedBufferGeometry ) : this
+Copies the given InstancedBufferGeometry to this instance.
+
+Source
+src/core/InstancedBufferGeometry.js
+
+InterleavedBuffer →
+InstancedInterleavedBuffer
+An instanced version of InterleavedBuffer.
+
+Constructor
+InstancedInterleavedBuffer( array : TypedArray, itemSize : Integer, meshPerAttribute : Number )
+Properties
+See InterleavedBuffer for inherited properties.
+
+.meshPerAttribute : Number
+Default is 1.
+
+Methods
+See InterleavedBuffer for inherited methods.
+
+Source
+src/core/InstancedInterleavedBuffer.js
+
+InterleavedBuffer
+"Interleaved" means that multiple attributes, possibly of different types, (e.g., position, normal, uv, color) are packed into a single array buffer.
+
+An introduction into interleaved arrays can be found here: Interleaved array basics
+
+Examples
+webgl / buffergeometry / points / interleaved
+
+Constructor
+InterleavedBuffer( array : TypedArray, stride : Integer )
+array -- A typed array with a shared buffer. Stores the geometry data.
+stride -- The number of typed-array elements per vertex.
+
+Properties
+.array : Array
+A typed array with a shared buffer. Stores the geometry data.
+
+.stride : Integer
+The number of typed-array elements per vertex.
+
+.count : Integer
+Gives the total number of elements in the array.
+
+.updateRanges : Object
+Array of objects containing:
+start: Position at which to start update.
+count: The number of components to update.
+
+This can be used to only update some components of stored data. Use the addUpdateRange function to add ranges to this array.
+
+.uuid : String
+UUID of this instance. This gets automatically assigned, so this shouldn't be edited.
+
+.version : Integer
+A version number, incremented every time the needsUpdate property is set to true.
+
+.needsUpdate : Boolean
+Default is false. Setting this to true increments version.
+
+.usage : Usage
+Defines the intended usage pattern of the data store for optimization purposes. Corresponds to the usage parameter of WebGLRenderingContext.bufferData().
+
+Methods
+.addUpdateRange ( start : Integer, count : Integer ) : this
+Adds a range of data in the data array to be updated on the GPU. Adds an object describing the range to the updateRanges array.
+
+.clearUpdateRanges () : this
+Clears the updateRanges array.
+
+.copy ( source : InterleavedBuffer ) : this
+Copies another InterleavedBuffer to this InterleavedBuffer.
+
+.copyAt ( index1 : Integer, attribute : InterleavedBuffer, index2 : Integer ) : this
+Copies data from attribute[index2] to array[index1].
+
+.set ( value : TypedArray, offset : Integer ) : this
+value - The source (typed) array.
+offset - The offset into the target array at which to begin writing values from the source array. Default is 0.
+
+Stores multiple values in the buffer, reading input values from a specified array.
+
+.clone ( data : Object ) : InterleavedBuffer
+data - This object holds shared array buffers required for properly cloning geometries with interleaved attributes.
+
+Creates a clone of this InterleavedBuffer.
+
+.setUsage ( value : Usage ) : this
+Set usage to value.
+
+.toJSON ( data : Object ) : Object
+data - This object holds shared array buffers required for properly serializing geometries with interleaved attributes.
+
+Serializes this InterleavedBuffer.
+
+Source
+src/core/InterleavedBuffer.js
+
+InterleavedBufferAttribute
+Constructor
+InterleavedBufferAttribute( interleavedBuffer : InterleavedBuffer, itemSize : Integer, offset : Integer, normalized : Boolean )
+Properties
+.data : InterleavedBuffer
+The InterleavedBuffer instance passed in the constructor.
+
+.array : TypedArray
+The value of data.array.
+
+.count : Integer
+The value of data.count. If the buffer is storing a 3-component item (such as a position, normal, or color), then this will count the number of such items stored.
+
+.isInterleavedBufferAttribute : Boolean
+Read-only flag to check if a given object is of type InterleavedBufferAttribute.
+
+.itemSize : Integer
+How many values make up each item.
+
+.name : String
+Optional name for this attribute instance. Default is an empty string.
+
+.needsUpdate : Boolean
+Default is false. Setting this to true will send the entire interleaved buffer (not just the specific attribute data) to the GPU again.
+
+.normalized : Boolean
+Default is false.
+
+.offset : Integer
+The offset in the underlying array buffer where an item starts.
+
+Methods
+.applyMatrix4 ( m : Matrix4 ) : this
+Applies matrix m to every Vector3 element of this InterleavedBufferAttribute.
+
+.applyNormalMatrix ( m : Matrix3 ) : this
+Applies normal matrix m to every Vector3 element of this InterleavedBufferAttribute.
+
+.transformDirection ( m : Matrix4 ) : this
+Applies matrix m to every Vector3 element of this InterleavedBufferAttribute, interpreting the elements as a direction vectors.
+
+.getComponent ( index : Integer, component : Integer ) : Number
+Returns the given component of the vector at the given index.
+
+.getX ( index : Integer ) : Number
+Returns the x component of the item at the given index.
+
+.getY ( index : Integer ) : Number
+Returns the y component of the item at the given index.
+
+.getZ ( index : Integer ) : Number
+Returns the z component of the item at the given index.
+
+.getW ( index : Integer ) : Number
+Returns the w component of the item at the given index.
+
+.setComponent ( index : Integer, component : Integer, value : Float ) : Number
+Sets the given component of the vector at the given index.
+
+.setX ( index : Integer, x : Float ) : this
+Sets the x component of the item at the given index.
+
+.setY ( index : Integer, y : Float ) : this
+Sets the y component of the item at the given index.
+
+.setZ ( index : Integer, z : Float ) : this
+Sets the z component of the item at the given index.
+
+.setW ( index : Integer, w : Float ) : this
+Sets the w component of the item at the given index.
+
+.setXY ( index : Integer, x : Float, y : Float ) : this
+Sets the x and y components of the item at the given index.
+
+.setXYZ ( index : Integer, x : Float, y : Float, z : Float ) : this
+Sets the x, y and z components of the item at the given index.
+
+.setXYZW ( index : Integer, x : Float, y : Float, z : Float, w : Float ) : this
+Sets the x, y, z and w components of the item at the given index.
+
+Source
+src/core/InterleavedBufferAttribute.js
+
+Layers
+A Layers object assigns an Object3D to 1 or more of 32 layers numbered 0 to 31 - internally the layers are stored as a bit mask, and by default all Object3Ds are a member of layer 0.
+
+This can be used to control visibility - an object must share a layer with a camera to be visible when that camera's view is rendered.
+
+All classes that inherit from Object3D have an Object3D.layers property which is an instance of this class.
+
+Examples
+WebGL / layers
+
+Constructor
+Layers()
+Create a new Layers object, with membership initially set to layer 0.
+
+Properties
+.mask : Integer
+A bit mask storing which of the 32 layers this layers object is currently a member of.
+
+Methods
+.disable ( layer : Integer ) : undefined
+layer - an integer from 0 to 31.
+
+Remove membership of this layer.
+
+.enable ( layer : Integer ) : undefined
+layer - an integer from 0 to 31.
+
+Add membership of this layer.
+
+.set ( layer : Integer ) : undefined
+layer - an integer from 0 to 31.
+
+Set membership to layer, and remove membership all other layers.
+
+.test ( layers : Layers ) : Boolean
+layers - a Layers object
+
+Returns true if this and the passed layers object have at least one layer in common.
+
+.isEnabled ( layer : Integer ) : Boolean
+layer - an integer from 0 to 31.
+
+Returns true if the given layer is enabled.
+
+.toggle ( layer : Integer ) : undefined
+layer - an integer from 0 to 31.
+
+Toggle membership of layer.
+
+.enableAll () : undefined
+Add membership to all layers.
+
+.disableAll () : undefined
+Remove membership from all layers.
+
+Source
+src/core/Layers.js
+
+Object3D
+This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.
+
+Note that this can be used for grouping objects via the .add( object ) method which adds the object as a child, however it is better to use Group for this.
+
+Constructor
+Object3D()
+The constructor takes no arguments.
+
+Properties
+.animations : AnimationClip
+Array with object's animation clips.
+
+.castShadow : Boolean
+Whether the object gets rendered into shadow map. Default is false.
+
+.children : Array
+Array with object's children. See Group for info on manually grouping objects.
+
+.customDepthMaterial : Material
+Custom depth material to be used when rendering to the depth map. Can only be used in context of meshes. When shadow-casting with a DirectionalLight or SpotLight, if you are modifying vertex positions in the vertex shader you must specify a customDepthMaterial for proper shadows. Default is undefined.
+
+.customDistanceMaterial : Material
+Same as customDepthMaterial, but used with PointLight. Default is undefined.
+
+.frustumCulled : Boolean
+When this is set, it checks every frame if the object is in the frustum of the camera before rendering the object. If set to false the object gets rendered every frame even if it is not in the frustum of the camera. Default is true.
+
+.id : Integer
+readonly – Unique number for this object instance.
+
+.isObject3D : Boolean
+Read-only flag to check if a given object is of type Object3D.
+
+.layers : Layers
+The layer membership of the object. The object is only visible if it has at least one layer in common with the Camera in use. This property can also be used to filter out unwanted objects in ray-intersection tests when using Raycaster.
+
+.matrix : Matrix4
+The local transform matrix.
+
+.matrixAutoUpdate : Boolean
+When this is set, it calculates the matrix of position, (rotation or quaternion) and scale every frame and also recalculates the matrixWorld property. Default is Object3D.DEFAULT_MATRIX_AUTO_UPDATE (true).
+
+.matrixWorld : Matrix4
+The global transform of the object. If the Object3D has no parent, then it's identical to the local transform .matrix.
+
+.matrixWorldAutoUpdate : Boolean
+If set, then the renderer checks every frame if the object and its children need matrix updates. When it isn't, then you have to maintain all matrices in the object and its children yourself. Default is Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE (true).
+
+.matrixWorldNeedsUpdate : Boolean
+When this is set, it calculates the matrixWorld in that frame and resets this property to false. Default is false.
+
+.modelViewMatrix : Matrix4
+This is passed to the shader and used to calculate the position of the object.
+
+.name : String
+Optional name of the object (doesn't need to be unique). Default is an empty string.
+
+.normalMatrix : Matrix3
+This is passed to the shader and used to calculate lighting for the object. It is the transpose of the inverse of the upper left 3x3 sub-matrix of this object's modelViewMatrix.
+
+The reason for this special matrix is that simply using the modelViewMatrix could result in a non-unit length of normals (on scaling) or in a non-perpendicular direction (on non-uniform scaling).
+
+On the other hand the translation part of the modelViewMatrix is not relevant for the calculation of normals. Thus a Matrix3 is sufficient.
+
+.onAfterRender : Function
+An optional callback that is executed immediately after a 3D object is rendered. This function is called with the following parameters: renderer, scene, camera, geometry, material, group.
+
+Please notice that this callback is only executed for renderable 3D objects. Meaning 3D objects which define their visual appearance with geometries and materials like instances of Mesh, Line, Points or Sprite. Instances of Object3D, Group or Bone are not renderable and thus this callback is not executed for such objects.
+
+.onAfterShadow : Function
+An optional callback that is executed immediately after a 3D object is rendered to a shadow map. This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry, depthMaterial, group.
+
+Please notice that this callback is only executed for renderable 3D objects. Meaning 3D objects which define their visual appearance with geometries and materials like instances of Mesh, Line, Points or Sprite. Instances of Object3D, Group or Bone are not renderable and thus this callback is not executed for such objects.
+
+.onBeforeRender : Function
+An optional callback that is executed immediately before a 3D object is rendered. This function is called with the following parameters: renderer, scene, camera, geometry, material, group.
+
+Please notice that this callback is only executed for renderable 3D objects. Meaning 3D objects which define their visual appearance with geometries and materials like instances of Mesh, Line, Points or Sprite. Instances of Object3D, Group or Bone are not renderable and thus this callback is not executed for such objects.
+
+.onBeforeShadow : Function
+An optional callback that is executed immediately before a 3D object is rendered to a shadow map. This function is called with the following parameters: renderer, scene, camera, shadowCamera, geometry, depthMaterial, group.
+
+Please notice that this callback is only executed for renderable 3D objects. Meaning 3D objects which define their visual appearance with geometries and materials like instances of Mesh, Line, Points or Sprite. Instances of Object3D, Group or Bone are not renderable and thus this callback is not executed for such objects.
+
+.parent : Object3D
+Object's parent in the scene graph. An object can have at most one parent.
+
+.position : Vector3
+A Vector3 representing the object's local position. Default is (0, 0, 0).
+
+.quaternion : Quaternion
+Object's local rotation as a Quaternion.
+
+.receiveShadow : Boolean
+Whether the material receives shadows. Default is false.
+
+.renderOrder : Number
+This value allows the default rendering order of scene graph objects to be overridden although opaque and transparent objects remain sorted independently. When this property is set for an instance of Group, all descendants objects will be sorted and rendered together. Sorting is from lowest to highest renderOrder. Default value is 0.
+
+.rotation : Euler
+Object's local rotation (see Euler angles), in radians.
+
+.scale : Vector3
+The object's local scale. Default is Vector3( 1, 1, 1 ).
+
+.up : Vector3
+This is used by the lookAt method, for example, to determine the orientation of the result.
+Default is Object3D.DEFAULT_UP - that is, ( 0, 1, 0 ).
+
+.userData : Object
+An object that can be used to store custom data about the Object3D. It should not hold references to functions as these will not be cloned. Default is an empty object {}.
+
+.uuid : String
+UUID of this object instance. This gets automatically assigned, so this shouldn't be edited.
+
+.visible : Boolean
+Object gets rendered if true. Default is true.
+
+Static Properties
+Static properties and methods are defined per class rather than per instance of that class. This means that changing Object3D.DEFAULT_UP or Object3D.DEFAULT_MATRIX_AUTO_UPDATE will change the values of up and matrixAutoUpdate for every instance of Object3D (or derived classes) created after the change has been made (already created Object3Ds will not be affected).
+
+.DEFAULT_UP : Vector3
+The default up direction for objects, also used as the default position for DirectionalLight, HemisphereLight and Spotlight (which creates lights shining from the top down).
+Set to ( 0, 1, 0 ) by default.
+
+.DEFAULT_MATRIX_AUTO_UPDATE : Boolean
+The default setting for matrixAutoUpdate for newly created Object3Ds.
+
+.DEFAULT_MATRIX_WORLD_AUTO_UPDATE : Boolean
+The default setting for matrixWorldAutoUpdate for newly created Object3Ds.
+
+Methods
+EventDispatcher methods are available on this class.
+
+.add ( object : Object3D, ... ) : this
+Adds object as child of this object. An arbitrary number of objects may be added. Any current parent on an object passed in here will be removed, since an object can have at most one parent.
+
+See Group for info on manually grouping objects.
+
+.applyMatrix4 ( matrix : Matrix4 ) : undefined
+Applies the matrix transform to the object and updates the object's position, rotation and scale.
+
+.applyQuaternion ( quaternion : Quaternion ) : this
+Applies the rotation represented by the quaternion to the object.
+
+.attach ( object : Object3D ) : this
+Adds object as a child of this, while maintaining the object's world transform.
+
+Note: This method does not support scene graphs having non-uniformly-scaled nodes(s).
+
+.clear () : this
+Removes all child objects.
+
+.clone ( recursive : Boolean ) : Object3D
+recursive -- if true, descendants of the object are also cloned. Default is true.
+
+Returns a clone of this object and optionally all descendants.
+
+.copy ( object : Object3D, recursive : Boolean ) : this
+recursive -- If set to true, descendants of the object are copied next to the existing ones. If set to false, descendants are left unchanged. Default is true.
+
+Copies the given object into this object. Note: Event listeners and user-defined callbacks (.onAfterRender and .onBeforeRender) are not copied.
+
+.getObjectById ( id : Integer ) : Object3D
+id -- Unique number of the object instance
+
+Searches through an object and its children, starting with the object itself, and returns the first with a matching id.
+Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.
+
+.getObjectByName ( name : String ) : Object3D
+name -- String to match to the children's Object3D.name property.
+
+Searches through an object and its children, starting with the object itself, and returns the first with a matching name.
+Note that for most objects the name is an empty string by default. You will have to set it manually to make use of this method.
+
+.getObjectByProperty ( name : String, value : Any ) : Object3D
+name -- the property name to search for.
+value -- value of the given property.
+
+Searches through an object and its children, starting with the object itself, and returns the first with a property that matches the value given.
+
+.getObjectsByProperty ( name : String, value : Any, optionalTarget : Array ) : Object3D
+name -- the property name to search for.
+value -- value of the given property.
+optionalTarget -- (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0;).
+
+Searches through an object and its children, starting with the object itself, and returns all the objects with a property that matches the value given.
+
+.getWorldPosition ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns a vector representing the position of the object in world space.
+
+.getWorldQuaternion ( target : Quaternion ) : Quaternion
+target — the result will be copied into this Quaternion.
+
+Returns a quaternion representing the rotation of the object in world space.
+
+.getWorldScale ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns a vector of the scaling factors applied to the object for each axis in world space.
+
+.getWorldDirection ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns a vector representing the direction of object's positive z-axis in world space.
+
+.localToWorld ( vector : Vector3 ) : Vector3
+vector - A vector representing a position in this object's local space.
+
+Converts the vector from this object's local space to world space.
+
+.lookAt ( vector : Vector3 ) : undefined
+.lookAt ( x : Float, y : Float, z : Float ) : undefined
+vector - A vector representing a position in world space.
+
+Optionally, the x, y and z components of the world space position.
+
+Rotates the object to face a point in world space.
+
+This method does not support objects having non-uniformly-scaled parent(s).
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Abstract (empty) method to get intersections between a casted ray and this object. Subclasses such as Mesh, Line, and Points implement this method in order to use raycasting.
+
+.remove ( object : Object3D, ... ) : this
+Removes object as child of this object. An arbitrary number of objects may be removed.
+
+.removeFromParent () : this
+Removes this object from its current parent.
+
+.rotateOnAxis ( axis : Vector3, angle : Float ) : this
+axis -- A normalized vector in object space.
+angle -- The angle in radians.
+
+Rotate an object along an axis in object space. The axis is assumed to be normalized.
+
+.rotateOnWorldAxis ( axis : Vector3, angle : Float) : this
+axis -- A normalized vector in world space.
+angle -- The angle in radians.
+
+Rotate an object along an axis in world space. The axis is assumed to be normalized. Method Assumes no rotated parent.
+
+.rotateX ( rad : Float ) : this
+rad - the angle to rotate in radians.
+
+Rotates the object around x axis in local space.
+
+.rotateY ( rad : Float ) : this
+rad - the angle to rotate in radians.
+
+Rotates the object around y axis in local space.
+
+.rotateZ ( rad : Float ) : this
+rad - the angle to rotate in radians.
+
+Rotates the object around z axis in local space.
+
+.setRotationFromAxisAngle ( axis : Vector3, angle : Float ) : undefined
+axis -- A normalized vector in object space.
+angle -- angle in radians
+
+Calls setFromAxisAngle( axis, angle ) on the .quaternion.
+
+.setRotationFromEuler ( euler : Euler ) : undefined
+euler -- Euler angle specifying rotation amount.
+Calls setRotationFromEuler( euler) on the .quaternion.
+
+.setRotationFromMatrix ( m : Matrix4 ) : undefined
+m -- rotate the quaternion by the rotation component of the matrix.
+Calls setFromRotationMatrix( m) on the .quaternion.
+
+Note that this assumes that the upper 3x3 of m is a pure rotation matrix (i.e, unscaled).
+
+.setRotationFromQuaternion ( q : Quaternion ) : undefined
+q -- normalized Quaternion.
+
+Copy the given quaternion into .quaternion.
+
+.toJSON ( meta : Object ) : Object
+meta -- object containing metadata such as materials, textures or images for the object.
+Convert the object to three.js JSON Object/Scene format.
+
+.translateOnAxis ( axis : Vector3, distance : Float ) : this
+axis -- A normalized vector in object space.
+distance -- The distance to translate.
+
+Translate an object by distance along an axis in object space. The axis is assumed to be normalized.
+
+.translateX ( distance : Float ) : this
+Translates object along x axis in object space by distance units.
+
+.translateY ( distance : Float ) : this
+Translates object along y axis in object space by distance units.
+
+.translateZ ( distance : Float ) : this
+Translates object along z axis in object space by distance units.
+
+.traverse ( callback : Function ) : undefined
+callback - A function with as first argument an object3D object.
+
+Executes the callback on this object and all descendants.
+Note: Modifying the scene graph inside the callback is discouraged.
+
+.traverseVisible ( callback : Function ) : undefined
+callback - A function with as first argument an object3D object.
+
+Like traverse, but the callback will only be executed for visible objects. Descendants of invisible objects are not traversed.
+Note: Modifying the scene graph inside the callback is discouraged.
+
+.traverseAncestors ( callback : Function ) : undefined
+callback - A function with as first argument an object3D object.
+
+Executes the callback on all ancestors.
+Note: Modifying the scene graph inside the callback is discouraged.
+
+.updateMatrix () : undefined
+Updates the local transform.
+
+.updateMatrixWorld ( force : Boolean ) : undefined
+force - A boolean that can be used to bypass .matrixWorldAutoUpdate, to recalculate the world matrix of the object and descendants on the current frame. Useful if you cannot wait for the renderer to update it on the next frame (assuming .matrixWorldAutoUpdate set to true).
+
+Updates the global transform of the object and its descendants if the world matrix needs update (.matrixWorldNeedsUpdate set to true) or if the force parameter is set to true.
+
+.updateWorldMatrix ( updateParents : Boolean, updateChildren : Boolean ) : undefined
+updateParents - recursively updates global transform of ancestors.
+updateChildren - recursively updates global transform of descendants.
+
+Updates the global transform of the object.
+
+.worldToLocal ( vector : Vector3 ) : Vector3
+vector - A vector representing a position in world space.
+
+Converts the vector from world space to this object's local space.
+
+Events
+added
+Fires when the object has been added to its parent object.
+
+removed
+Fires when the object has been removed from its parent object.
+
+childadded
+Fires when a new child object has been added.
+
+childremoved
+Fires when a new child object has been removed.
+
+Source
+src/core/Object3D.js
+
+Raycaster
+This class is designed to assist with raycasting. Raycasting is used for mouse picking (working out what objects in the 3d space the mouse is over) amongst other things.
+
+Code Example
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function onPointerMove( event ) {
+
+	// calculate pointer position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
+
+function render() {
+
+	// update the picking ray with the camera and pointer position
+	raycaster.setFromCamera( pointer, camera );
+
+	// calculate objects intersecting the picking ray
+	const intersects = raycaster.intersectObjects( scene.children );
+
+	for ( let i = 0; i < intersects.length; i ++ ) {
+
+		intersects[ i ].object.material.color.set( 0xff0000 );
+
+	}
+
+	renderer.render( scene, camera );
+
+}
+
+window.addEventListener( 'pointermove', onPointerMove );
+
+window.requestAnimationFrame(render);
+Examples
+Raycasting to a Mesh
+Raycasting to a Mesh in using an OrthographicCamera
+Raycasting to a Mesh with BufferGeometry
+Raycasting to a InstancedMesh
+Raycasting to a Line
+Raycasting to Points
+Terrain raycasting
+Raycasting to paint voxels
+Raycast to a Texture
+
+Constructor
+Raycaster( origin : Vector3, direction : Vector3, near : Float, far : Float )
+origin — The origin vector where the ray casts from.
+direction — The direction vector that gives direction to the ray. Should be normalized.
+near — All results returned are further away than near. Near can't be negative. Default value is 0.
+far — All results returned are closer than far. Far can't be lower than near. Default value is Infinity.
+
+This creates a new raycaster object.
+
+Properties
+.far : Float
+The far factor of the raycaster. This value indicates which objects can be discarded based on the distance. This value shouldn't be negative and should be larger than the near property.
+
+.near : Float
+The near factor of the raycaster. This value indicates which objects can be discarded based on the distance. This value shouldn't be negative and should be smaller than the far property.
+
+.camera : Camera
+The camera to use when raycasting against view-dependent objects such as billboarded objects like Sprites. This field can be set manually or is set when calling "setFromCamera". Defaults to null.
+
+.layers : Layers
+Used by Raycaster to selectively ignore 3D objects when performing intersection tests. The following code example ensures that only 3D objects on layer 1 will be honored by the instance of Raycaster.
+raycaster.layers.set( 1 );
+object.layers.enable( 1 );
+
+.params : Object
+An object with the following properties:
+{
+	Mesh: {},
+	Line: { threshold: 1 },
+	LOD: {},
+	Points: { threshold: 1 },
+	Sprite: {}
+}
+Where threshold is the precision of the raycaster when intersecting objects, in world units.
+
+.ray : Ray
+The Ray used for the raycasting.
+
+Methods
+.set ( origin : Vector3, direction : Vector3) : undefined
+origin — The origin vector where the ray casts from.
+direction — The normalized direction vector that gives direction to the ray.
+
+Updates the ray with a new origin and direction. Please note that this method only copies the values from the arguments.
+
+.setFromCamera ( coords : Vector2, camera : Camera ) : undefined
+coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X and Y components should be between -1 and 1.
+camera — camera from which the ray should originate
+
+Updates the ray with a new origin and direction.
+
+.setFromXRController ( controller : WebXRController ) : this
+controller — The controller to copy the position and direction from.
+
+Updates the ray with a new origin and direction.
+
+.intersectObject ( object : Object3D, recursive : Boolean, optionalTarget : Array ) : Array
+object — The object to check for intersection with the ray.
+recursive — If true, it also checks all descendants. Otherwise it only checks intersection with the object. Default is true.
+optionalTarget — (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0;).
+
+Checks all intersection between the ray and the object with or without the descendants. Intersections are returned sorted by distance, closest first. An array of intersections is returned...
+
+ [ { distance, point, face, faceIndex, object }, ... ] 
+distance – distance between the origin of the ray and the intersection
+distanceToRay – Some objects (f.e. Points) provide the distance of the intersection to the nearest point on the ray. For other objects it will be undefined
+point – point of intersection, in world coordinates
+face – intersected face
+faceIndex – index of the intersected face
+object – the intersected object
+uv - U,V coordinates at point of intersection
+uv1 - Second set of U,V coordinates at point of intersection
+normal - interpolated normal vector at point of intersection
+instanceId – The index number of the instance where the ray intersects the InstancedMesh
+
+Raycaster delegates to the raycast method of the passed object, when evaluating whether the ray intersects the object or not. This allows meshes to respond differently to ray casting than lines and pointclouds.
+
+Note that for meshes, faces must be pointed towards the origin of the ray in order to be detected; intersections of the ray passing through the back of a face will not be detected. To raycast against both faces of an object, you'll want to set the material's side property to THREE.DoubleSide.
+
+.intersectObjects ( objects : Array, recursive : Boolean, optionalTarget : Array ) : Array
+objects — The objects to check for intersection with the ray.
+recursive — If true, it also checks all descendants of the objects. Otherwise it only checks intersection with the objects. Default is true.
+optionalTarget — (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0;).
+
+Checks all intersection between the ray and the objects with or without the descendants. Intersections are returned sorted by distance, closest first. Intersections are of the same form as those returned by .intersectObject.
+
+Source
+src/core/Raycaster.js
+
+Uniform
+Uniforms are global GLSL variables. They are passed to shader programs.
+
+Code Example
+When declaring a uniform of a ShaderMaterial, it is declared by value or by object.
+
+uniforms: {
+	time: { value: 1.0 }, 
+	resolution: new Uniform( new Vector2() )
+};
+Uniform types
+Each uniform must have a value property. The type of the value must correspond to the type of the uniform variable in the GLSL code as specified for the primitive GLSL types in the table below. Uniform structures and arrays are also supported. GLSL arrays of primitive type must either be specified as an array of the corresponding THREE objects or as a flat array containing the data of all the objects. In other words; GLSL primitives in arrays must not be represented by arrays. This rule does not apply transitively. An array of vec2 arrays, each with a length of five vectors, must be an array of arrays, of either five Vector2 objects or ten numbers.
+
+Uniform types
+GLSL type	JavaScript type
+int	Number
+uint	Number
+float	Number
+bool	Boolean
+bool	Number
+vec2	THREE.Vector2
+vec2	Float32Array (*)
+vec2	Array (*)
+vec3	THREE.Vector3
+vec3	THREE.Color
+vec3	Float32Array (*)
+vec3	Array (*)
+vec4	THREE.Vector4
+vec4	THREE.Quaternion
+vec4	Float32Array (*)
+vec4	Array (*)
+mat2	Float32Array (*)
+mat2	Array (*)
+mat3	THREE.Matrix3
+mat3	Float32Array (*)
+mat3	Array (*)
+mat4	THREE.Matrix4
+mat4	Float32Array (*)
+mat4	Array (*)
+ivec2, bvec2	Float32Array (*)
+ivec2, bvec2	Array (*)
+ivec3, bvec3	Int32Array (*)
+ivec3, bvec3	Array (*)
+ivec4, bvec4	Int32Array (*)
+ivec4, bvec4	Array (*)
+sampler2D	THREE.Texture
+samplerCube	THREE.CubeTexture
+(*) Same for an (innermost) array (dimension) of the same GLSL type, containing the components of all vectors or matrices in the array.
+
+Structured Uniforms
+Sometimes you want to organize uniforms as structs in your shader code. The following style must be used so three.js is able to process structured uniform data.
+
+uniforms = {
+	data: { 
+		value: {
+			position: new Vector3(), 
+			direction: new Vector3( 0, 0, 1 ) 
+		} 
+	} 
+};
+This definition can be mapped on the following GLSL code:
+struct Data { 
+	vec3 position;
+	vec3 direction;
+};
+uniform Data data;
+Structured Uniforms with Arrays
+It's also possible to manage structs in arrays. The syntax for this use case looks like so:
+
+const entry1 = {
+	position: new Vector3(),
+	direction: new Vector3( 0, 0, 1 )
+};
+const entry2 = {
+	position: new Vector3( 1, 1, 1 ),
+	direction: new Vector3( 0, 1, 0 )
+};
+
+uniforms = {
+	data: {
+		value: [ entry1, entry2 ]
+	}
+};
+This definition can be mapped on the following GLSL code:
+struct Data { 
+	vec3 position; 
+	vec3 direction; 
+};
+uniform Data data[ 2 ];
+Constructor
+Uniform( value : Object )
+value -- An object containing the value to set up the uniform. It's type must be one of the Uniform Types described above.
+
+Properties
+.value : Object
+Current value of the uniform.
+
+Methods
+.clone () : Uniform
+Returns a clone of this uniform.
+If the uniform's value property is an Object with a clone() method, this is used, otherwise the value is copied by assignment. Array values are shared between cloned Uniforms.
+
+Source
+src/core/Uniform.js
+

@@ -1,0 +1,132 @@
+CSS2DRenderer
+CSS2DRenderer is a simplified version of CSS3DRenderer. The only transformation that is supported is translation.
+
+The renderer is very useful if you want to combine HTML based labels with 3D objects. Here too, the respective DOM elements are wrapped into an instance of CSS2DObject and added to the scene graph.
+
+CSS2DRenderer only supports 100% browser and display zoom.
+
+Import
+CSS2DRenderer is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+Examples
+css2d_label
+molecules
+
+Constructor
+CSS2DRenderer( parameters : Object )
+element - A HTMLElement where the renderer appends its child-elements. This corresponds to the domElement property below. If not passed in here, a new div element will be created.
+
+Properties
+.domElement : DOMElement
+A HTMLElement where the renderer appends its child-elements.
+This is automatically created by the renderer in the constructor (if not provided already).
+
+Methods
+.getSize () : Object
+Returns an object containing the width and height of the renderer.
+
+.render ( scene : Scene, camera : Camera ) : undefined
+Renders a scene using a camera.
+
+.setSize (width : Number, height : Number) : undefined
+Resizes the renderer to (width, height).
+
+Source
+examples/jsm/renderers/CSS2DRenderer.js
+
+CSS3DRenderer
+CSS3DRenderer can be used to apply hierarchical 3D transformations to DOM elements via the CSS3 transform property. This renderer is particularly interesting if you want to apply 3D effects to a website without canvas based rendering. It can also be used in order to combine DOM elements with WebGL content.
+
+There are, however, some important limitations:
+
+It's not possible to use the material system of three.js.
+It's also not possible to use geometries.
+CSS3DRenderer only supports 100% browser and display zoom.
+So CSS3DRenderer is just focused on ordinary DOM elements. These elements are wrapped into special objects (CSS3DObject or CSS3DSprite) and then added to the scene graph.
+Import
+CSS3DRenderer is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
+Examples
+molecules
+orthographic camera
+periodictable
+sprites
+
+Constructor
+CSS3DRenderer( parameters : Object )
+element - A HTMLElement where the renderer appends its child-elements. This corresponds to the domElement property below. If not passed in here, a new div element will be created.
+
+Properties
+.domElement : DOMElement
+A HTMLElement where the renderer appends its child-elements.
+This is automatically created by the renderer in the constructor (if not provided already).
+
+Methods
+.getSize () : Object
+Returns an object containing the width and height of the renderer.
+
+.render ( scene : Scene, camera : PerspectiveCamera ) : undefined
+Renders a scene using a perspective camera.
+
+.setSize (width : Number, height : Number) : undefined
+Resizes the renderer to (width, height).
+
+Source
+examples/jsm/renderers/CSS3DRenderer.js
+
+SVGRenderer
+SVGRenderer can be used to render geometric data using SVG. The produced vector graphics are particular useful in the following use cases:
+
+Animated logos or icons
+Interactive 2D/3D diagrams or graphs
+Interactive maps
+Complex or animated user interfaces
+SVGRenderer has various advantages. It produces crystal-clear and sharp output which is independent of the actual viewport resolution.
+SVG elements can be styled via CSS. And they have good accessibility since it's possible to add metadata like title or description (useful for search engines or screen readers).
+
+There are, however, some important limitations:
+
+No advanced shading
+No texture support
+No shadow support
+Import
+SVGRenderer is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { SVGRenderer } from 'three/addons/renderers/SVGRenderer.js';
+Examples
+lines
+sandbox
+
+Constructor
+SVGRenderer()
+Properties
+.overdraw : Number
+Number of fractional pixels to enlarge polygons in order to prevent anti-aliasing gaps. Range is [0..1]. Default is 0.5.
+
+Methods
+.clear () : undefined
+Tells the renderer to clear its drawing surface.
+
+.getSize () : Object
+Returns an object containing the width and height of the renderer.
+
+.render ( scene : Scene, camera : Camera ) : undefined
+Renders a scene using a camera.
+
+.setClearColor ( color : Color, alpha : number ) : undefined
+Sets the clearColor and the clearAlpha.
+
+.setPrecision ( precision : Number ) : undefined
+Sets the precision of the data used to create a path.
+
+.setQuality () : undefined
+Sets the render quality. Possible values are low and high (default).
+
+.setSize ( width : Number, height : Number ) : undefined
+Resizes the renderer to (width, height).
+
+Source
+examples/jsm/renderers/SVGRenderer.js
+

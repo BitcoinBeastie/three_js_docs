@@ -1,0 +1,878 @@
+Mesh →
+BatchedMesh
+A special version of Mesh with multi draw batch rendering support. Use BatchedMesh if you have to render a large number of objects with the same material but with different geometries or world transformations. The usage of BatchedMesh will help you to reduce the number of draw calls and thus improve the overall rendering performance in your application.
+
+If the WEBGL_multi_draw extension is not supported then a less performant fallback is used.
+
+Code Example
+const box = new THREE.BoxGeometry( 1, 1, 1 );
+const sphere = new THREE.SphereGeometry( 1, 12, 12 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+
+// initialize and add geometries into the batched mesh
+const batchedMesh = new BatchedMesh( 10, 5000, 10000, material );
+const boxGeometryId = batchedMesh.addGeometry( box );
+const sphereGeometryId = batchedMesh.addGeometry( sphere );
+
+// create instances of those geometries
+const boxInstancedId1 = batchedMesh.addInstance( boxGeometryId );
+const boxInstancedId2 = batchedMesh.addInstance( boxGeometryId );
+
+const sphereInstancedId1 = batchedMesh.addInstance( sphereGeometryId );
+const sphereInstancedId2 = batchedMesh.addInstance( sphereGeometryId );
+
+// position the geometries
+batchedMesh.setMatrixAt( boxInstancedId1, boxMatrix1 );
+batchedMesh.setMatrixAt( boxInstancedId2, boxMatrix2 );
+
+batchedMesh.setMatrixAt( sphereInstancedId1, sphereMatrix1 );
+batchedMesh.setMatrixAt( sphereInstancedId2, sphereMatrix2 );
+
+scene.add( batchedMesh );
+Examples
+WebGL / mesh / batch
+
+Constructor
+BatchedMesh( maxInstanceCount : Integer, maxVertexCount : Integer, maxIndexCount : Integer, material : Material, )
+maxInstanceCount - the max number of individual instances planned to be added and rendered.
+maxVertexCount - the max number of vertices to be used by all unique geometries.
+maxIndexCount - the max number of indices to be used by all unique geometries.
+material - an instance of Material. Default is a new MeshBasicMaterial.
+
+Properties
+See the base Mesh class for common properties.
+
+.boundingBox : Box3
+This bounding box encloses all instances of the BatchedMesh. Can be calculated with .computeBoundingBox(). Default is null.
+
+.boundingSphere : Sphere
+This bounding sphere encloses all instances of the BatchedMesh. Can be calculated with .computeBoundingSphere(). Default is null.
+
+.perObjectFrustumCulled : Boolean
+If true then the individual objects within the BatchedMesh are frustum culled. Default is true.
+
+.sortObjects : Boolean
+If true then the individual objects within the BatchedMesh are sorted to improve overdraw-related artifacts. If the material is marked as "transparent" objects are rendered back to front and if not then they are rendered front to back. Default is true.
+
+.maxInstanceCount : Integer
+The maximum number of individual instances that can be stored in the BatchedMesh. Read only.
+
+.isBatchedMesh : Boolean
+Read-only flag to check if a given object is of type BatchedMesh.
+
+Methods
+See the base Mesh class for common methods.
+
+.computeBoundingBox () : undefined
+Computes the bounding box, updating .boundingBox attribute.
+Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are null.
+
+.computeBoundingSphere () : undefined
+Computes the bounding sphere, updating .boundingSphere attribute.
+Bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are null.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.setCustomSort ( sortFunction : Function ) : this
+Takes a sort a function that is run before render. The function takes a list of instances to sort and a camera. The objects in the list include a "z" field to perform a depth-ordered sort with.
+
+.getColorAt ( instanceId : Integer, target : Color ) : undefined
+instanceId: The id of an instance to get the color of.
+
+target: The target object to copy the color in to.
+
+Get the color of the defined geometry.
+
+.getMatrixAt ( instanceId : Integer, target : Matrix4 ) : Matrix4
+instanceId: The id of an instance to get the matrix of.
+
+target: This 4x4 matrix will be set to the local transformation matrix of the defined instance.
+
+Get the local transformation matrix of the defined instance.
+
+.getVisibleAt ( instanceId : Integer ) : Boolean
+instanceId: The id of an instance to get the visibility state of.
+
+Get whether the given instance is marked as "visible" or not.
+
+.getGeometryRangeAt ( geometryId : Integer, target : Object ) : Object
+geometryId: The id of the geometry to get the range of.
+
+target: Optional target object to copy the range in to.
+
+Get the range representing the subset of triangles related to the attached geometry, indicating the starting offset and count, or null if invalid.
+
+Return an object of the form:
+
+{ start: Integer, count: Integer }
+.getGeometryIdAt ( instanceId : Integer ) : Integer
+instanceId: The id of an instance to get the geometryIndex of.
+
+Get the geometryIndex of the defined instance.
+
+.setColorAt ( instanceId : Integer, color : Color ) : undefined
+instanceId: The id of the instance to set the color of.
+
+color: The color to set the instance to.
+
+Sets the given color to the defined geometry instance.
+
+.setMatrixAt ( instanceId : Integer, matrix : Matrix4 ) : this
+instanceId: The id of an instance to set the matrix of.
+
+matrix: A 4x4 matrix representing the local transformation of a single instance.
+
+Sets the given local transformation matrix to the defined instance.
+
+Negatively scaled matrices are not supported.
+
+.setVisibleAt ( instanceId : Integer, visible : Boolean ) : this
+instanceId: The id of the instance to set the visibility of.
+
+visible: A boolean value indicating the visibility state.
+
+Sets the visibility of the instance at the given index.
+
+.setGeometryIdAt ( instanceId : Integer, geometryId : Integer ) : this
+instanceId: The id of the instance to set the geometryIndex of.
+
+geometryId: The geometryIndex to be use by the instance.
+
+Sets the geometryIndex of the instance at the given index.
+
+.addGeometry ( geometry : BufferGeometry, reservedVertexRange : Integer, reservedIndexRange : Integer ) : Integer
+geometry: The geometry to add into the BatchedMesh.
+
+reservedVertexRange: Optional parameter specifying the amount of vertex buffer space to reserve for the added geometry. This is necessary if it is planned to set a new geometry at this index at a later time that is larger than the original geometry. Defaults to the length of the given geometry vertex buffer.
+
+reservedIndexRange: Optional parameter specifying the amount of index buffer space to reserve for the added geometry. This is necessary if it is planned to set a new geometry at this index at a later time that is larger than the original geometry. Defaults to the length of the given geometry index buffer.
+
+Adds the given geometry to the BatchedMesh and returns the associated geometry id referring to it to be used in other functions.
+
+.deleteGeometry ( geometryId : Integer ) : Integer
+geometryId: The id of a geometry to remove from the BatchedMesh that was previously added via "addGeometry". Any instances referencing this geometry will also be removed as a side effect.
+
+.addInstance ( geometryId : Integer ) : Integer
+geometryId: The id of a previously added geometry via "addGeometry" to add into the BatchedMesh to render.
+
+Adds a new instance to the BatchedMesh using the geometry of the given geometryId and returns a new id referring to the new instance to be used by other functions.
+
+.deleteInstance ( instanceId : Integer ) : Integer
+instanceId: The id of an instance to remove from the BatchedMesh that was previously added via "addInstance".
+
+Removes an existing instance from the BatchedMesh using the given instanceId.
+
+.setGeometryAt ( geometryId : Integer, geometry : BufferGeometry ) : Integer
+geometryId: Which geometry id to replace with this geometry.
+
+geometry: The geometry to substitute at the given geometry id.
+
+Replaces the geometry at geometryId with the provided geometry. Throws an error if there is not enough space reserved for geometry. Calling this will change all instances that are rendering that geometry.
+
+.optimize () : this
+Repacks the sub geometries in BatchedMesh to remove any unused space remaining from previously deleted geometry, freeing up space to add new geometry.
+
+.setGeometrySize ( maxVertexCount, maxIndexCount ) : this
+Resizes the available space in BatchedMesh's vertex and index buffer attributes to the provided sizes. If the provided arguments shrink the geometry buffers but there is not enough unused space at the end of the geometry attributes then an error is thrown.
+
+maxVertexCount - the max number of vertices to be used by all unique geometries to resize to.
+maxIndexCount - the max number of indices to be used by all unique geometries to resize to.
+
+.setInstanceCount ( maxInstanceCount ) : this
+Resizes the necessary buffers to support the provided number of instances. If the provided arguments shrink the number of instances but there are not enough unused ids at the end of the list then an error is thrown.
+
+maxInstanceCount - the max number of individual instances that can be added and rendered by the BatchedMesh.
+
+Source
+src/objects/BatchedMesh.js
+
+Object3D →
+Bone
+A bone which is part of a Skeleton. The skeleton in turn is used by the SkinnedMesh. Bones are almost identical to a blank Object3D.
+
+Code Example
+const root = new THREE.Bone();
+const child = new THREE.Bone();
+
+root.add( child );
+child.position.y = 5;
+Constructor
+Bone( )
+Creates a new Bone.
+
+Properties
+See the base Object3D class for common properties.
+
+.isBone : Boolean
+Read-only flag to check if a given object is of type Bone.
+
+.type : String
+Set to 'Bone', this can be used to find all Bones in a scene.
+
+Methods
+See the base Object3D class for common methods.
+
+Source
+src/objects/Bone.js
+
+Group →
+ClippingGroup
+A special version of the Group object that defines clipping planes for descendant objects. ClippingGroups can be nested, with clipping planes accumulating by type: intersection or union.
+
+Note: ClippingGroup is only supported with WebGPURenderer.
+
+Constructor
+ClippingGroup( )
+Properties
+See the base Group class for common properties.
+
+.isClippingGroup : Boolean
+Read-only flag to check if a given object is of type ClippingGroup.
+
+.clippingPlanes : Array
+User-defined clipping planes specified as THREE.Plane objects in world space. These planes apply to the objects that are children of this ClippingGroup. Points in space whose signed distance to the plane is negative are clipped (not rendered). See the webgpu / clipping example. Default is [].
+
+.enabled : Boolean
+Determines if the clipping planes defined by this object are applied. Default is true.
+
+.clipIntersection : Boolean
+Changes the behavior of clipping planes so that only their intersection is clipped, rather than their union. Default is false.
+
+.clipShadows : Boolean
+Defines whether to clip shadows according to the clipping planes specified by this ClippingGroup. Default is false.
+
+Methods
+See the base Object3D class for common methods.
+
+Source
+src/objects/ClippingGroup.js
+
+Object3D →
+Group
+This is almost identical to an Object3D. Its purpose is to make working with groups of objects syntactically clearer.
+
+Code Example
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+
+const cubeA = new THREE.Mesh( geometry, material );
+cubeA.position.set( 100, 100, 0 );
+
+const cubeB = new THREE.Mesh( geometry, material );
+cubeB.position.set( -100, -100, 0 );
+
+//create a group and add the two cubes
+//These cubes can now be rotated / scaled etc as a group
+const group = new THREE.Group();
+group.add( cubeA );
+group.add( cubeB );
+
+scene.add( group );
+Constructor
+Group( )
+Properties
+See the base Object3D class for common properties.
+
+.isGroup : Boolean
+Read-only flag to check if a given object is of type Group.
+
+.type : String
+A string 'Group'. This should not be changed.
+
+Methods
+See the base Object3D class for common methods.
+
+Source
+src/objects/Group.js
+
+Mesh →
+InstancedMesh
+A special version of Mesh with instanced rendering support. Use InstancedMesh if you have to render a large number of objects with the same geometry and material(s) but with different world transformations. The usage of InstancedMesh will help you to reduce the number of draw calls and thus improve the overall rendering performance in your application.
+
+Examples
+WebGL / instancing / dynamic
+WebGL / instancing / performance
+WebGL / instancing / scatter
+WebGL / instancing / raycast
+
+Constructor
+InstancedMesh( geometry : BufferGeometry, material : Material, count : Integer )
+geometry - an instance of BufferGeometry.
+material — a single or an array of Material. Default is a new MeshBasicMaterial.
+count - the number of instances.
+
+Properties
+See the base Mesh class for common properties.
+
+.boundingBox : Box3
+This bounding box encloses all instances of the InstancedMesh. Can be calculated with .computeBoundingBox(). Default is null.
+
+.boundingSphere : Sphere
+This bounding sphere encloses all instances of the InstancedMesh. Can be calculated with .computeBoundingSphere(). Default is null.
+
+.count : Integer
+The number of instances. The count value passed into the constructor represents the maximum number of instances of this mesh. You can change the number of instances at runtime to an integer value in the range [0, count].
+
+If you need more instances than the original count value, you have to create a new InstancedMesh.
+
+.instanceColor : InstancedBufferAttribute
+Represents the colors of all instances. null by default. You have to set its needsUpdate flag to true if you modify instanced data via .setColorAt().
+
+.instanceMatrix : InstancedBufferAttribute
+Represents the local transformation of all instances. You have to set its needsUpdate flag to true if you modify instanced data via .setMatrixAt().
+
+.morphTexture : DataTexture
+Represents the morph target weights of all instances. You have to set its needsUpdate flag to true if you modify instanced data via .setMorphAt().
+
+.isInstancedMesh : Boolean
+Read-only flag to check if a given object is of type InstancedMesh.
+
+Methods
+See the base Mesh class for common methods.
+
+.computeBoundingBox () : undefined
+Computes the bounding box of the instanced mesh, and updates the .boundingBox attribute. The bounding box is not computed by the engine; it must be computed by your app. You may need to recompute the bounding box if an instance is transformed via .setMatrixAt().
+
+.computeBoundingSphere () : undefined
+Computes the bounding sphere of the instanced mesh, and updates the .boundingSphere attribute. The engine automatically computes the bounding sphere when it is needed, e.g., for ray casting or view frustum culling. You may need to recompute the bounding sphere if an instance is transformed via .setMatrixAt().
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.getColorAt ( index : Integer, color : Color ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+color: This color object will be set to the color of the defined instance.
+
+Get the color of the defined instance.
+
+.getMatrixAt ( index : Integer, matrix : Matrix4 ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+matrix: This 4x4 matrix will be set to the local transformation matrix of the defined instance.
+
+Get the local transformation matrix of the defined instance.
+
+.getMorphAt ( index : Integer, mesh : Mesh ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+mesh: The .morphTargetInfluences property of this mesh will be filled with the morph target weights of the defined instance.
+
+Get the morph target weights of the defined instance.
+
+.setColorAt ( index : Integer, color : Color ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+color: The color of a single instance.
+
+Sets the given color to the defined instance. Make sure you set .instanceColor.needsUpdate to true after updating all the colors.
+
+.setMatrixAt ( index : Integer, matrix : Matrix4 ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+matrix: A 4x4 matrix representing the local transformation of a single instance.
+
+Sets the given local transformation matrix to the defined instance. Make sure you set .instanceMatrix.needsUpdate to true after updating all the matrices.
+
+Negatively scaled matrices are not supported.
+
+.setMorphAt ( index : Integer, mesh : Mesh ) : undefined
+index: The index of an instance. Values have to be in the range [0, count].
+
+mesh: A mesh with .morphTargetInfluences property containing the morph target weights of a single instance.
+
+Sets the morph target weights to the defined instance. Make sure you set .morphTexture.needsUpdate to true after updating all the influences.
+
+Source
+src/objects/InstancedMesh.js
+
+Object3D →
+Line
+A continuous line.
+
+This is nearly the same as LineSegments; the only difference is that it is rendered using gl.LINE_STRIP instead of gl.LINES
+
+Code Example
+const material = new THREE.LineBasicMaterial({
+	color: 0x0000ff
+});
+
+const points = [];
+points.push( new THREE.Vector3( - 10, 0, 0 ) );
+points.push( new THREE.Vector3( 0, 10, 0 ) );
+points.push( new THREE.Vector3( 10, 0, 0 ) );
+
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const line = new THREE.Line( geometry, material );
+scene.add( line );
+Constructor
+Line( geometry : BufferGeometry, material : Material )
+geometry — vertices representing the line segment(s). Default is a new BufferGeometry.
+material — material for the line. Default is a new LineBasicMaterial.
+
+Properties
+See the base Object3D class for common properties.
+
+.geometry : BufferGeometry
+Vertices representing the line segment(s).
+
+.isLine : Boolean
+Read-only flag to check if a given object is of type Line.
+
+.material : Material
+Material for the line.
+
+.morphTargetInfluences : Array
+An array of weights typically from 0-1 that specify how much of the morph is applied. Undefined by default, but reset to a blank array by .updateMorphTargets().
+
+.morphTargetDictionary : Object
+A dictionary of morphTargets based on the morphTarget.name property. Undefined by default, but rebuilt .updateMorphTargets().
+
+Methods
+See the base Object3D class for common methods.
+
+.computeLineDistances () : this
+Computes an array of distance values which are necessary for LineDashedMaterial. For each vertex in the geometry, the method calculates the cumulative length from the current point to the very beginning of the line.
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Get intersections between a casted Ray and this Line. Raycaster.intersectObject will call this method.
+
+.updateMorphTargets () : undefined
+Updates the morphTargets to have no influence on the object. Resets the .morphTargetInfluences and .morphTargetDictionary properties.
+
+Source
+src/objects/Line.js
+
+Object3D → Line →
+LineLoop
+A continuous line that connects back to the start.
+
+This is nearly the same as Line; the only difference is that it is rendered using gl.LINE_LOOP instead of gl.LINE_STRIP, which draws a straight line to the next vertex, and connects the last vertex back to the first.
+
+Constructor
+LineLoop( geometry : BufferGeometry, material : Material )
+geometry — List of vertices representing points on the line loop.
+material — Material for the line. Default is LineBasicMaterial.
+
+Properties
+See the base Line class for common properties.
+
+.isLineLoop : Boolean
+Read-only flag to check if a given object is of type LineLoop.
+
+Methods
+See the base Line class for common methods.
+
+Source
+src/objects/LineLoop.js
+
+Object3D → Line →
+LineSegments
+A series of lines drawn between pairs of vertices.
+
+This is nearly the same as Line; the only difference is that it is rendered using gl.LINES instead of gl.LINE_STRIP.
+
+Constructor
+LineSegments( geometry : BufferGeometry, material : Material )
+geometry — Pair(s) of vertices representing each line segment(s).
+material — Material for the line. Default is LineBasicMaterial.
+
+Properties
+See the base Line class for common properties.
+
+.isLineSegments : Boolean
+Read-only flag to check if a given object is of type LineSegments.
+
+Methods
+See the base Line class for common methods.
+
+Source
+src/objects/LineSegments.js
+
+Object3D →
+LOD
+Level of Detail - show meshes with more or less geometry based on distance from the camera.
+
+Every level is associated with an object, and rendering can be switched between them at the distances specified. Typically you would create, say, three meshes, one for far away (low detail), one for mid range (medium detail) and one for close up (high detail).
+
+Code Example
+const lod = new THREE.LOD();
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+
+//Create spheres with 3 levels of detail and create new LOD levels for them
+for( let i = 0; i < 3; i++ ) {
+	const geometry = new THREE.IcosahedronGeometry( 10, 3 - i );
+	const mesh = new THREE.Mesh( geometry, material );
+	lod.addLevel( mesh, i * 75 );
+}
+
+scene.add( lod );
+Examples
+webgl / lod
+
+Constructor
+LOD( )
+Creates a new LOD.
+
+Properties
+See the base Object3D class for common properties.
+
+.autoUpdate : Boolean
+Whether the LOD object is updated automatically by the renderer per frame or not. If set to false, you have to call LOD.update() in the render loop by yourself. Default is true.
+
+.isLOD : Boolean
+Read-only flag to check if a given object is of type LOD.
+
+.levels : Array
+An array of level objects
+
+Each level is an object with the following properties:
+object - The Object3D to display at this level.
+distance - The distance at which to display this level of detail.
+hysteresis - Threshold used to avoid flickering at LOD boundaries, as a fraction of distance.
+
+Methods
+See the base Object3D class for common methods.
+
+.addLevel ( object : Object3D, distance : Float, hysteresis : Float ) : this
+object - The Object3D to display at this level.
+distance - The distance at which to display this level of detail. Default 0.0.
+hysteresis - Threshold used to avoid flickering at LOD boundaries, as a fraction of distance. Default 0.0.
+
+Adds a mesh that will display at a certain distance and greater. Typically the further away the distance, the lower the detail on the mesh.
+
+.removeLevel ( distance : Float) : Boolean
+distance - Distance of the level to delete.
+
+Removes an existing level, based on the distance from the camera. Returns true when the level has been removed. Otherwise false.
+
+.getCurrentLevel () : Integer
+Get the currently active LOD level. As index of the levels array.
+
+.getObjectForDistance ( distance : Float ) : Object3D
+Get a reference to the first Object3D (mesh) that is greater than distance.
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Get intersections between a casted Ray and this LOD. Raycaster.intersectObject will call this method.
+
+.toJSON ( meta ) : Object
+Create a JSON structure with details of this LOD object.
+
+.update ( camera : Camera ) : undefined
+Set the visibility of each level's object based on distance from the camera.
+
+Source
+src/objects/LOD.js
+
+Object3D →
+Mesh
+Class representing triangular polygon mesh based objects. Also serves as a base for other classes such as SkinnedMesh.
+
+Code Example
+const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+Constructor
+Mesh( geometry : BufferGeometry, material : Material )
+geometry — (optional) an instance of BufferGeometry. Default is a new BufferGeometry.
+material — (optional) a single or an array of Material. Default is a new MeshBasicMaterial
+
+Properties
+See the base Object3D class for common properties.
+
+.geometry : BufferGeometry
+An instance of BufferGeometry (or derived classes), defining the object's structure.
+
+.isMesh : Boolean
+Read-only flag to check if a given object is of type Mesh.
+
+.material : Material
+An instance of material derived from the Material base class or an array of materials, defining the object's appearance. Default is a MeshBasicMaterial.
+
+.morphTargetInfluences : Array
+An array of weights typically from 0-1 that specify how much of the morph is applied. Undefined by default, but reset to a blank array by updateMorphTargets.
+
+.morphTargetDictionary : Object
+A dictionary of morphTargets based on the morphTarget.name property. Undefined by default, but rebuilt updateMorphTargets.
+
+Methods
+See the base Object3D class for common methods.
+
+.getVertexPosition ( index : Integer, target : Vector3 ) : Vector3
+Get the local-space position of the vertex at the given index, taking into account the current animation state of both morph targets and skinning.
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Get intersections between a casted ray and this mesh. Raycaster.intersectObject will call this method, but the results are not ordered.
+
+.updateMorphTargets () : undefined
+Updates the morphTargets to have no influence on the object. Resets the morphTargetInfluences and morphTargetDictionary properties.
+
+Source
+src/objects/Mesh.js
+
+Object3D →
+Points
+A class for displaying points. The points are rendered by the WebGLRenderer using gl.POINTS.
+
+Constructor
+Points( geometry : BufferGeometry, material : Material )
+geometry — (optional) an instance of BufferGeometry. Default is a new BufferGeometry.
+material — (optional) a Material. Default is a new PointsMaterial.
+
+Properties
+See the base Object3D class for common properties.
+
+.geometry : BufferGeometry
+An instance of BufferGeometry (or derived classes), defining the object's structure.
+
+.isPoints : Boolean
+Read-only flag to check if a given object is of type Points.
+
+.material : Material
+An instance of Material, defining the object's appearance. Default is a PointsMaterial.
+
+.morphTargetInfluences : Array
+An array of weights typically from 0-1 that specify how much of the morph is applied. Undefined by default, but reset to a blank array by updateMorphTargets.
+
+.morphTargetDictionary : Object
+A dictionary of morphTargets based on the morphTarget.name property. Undefined by default, but rebuilt updateMorphTargets.
+
+Methods
+See the base Object3D class for common methods.
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Get intersections between a casted ray and this Points. Raycaster.intersectObject will call this method.
+
+.updateMorphTargets () : undefined
+Updates the morphTargets to have no influence on the object. Resets the morphTargetInfluences and morphTargetDictionary properties.
+
+Source
+src/objects/Points.js
+
+Skeleton
+Use an array of bones to create a skeleton that can be used by a SkinnedMesh.
+
+Code Example
+// Create a simple "arm"
+
+const bones = [];
+
+const shoulder = new THREE.Bone();
+const elbow = new THREE.Bone();
+const hand = new THREE.Bone();
+
+shoulder.add( elbow );
+elbow.add( hand );
+
+bones.push( shoulder );
+bones.push( elbow );
+bones.push( hand );
+
+shoulder.position.y = -5;
+elbow.position.y = 0;
+hand.position.y = 5;
+
+const armSkeleton = new THREE.Skeleton( bones );
+See the SkinnedMesh page for an example of usage with standard BufferGeometry.
+
+Constructor
+Skeleton( bones : Array, boneInverses : Array )
+bones - The array of bones. Default is an empty array.
+boneInverses - (optional) An array of Matrix4s.
+
+Creates a new Skeleton.
+
+Properties
+.bones : Array
+The array of bones. Note this is a copy of the original array, not a reference, so you can modify the original array without effecting this one.
+
+.boneInverses : Array
+An array of Matrix4s that represent the inverse of the matrixWorld of the individual bones.
+
+.boneMatrices : Float32Array
+The array buffer holding the bone data when using a vertex texture.
+
+.boneTexture : DataTexture
+The DataTexture holding the bone data when using a vertex texture.
+
+Methods
+.clone () : Skeleton
+Returns a clone of this Skeleton object.
+
+.calculateInverses () : undefined
+Generates the boneInverses array if not provided in the constructor.
+
+.computeBoneTexture () : this
+Computes an instance of DataTexture in order to pass the bone data more efficiently to the shader. The texture is assigned to boneTexture.
+
+.pose () : undefined
+Returns the skeleton to the base pose.
+
+.update () : undefined
+Updates the boneMatrices and boneTexture after changing the bones. This is called automatically by the WebGLRenderer if the skeleton is used with a SkinnedMesh.
+
+.getBoneByName ( name : String ) : Bone
+name -- String to match to the Bone's .name property.
+
+Searches through the skeleton's bone array and returns the first with a matching name.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+Source
+src/objects/Skeleton.js
+
+Object3D → Mesh →
+SkinnedMesh
+A mesh that has a Skeleton with bones that can then be used to animate the vertices of the geometry.
+
+
+Code Example
+const geometry = new THREE.CylinderGeometry( 5, 5, 5, 5, 15, 5, 30 );
+
+// create the skin indices and skin weights manually
+// (typically a loader would read this data from a 3D model for you)
+
+const position = geometry.attributes.position;
+
+const vertex = new THREE.Vector3();
+
+const skinIndices = [];
+const skinWeights = [];
+
+for ( let i = 0; i < position.count; i ++ ) {
+
+	vertex.fromBufferAttribute( position, i );
+
+	// compute skinIndex and skinWeight based on some configuration data
+	const y = ( vertex.y + sizing.halfHeight );
+	const skinIndex = Math.floor( y / sizing.segmentHeight );
+	const skinWeight = ( y % sizing.segmentHeight ) / sizing.segmentHeight;
+	skinIndices.push( skinIndex, skinIndex + 1, 0, 0 );
+	skinWeights.push( 1 - skinWeight, skinWeight, 0, 0 );
+}
+
+geometry.setAttribute( 'skinIndex', new THREE.Uint16BufferAttribute( skinIndices, 4 ) );
+geometry.setAttribute( 'skinWeight', new THREE.Float32BufferAttribute( skinWeights, 4 ) );
+
+// create skinned mesh and skeleton
+
+const mesh = new THREE.SkinnedMesh( geometry, material );
+const skeleton = new THREE.Skeleton( bones );
+
+// see example from THREE.Skeleton
+const rootBone = skeleton.bones[ 0 ];
+mesh.add( rootBone );
+
+// bind the skeleton to the mesh
+mesh.bind( skeleton );
+
+// move the bones and manipulate the model
+skeleton.bones[ 0 ].rotation.x = -0.1;
+skeleton.bones[ 1 ].rotation.x = 0.2;
+Constructor
+SkinnedMesh( geometry : BufferGeometry, material : Material )
+geometry - an instance of BufferGeometry.
+material - (optional) an instance of Material. Default is a new MeshBasicMaterial.
+
+Properties
+See the base Mesh class for common properties.
+
+.bindMode : String
+Either AttachedBindMode or DetachedBindMode. AttachedBindMode means the skinned mesh shares the same world space as the skeleton. This is not true when using DetachedBindMode which is useful when sharing a skeleton across multiple skinned meshes. Default is AttachedBindMode.
+
+.bindMatrix : Matrix4
+The base matrix that is used for the bound bone transforms.
+
+.bindMatrixInverse : Matrix4
+The base matrix that is used for resetting the bound bone transforms.
+
+.boundingBox : Box3
+The bounding box of the SkinnedMesh. Can be calculated with .computeBoundingBox(). Default is null.
+
+.boundingSphere : Sphere
+The bounding sphere of the SkinnedMesh. Can be calculated with .computeBoundingSphere(). Default is null.
+
+.isSkinnedMesh : Boolean
+Read-only flag to check if a given object is of type SkinnedMesh.
+
+.skeleton : Skeleton
+Skeleton representing the bone hierarchy of the skinned mesh.
+
+Methods
+See the base Mesh class for common methods.
+
+.bind ( skeleton : Skeleton, bindMatrix : Matrix4 ) : undefined
+skeleton - Skeleton created from a Bones tree.
+bindMatrix - Matrix4 that represents the base transform of the skeleton.
+
+Bind a skeleton to the skinned mesh. The bindMatrix gets saved to .bindMatrix property and the .bindMatrixInverse gets calculated.
+
+.clone () : SkinnedMesh
+This method does currently not clone an instance of SkinnedMesh correctly. Please use SkeletonUtils.clone() in the meanwhile.
+
+.computeBoundingBox () : undefined
+Computes the bounding box of the skinned mesh, and updates the .boundingBox attribute. The bounding box is not computed by the engine; it must be computed by your app. If the skinned mesh is animated, the bounding box should be recomputed per frame.
+
+.computeBoundingSphere () : undefined
+Computes the bounding sphere of the skinned mesh, and updates the .boundingSphere attribute. The bounding sphere is automatically computed by the engine when it is needed, e.g., for ray casting and view frustum culling. If the skinned mesh is animated, the bounding sphere should be recomputed per frame.
+
+.normalizeSkinWeights () : undefined
+Normalizes the skin weights.
+
+.pose () : undefined
+This method sets the skinned mesh in the rest pose (resets the pose).
+
+.applyBoneTransform ( index : Integer, vector : Vector3 ) : Vector3
+Applies the bone transform associated with the given index to the given position vector. Returns the updated vector.
+
+Source
+src/objects/SkinnedMesh.js
+
+Object3D →
+Sprite
+A sprite is a plane that always faces towards the camera, generally with a partially transparent texture applied.
+
+Sprites do not cast shadows, setting
+castShadow = true
+will have no effect.
+
+Code Example
+const map = new THREE.TextureLoader().load( 'sprite.png' );
+const material = new THREE.SpriteMaterial( { map: map } );
+
+const sprite = new THREE.Sprite( material );
+scene.add( sprite );
+Constructor
+Sprite( material : Material )
+material - (optional) an instance of SpriteMaterial. Default is a white SpriteMaterial.
+
+Creates a new Sprite.
+
+Properties
+See the base Object3D class for common properties.
+
+.isSprite : Boolean
+Read-only flag to check if a given object is of type Sprite.
+
+.material : SpriteMaterial
+An instance of SpriteMaterial, defining the object's appearance. Default is a white SpriteMaterial.
+
+.center : Vector2
+The sprite's anchor point, and the point around which the sprite rotates. A value of (0.5, 0.5) corresponds to the midpoint of the sprite. A value of (0, 0) corresponds to the lower left corner of the sprite. The default is (0.5, 0.5).
+
+Methods
+See the base Object3D class for common methods.
+
+.copy ( sprite : Sprite ) : this
+Copies the properties of the passed sprite to this one.
+
+.raycast ( raycaster : Raycaster, intersects : Array ) : undefined
+Get intersections between a casted ray and this sprite. Raycaster.intersectObject() will call this method. The raycaster must be initialized by calling Raycaster.setFromCamera() before raycasting against sprites.
+
+Source
+src/objects/Sprite.js
+

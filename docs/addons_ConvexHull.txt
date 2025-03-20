@@ -1,0 +1,350 @@
+Face
+Represents a section bounded by a specific amount of half-edges. The current implementation assumes that a face always consist of three edges.
+
+Import
+Face is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { Face } from 'three/addons/math/ConvexHull.js';
+Constructor
+Face()
+Creates a new instance of Face.
+
+Properties
+.normal : Vector3
+The normal vector of the face. Default is a Vector3 at (0, 0, 0).
+
+.midpoint : Vector3
+The midpoint or centroid of the face. Default is a Vector3 at (0, 0, 0).
+
+.area : Float
+The area of the face. Default is 0.
+
+.constant : Float
+Signed distance from face to the origin. Default is 0.
+
+.outside : VertexNode
+Reference to a vertex in a vertex list this face can see. Default is null.
+
+.mark : Integer
+Marks if a face is visible or deleted. Default is 'Visible'.
+
+.edge : HalfEdge
+Reference to the base edge of a face. To retrieve all edges, you can use the 'next' reference of the current edge. Default is null.
+
+Methods
+.create ( a : VertexNode, b : VertexNode, c : VertexNode ) : Face
+a - First vertex of the face.
+b - Second vertex of the face.
+c - Third vertex of the face.
+
+Creates a face.
+
+.getEdge ( i : Integer ) : HalfEdge
+i - The index of the edge.
+
+Returns an edge by the given index.
+
+.compute () : this
+Computes all properties of the face.
+
+.distanceToPoint ( point : Vector3 ) : Float
+point - Any point in 3D space.
+
+Returns the signed distance from a given point to the plane representation of this face.
+
+Source
+examples/jsm/math/ConvexHull.js
+
+HalfEdge
+The basis for a half-edge data structure, also known as doubly connected edge list (DCEL).
+
+Import
+HalfEdge is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { HalfEdge } from 'three/addons/math/ConvexHull.js';
+Constructor
+HalfEdge( vertex : VertexNode, face : Face )
+vertex - VertexNode A reference to its destination vertex.
+face - Face A reference to its face.
+
+Creates a new instance of HalfEdge.
+
+Properties
+.vertex : VertexNode
+Reference to the destination vertex. The origin vertex can be obtained by querying the destination of its twin, or of the previous half-edge. Default is undefined.
+
+.prev : HalfEdge
+Reference to the previous half-edge of the same face. Default is null.
+
+.next : HalfEdge
+Reference to the next half-edge of the same face. Default is null.
+
+.twin : HalfEdge
+Reference to the twin half-edge to reach the opposite face. Default is null.
+
+.face : Face
+Each half-edge bounds a single face and thus has a reference to that face. Default is undefined.
+
+Methods
+.head () : VertexNode
+Returns the destination vertex.
+
+.tail () : VertexNode
+Returns the origin vertex.
+
+.length () : Float
+Returns the Euclidean length (straight-line length) of the edge.
+
+.lengthSquared () : Float
+Returns the square of the Euclidean length (straight-line length) of the edge.
+
+.setTwin ( edge : HalfEdge ) : this
+edge - Any half-edge.
+
+Sets the twin edge of this half-edge. It also ensures that the twin reference of the given half-edge is correctly set.
+
+Source
+examples/jsm/math/ConvexHull.js
+
+ConvexHull
+A convex hull class. Implements the Quickhull algorithm by: Dirk Gregorius. March 2014, Game Developers Conference: Implementing QuickHull.
+
+Import
+ConvexHull is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { ConvexHull } from 'three/addons/math/ConvexHull.js';
+Constructor
+ConvexHull()
+Creates a new instance of ConvexHull.
+
+Properties
+.assigned : VertexList
+This vertex list holds all vertices that are assigned to a face. Default is an empty vertex list.
+
+.faces : Array
+The generated faces of the convex hull. Default is an empty array.
+
+.newFaces : Array
+This array holds the faces that are generated within a single iteration. Default is an empty array.
+
+.tolerance : Float
+The epsilon value that is used for internal comparative operations. The calculation of this value depends on the size of the geometry. Default is -1.
+
+.unassigned : VertexList
+This vertex list holds all vertices that are not assigned to a face. Default is an empty vertex list.
+
+.vertices : Array
+The internal representation of the given geometry data (an array of vertices).
+
+Methods
+.addAdjoiningFace ( eyeVertex : VertexNode, horizonEdge : HalfEdge ) : HalfEdge
+eyeVertex - The vertex that is added to the hull.
+horizonEdge - A single edge of the horizon.
+
+Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order. All the half edges are created in CCW order thus the face is always pointing outside the hull
+
+.addNewFaces ( eyeVertex : VertexNode, horizonEdge : HalfEdge ) : this
+eyeVertex - The vertex that is added to the hull.
+horizon - An array of half-edges that form the horizon.
+
+Adds 'horizon.length' faces to the hull, each face will be linked with the horizon opposite face and the face on the left/right.
+
+.addVertexToFace ( vertex : VertexNode, face : Face ) : this
+vertex - The vertex to add.
+face - The target face.
+
+Adds a vertex to the 'assigned' list of vertices and assigns it to the given face.
+
+.addVertexToHull ( eyeVertex : VertexNode ) : this
+eyeVertex - The vertex that is added to the hull.
+
+Adds a vertex to the hull with the following algorithm
+
+Compute the 'horizon' which is a chain of half edges. For an edge to belong to this group it must be the edge connecting a face that can see 'eyeVertex' and a face which cannot see 'eyeVertex'.
+All the faces that can see 'eyeVertex' have its visible vertices removed from the assigned vertex list.
+A new set of faces is created with each edge of the 'horizon' and 'eyeVertex'. Each face is connected with the opposite horizon face and the face on the left/right.
+The vertices removed from all the visible faces are assigned to the new faces if possible.
+.cleanup () : this
+Cleans up internal properties after computing the convex hull.
+
+.compute () : this
+Starts the execution of the quick hull algorithm.
+
+.computeExtremes () : Object
+Computes the extremes values (min/max vectors) which will be used to compute the initial hull.
+
+.computeHorizon ( eyePoint : Vector3, crossEdge : HalfEdge, face : Face, horizon : Array ) : this
+eyePoint - The 3D-coordinates of a point.
+crossEdge - The edge used to jump to the current face.
+face - The current face being tested.
+horizon - The edges that form part of the horizon in CCW order.
+
+Computes a chain of half edges in CCW order called the 'horizon'. For an edge to be part of the horizon it must join a face that can see 'eyePoint' and a face that cannot see 'eyePoint'.
+
+.computeInitialHull () : this
+Computes the initial simplex assigning to its faces all the points that are candidates to form part of the hull.
+
+.containsPoint ( point : Vector3 ) : this
+point - A point in 3D space.
+
+Returns true if the given point is inside this convex hull.
+
+.deleteFaceVertices ( face : Face, absorbingFace : Face ) : this
+face - The given face.
+absorbingFace - An optional face that tries to absorb the vertices of the first face.
+
+Removes all the visible vertices that 'face' is able to see.
+
+If 'absorbingFace' doesn't exist, then all the removed vertices will be added to the 'unassigned' vertex list.
+If 'absorbingFace' exists, then this method will assign all the vertices of 'face' that can see 'absorbingFace'.
+If a vertex cannot see 'absorbingFace', it's added to the 'unassigned' vertex list.
+.intersectRay ( ray : Ray, target : Vector3 ) : Vector3
+ray - The given ray.
+target - The target vector representing the intersection point.
+
+Performs a ray intersection test with this convex hull. If no intersection is found, null is returned.
+
+.intersectsRay ( ray : Ray ) : Boolean
+ray - The given ray.
+
+Returns true if the given ray intersects with this convex hull.
+
+.makeEmpty () : this
+Makes this convex hull empty.
+
+.nextVertexToAdd () : VertexNode
+Finds the next vertex to create faces with the current hull.
+
+Let the initial face be the first face existing in the 'assigned' vertex list.
+If a face doesn't exist then return since there're no vertices left.
+Otherwise for each vertex that face sees find the one furthest away from it.
+.reindexFaces () : this
+Removes inactive (e.g. deleted) faces from the internal face list.
+
+.removeAllVerticesFromFace ( face : Face ) : VertexNode
+face - The given face.
+
+Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertex list.
+
+.removeVertexFromFace ( vertex : VertexNode, face : Face ) : this
+vertex - The vertex to remove.
+face - The target face.
+
+Removes a vertex from the 'assigned' list of vertices and from the given face. It also makes sure that the link from 'face' to the first vertex it sees in 'assigned' is linked correctly after the removal.
+
+.resolveUnassignedPoints ( newFaces : Array ) : this
+newFaces - An array of new faces.
+
+Reassigns as many vertices as possible from the unassigned list to the new faces.
+
+.setFromObject ( object : Object3D ) : this
+object - Object3D to compute the convex hull of.
+
+Computes the convex hull of an Object3D (including its children),accounting for the world transforms of both the object and its children.
+
+.setFromPoints ( points : Array ) : this
+points - Array of Vector3s that the resulting convex hull will contain.
+
+Computes to convex hull for the given array of points.
+
+Source
+examples/jsm/math/ConvexHull.js
+
+VertexNode
+A vertex as a double linked list node.
+
+Import
+VertexNode is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { VertexNode } from 'three/addons/math/ConvexHull.js';
+Constructor
+VertexNode( point : Vector3 )
+point - Vector3 A point (x, y, z) in 3D space.
+
+Creates a new instance of VertexNode.
+
+Properties
+.point : Vector3
+A point (x, y, z) in 3D space. Default is undefined.
+
+.prev : VertexNode
+Reference to the previous vertex in the double linked list. Default is null.
+
+.next : VertexNode
+Reference to the next vertex in the double linked list. Default is null.
+
+.face : Face
+Reference to the face that is able to see this vertex. Default is undefined.
+
+Source
+examples/jsm/math/ConvexHull.js
+
+
+VertexList
+A doubly linked list of vertices.
+
+Import
+VertexList is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { VertexList } from 'three/addons/math/ConvexHull.js';
+Constructor
+VertexList()
+Creates a new instance of VertexList.
+
+Properties
+.head : VertexNode
+Reference to the first vertex of the linked list. Default is null.
+
+.tail : VertexNode
+Reference to the last vertex of the linked list. Default is null.
+
+Methods
+.first () : VertexNode
+Returns the head reference.
+
+.last () : VertexNode
+Returns the tail reference.
+
+.clear () : this
+Clears the linked list.
+
+.insertBefore ( target : Vertex, vertex : Vertex ) : this
+target - The target vertex. It's assumed that this vertex belongs to the linked list.
+vertex - The vertex to insert.
+
+Inserts a vertex before a target vertex.
+
+.insertAfter ( target : Vertex, vertex : Vertex ) : this
+target - The target vertex. It's assumed that this vertex belongs to the linked list.
+vertex - The vertex to insert.
+
+Inserts a vertex after a target vertex.
+
+.append ( vertex : Vertex ) : this
+vertex - The vertex to append.
+
+Appends a vertex to the end of the linked list.
+
+.appendChain ( vertex : Vertex ) : this
+vertex - The head vertex of a chain of vertices.
+
+Appends a chain of vertices where the given vertex is the head.
+
+.remove ( vertex : Vertex ) : this
+vertex - The vertex to remove.
+
+Removes a vertex from the linked list.
+
+.removeSubList ( a : Vertex, b : Vertex ) : this
+a - The head of the sublist.
+b - The tail of the sublist.
+
+Removes a sublist of vertices from the linked list.
+
+.isEmpty () : Boolean
+Returns true if the linked list is empty.
+
+Source
+examples/jsm/math/ConvexHull.js
+
+

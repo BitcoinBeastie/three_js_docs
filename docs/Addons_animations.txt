@@ -1,0 +1,135 @@
+Animations
+CCDIKSolver
+A solver for IK with CCD Algorithm.
+
+CCDIKSolver solves Inverse Kinematics Problem with CCD Algorithm. CCDIKSolver is designed to work with SkinnedMesh but also can be used with GLTFLoader skeleton.
+
+
+Import
+CCDIKSolver is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { CCDIKSolver } from 'three/addons/animation/CCDIKSolver.js';
+Code Example
+let ikSolver;
+
+//
+// Bones hierarchy:
+//
+//   root
+//     ├── bone0
+//     │    └── bone1
+//     │          └── bone2
+//     │                └── bone3
+//     └── target
+//
+// Positioned as follow on the cylinder:
+//
+//        o      <- target      (y =  20)
+//        
+//   +----o----+ <- bone3       (y =  12)
+//   |         |
+//   |    o    | <- bone2       (y =   4)
+//   |         |
+//   |    o    | <- bone1       (y =  -4)
+//   |         |
+//   +----oo---+ <- root, bone0 (y = -12)
+//
+
+let bones = []
+
+// "root"
+let rootBone = new Bone();
+rootBone.position.y = -12;
+bones.push( rootBone );
+
+// "bone0"
+let prevBone = new Bone();
+prevBone.position.y = 0;
+rootBone.add( prevBone );
+bones.push( prevBone );
+
+// "bone1", "bone2", "bone3"
+for ( let i = 1; i <= 3; i ++ ) {
+	const bone = new Bone();
+	bone.position.y = 8;
+	bones.push( bone );
+	
+	prevBone.add( bone );
+	prevBone = bone;
+}
+
+// "target"
+const targetBone = new Bone();
+targetBone.position.y = 24 + 8
+rootBone.add( targetBone );
+bones.push( targetBone );
+
+//
+// skinned mesh
+//
+
+const mesh = new SkinnedMesh( geometry,	material );
+const skeleton = new Skeleton( bones );
+
+mesh.add( bones[ 0 ] ); // "root" bone
+mesh.bind( skeleton );
+
+//
+// ikSolver
+//
+
+const iks = [
+	{
+		target: 5, // "target"
+		effector: 4, // "bone3"
+		links: [ { index: 3 }, { index: 2 }, { index: 1 } ] // "bone2", "bone1", "bone0"
+	}
+];
+ikSolver = new CCDIKSolver( mesh, iks );
+
+function render() {
+	ikSolver?.update();
+	renderer.render( scene, camera );
+}
+Examples
+webgl_animation_skinning_ik
+
+Constructor
+CCDIKSolver( mesh : SkinnedMesh, iks : Array )
+mesh — SkinnedMesh for which CCDIKSolver solves IK problem.
+iks — An array of Object specifying IK parameter. target, effector, and link-index are index integers in .skeleton.bones. The bones relation should be "links[ n ], links[ n - 1 ], ..., links[ 0 ], effector" in order from parent to child.
+
+target — Target bone.
+effector — Effector bone.
+links — An array of Object specifying link bones.
+index — Link bone.
+limitation — (optional) Rotation axis. Default is undefined.
+rotationMin — (optional) Rotation minimum limit. Default is undefined.
+rotationMax — (optional) Rotation maximum limit. Default is undefined.
+enabled — (optional) Default is true.
+iteration — (optional) Iteration number of calculation. Smaller is faster but less precise. Default is 1.
+minAngle — (optional) Minimum rotation angle in a step. Default is undefined.
+maxAngle — (optional) Maximum rotation angle in a step. Default is undefined.
+Creates a new CCDIKSolver.
+
+Properties
+.iks : Array
+An array of IK parameter passed to the constructor.
+
+.mesh : SkinnedMesh
+SkinnedMesh passed to the constructor.
+
+Methods
+.createHelper () : CCDIKHelper
+Return CCDIKHelper. You can visualize IK bones by adding the helper to scene.
+
+.update () : this
+Update IK bones quaternion by solving CCD algorithm.
+
+.updateOne ( ikParam : Object ) : this
+Update an IK bone quaternion by solving CCD algorithm.
+
+Source
+examples/jsm/animation/CCDIKSolver.js
+
+Controls

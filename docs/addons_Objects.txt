@@ -1,0 +1,90 @@
+Mesh →
+Lensflare
+Creates a simulated lens flare that tracks a light. Lensflare can only be used when setting the alpha context parameter of WebGLRenderer to true.
+
+Import
+Lensflare is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { Lensflare, LensflareElement } from 'three/addons/objects/Lensflare.js';
+Code Example
+const light = new THREE.PointLight( 0xffffff, 1.5, 2000 );
+
+const textureLoader = new THREE.TextureLoader();
+
+const textureFlare0 = textureLoader.load( "textures/lensflare/lensflare0.png" );
+const textureFlare1 = textureLoader.load( "textures/lensflare/lensflare2.png" );
+const textureFlare2 = textureLoader.load( "textures/lensflare/lensflare3.png" );
+
+const lensflare = new Lensflare();
+
+lensflare.addElement( new LensflareElement( textureFlare0, 512, 0 ) );
+lensflare.addElement( new LensflareElement( textureFlare1, 512, 0 ) );
+lensflare.addElement( new LensflareElement( textureFlare2, 60, 0.6 ) );
+
+light.add( lensflare );
+Examples
+WebGL / lensflares
+
+Constructor
+LensflareElement( texture : Texture, size : Float, distance : Float, color : Color )
+texture - THREE.Texture to use for the flare.
+size - (optional) size in pixels
+distance - (optional) (0-1) from light source (0 = at light source)
+color - (optional) the Color of the lens flare
+
+Properties
+See the base Mesh class for common properties.
+
+Source
+examples/jsm/objects/Lensflare.js
+
+Mesh →
+Sky
+Sky creates a ready to go sky environment for your scenes.
+
+Import
+Sky is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { Sky } from 'three/addons/objects/Sky.js';
+Code Example
+const sky = new Sky();
+sky.scale.setScalar( 450000 );
+
+const phi = MathUtils.degToRad( 90 );
+const theta = MathUtils.degToRad( 180 );
+const sunPosition = new Vector3().setFromSphericalCoords( 1, phi, theta );
+
+sky.material.uniforms.sunPosition.value = sunPosition;
+
+scene.add( sky );
+Examples
+misc / objects / Sky
+
+Constructor
+Sky()
+Create a new Sky instance.
+
+Properties
+Sky instance is a Mesh with a pre-defined ShaderMaterial, so every property described here should be set using Uniforms.
+
+.turbidity : Number
+Haziness of the Sky.
+
+.rayleigh : Number
+For a more detailed explanation see: Rayleigh scattering .
+
+.mieCoefficient : Number
+Mie scattering amount.
+
+.mieDirectionalG : Number
+Mie scattering direction.
+
+.sunPosition : Vector3
+The position of the sun.
+
+.up : Vector3
+The sun's elevation from the horizon, in degrees.
+
+Source
+examples/jsm/objects/Sky.js
+

@@ -1,0 +1,772 @@
+Texture →
+CanvasTexture
+Creates a texture from a canvas element.
+
+This is almost the same as the base Texture class, except that it sets needsUpdate to true immediately.
+
+Constructor
+CanvasTexture( canvas : HTMLElement, mapping : Constant, wrapS : Constant, wrapT : Constant, magFilter : Constant, minFilter : Constant, format : Constant, type : Constant, anisotropy : Number )
+canvas -- The HTML canvas element from which to load the texture.
+mapping -- How the image is applied to the object. An object type of THREE.UVMapping. See mapping constants for other choices.
+wrapS -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+wrapT -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+magFilter -- How the texture is sampled when a texel covers more than one pixel. The default is THREE.LinearFilter. See magnification filter constants for other choices.
+minFilter -- How the texture is sampled when a texel covers less than one pixel. The default is THREE.LinearMipmapLinearFilter. See minification filter constants for other choices.
+format -- The format used in the texture. See format constants for other choices.
+type -- Default is THREE.UnsignedByteType. See type constants for other choices.
+anisotropy -- The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+
+
+Properties
+See the base Texture class for common properties.
+
+.isCanvasTexture : Boolean
+Read-only flag to check if a given object is of type CanvasTexture.
+
+.needsUpdate : Boolean
+True by default. This is required so that the canvas data is loaded.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/CanvasTexture.js
+
+Texture →
+CompressedTexture
+Creates a texture based on data in compressed form, for example from a DDS file.
+
+For use with the CompressedTextureLoader.
+
+Constructor
+CompressedTexture( mipmaps : Array, width : Number, height : Number, format : Constant, type : Constant, mapping : Constant, wrapS : Constant, wrapT : Constant, magFilter : Constant, minFilter : Constant, anisotropy : Number, colorSpace : Constant )
+mipmaps -- The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct format and type.
+width -- The width of the biggest mipmap.
+height -- The height of the biggest mipmap.
+format -- The format used in the mipmaps. See ST3C Compressed Texture Formats, PVRTC Compressed Texture Formats and ETC Compressed Texture Format for other choices.
+type -- Default is THREE.UnsignedByteType. See type constants for other choices.
+mapping -- How the image is applied to the object. An object type of THREE.UVMapping. See mapping constants for other choices.
+wrapS -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+wrapT -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+magFilter -- How the texture is sampled when a texel covers more than one pixel. The default is THREE.LinearFilter. See magnification filter constants for other choices.
+minFilter -- How the texture is sampled when a texel covers less than one pixel. The default is THREE.LinearMipmapLinearFilter. See minification filter constants for other choices.
+anisotropy -- The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+colorSpace -- The default is THREE.NoColorSpace. See color space constants for other choices.
+
+
+Properties
+See the base Texture class for common properties.
+.flipY : Boolean
+False by default. Flipping textures does not work for compressed textures.
+
+.generateMipmaps : Boolean
+False by default. Mipmaps can't be generated for compressed textures
+
+.image : Object
+Overridden with a object containing width and height.
+
+.isCompressedTexture : Boolean
+Read-only flag to check if a given object is of type CompressedTexture.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/CompressedTexture.js
+
+CompressedTexture →
+CompressedArrayTexture
+Creates an texture 2D array based on data in compressed form, for example from a DDS file.
+
+For use with the CompressedTextureLoader.
+
+Constructor
+CompressedArrayTexture( mipmaps : Array, width : Number, height : Number, format : Constant, type : Constant )
+mipmaps -- The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct format and type.
+width -- The width of the biggest mipmap.
+height -- The height of the biggest mipmap.
+depth -- The number of layers of the 2D array texture.
+format -- The format used in the mipmaps. See ST3C Compressed Texture Formats, PVRTC Compressed Texture Formats and ETC Compressed Texture Format for other choices.
+type -- Default is THREE.UnsignedByteType. See type constants for other choices.
+
+Properties
+See the base CompressedTexture class for common properties.
+.wrapR : number
+This defines how the texture is wrapped in the depth direction.
+The default is THREE.ClampToEdgeWrapping, where the edge is clamped to the outer edge texels. The other two choices are THREE.RepeatWrapping and THREE.MirroredRepeatWrapping. See the texture constants page for details.
+
+.image : Object
+Overridden with a object containing width, height, and depth.
+
+.layerUpdates : Set
+A set of all layers which need to be updated in the texture. See addLayerUpdate.
+
+.isCompressedArrayTexture : Boolean
+Read-only flag to check if a given object is of type CompressedArrayTexture.
+
+Methods
+.addLayerUpdate ( layerIndex ) : addLayerUpdate
+Describes that a specific layer of the texture needs to be updated. Normally when needsUpdate is set to true, the entire compressed texture array is sent to the GPU. Marking specific layers will only transmit subsets of all mipmaps associated with a specific depth in the array which is often much more performant.
+
+.clearLayerUpdates () : clearLayerUpdates
+Resets the layer updates registry. See addLayerUpdate.
+
+See the base CompressedTexture class for common methods.
+
+Source
+src/textures/CompressedArrayTexture.js
+
+Texture →
+CubeTexture
+Creates a cube texture made up of six images.
+
+Code Example
+const loader = new THREE.CubeTextureLoader();
+loader.setPath( 'textures/cube/pisa/' );
+
+const textureCube = loader.load( [
+	'px.png', 'nx.png',
+	'py.png', 'ny.png',
+	'pz.png', 'nz.png'
+] );
+
+const material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
+Constructor
+CubeTexture( images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace )
+CubeTexture is almost equivalent in functionality and usage to Texture. The only differences are that the images are an array of 6 images as opposed to a single image, and the mapping options are THREE.CubeReflectionMapping (default) or THREE.CubeRefractionMapping
+
+Properties
+See the base Texture class for common properties.
+
+.flipY : Boolean
+If set to true, the texture is flipped along the vertical axis when uploaded to the GPU. Default is false.
+
+.isCubeTexture : Boolean
+Read-only flag to check if a given object is of type CubeTexture.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/CubeTexture.js
+
+Texture →
+Data3DTexture
+Creates a three-dimensional texture from raw data, with parameters to divide it into width, height, and depth.
+
+Constructor
+Data3DTexture( data : TypedArray, width : Number, height : Number, depth : Number )
+data -- ArrayBufferView of the texture.
+width -- width of the texture.
+height -- height of the texture.
+depth -- depth of the texture.
+
+Code Example
+This creates a Data3DTexture with repeating data, 0 to 255
+
+// create a buffer with some data
+const sizeX = 64;
+const sizeY = 64;
+const sizeZ = 64;
+
+const data = new Uint8Array( sizeX * sizeY * sizeZ );
+let i = 0;
+
+for ( let z = 0; z < sizeZ; z ++ ) {
+	for ( let y = 0; y < sizeY; y ++ ) {
+		for ( let x = 0; x < sizeX; x ++ ) {
+			data[ i ] = i % 256;
+			i ++;
+		}
+	}
+}
+
+// use the buffer to create the texture
+const texture = new THREE.Data3DTexture( data, sizeX, sizeY, sizeZ );
+texture.needsUpdate = true;
+Examples
+WebGL / texture3d
+WebGL / texture3d / partialupdate
+WebGL / volume / cloud
+WebGL / volume / perlin
+
+Properties
+See the base Texture class for common properties.
+
+.flipY : Boolean
+Whether the texture is flipped along the Y axis when uploaded to the GPU. Default is false.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps (if possible) for the texture. Default is false.
+
+.image : Image
+Overridden with a record type holding data, width and height and depth.
+
+.isData3DTexture : Boolean
+Read-only flag to check if a given object is of type Data3DTexture.
+
+.magFilter : number
+How the texture is sampled when a texel covers more than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See the texture constants page for details.
+
+.minFilter : number
+How the texture is sampled when a texel covers less than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See the texture constants page for details.
+
+.unpackAlignment : number
+1 by default. Specifies the alignment requirements for the start of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows start on double-word boundaries). See glPixelStorei for more information.
+
+.wrapR : number
+This defines how the texture is wrapped in the depth direction.
+The default is THREE.ClampToEdgeWrapping, where the edge is clamped to the outer edge texels. The other two choices are THREE.RepeatWrapping and THREE.MirroredRepeatWrapping. See the texture constants page for details.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/Data3DTexture.js
+
+Texture →
+DataArrayTexture
+Creates an array of textures directly from raw data, width and height and depth.
+
+Constructor
+DataArrayTexture( data, width, height, depth )
+The data argument must be an ArrayBufferView. The properties inherited from Texture are the default, except magFilter and minFilter default to THREE.NearestFilter. The properties flipY and generateMipmaps are initially set to false.
+
+The interpretation of the data depends on type and format: If the type is THREE.UnsignedByteType, a Uint8Array will be useful for addressing the texel data. If the format is THREE.RGBAFormat, data needs four values for one texel; Red, Green, Blue and Alpha (typically the opacity).
+For the packed types, THREE.UnsignedShort4444Type and THREE.UnsignedShort5551Type all color components of one texel can be addressed as bitfields within an integer element of a Uint16Array.
+In order to use the types THREE.FloatType and THREE.HalfFloatType, the WebGL implementation must support the respective extensions OES_texture_float and OES_texture_half_float. In order to use THREE.LinearFilter for component-wise, bilinear interpolation of the texels based on these types, the WebGL extensions OES_texture_float_linear or OES_texture_half_float_linear must also be present.
+
+Code Example
+This creates a DataArrayTexture where each texture has a different color.
+
+// create a buffer with color data
+const width = 512;
+const height = 512;
+const depth = 100;
+
+const size = width * height;
+const data = new Uint8Array( 4 * size * depth );
+
+for ( let i = 0; i < depth; i ++ ) {
+	const color = new THREE.Color( Math.random(), Math.random(), Math.random() );
+	const r = Math.floor( color.r * 255 );
+	const g = Math.floor( color.g * 255 );
+	const b = Math.floor( color.b * 255 );
+
+	for ( let j = 0; j < size; j ++ ) {
+		const stride = ( i * size + j ) * 4;
+		data[ stride ] = r;
+		data[ stride + 1 ] = g;
+		data[ stride + 2 ] = b;
+		data[ stride + 3 ] = 255;
+	}
+}
+
+// used the buffer to create a DataArrayTexture
+const texture = new THREE.DataArrayTexture( data, width, height, depth );
+texture.needsUpdate = true;
+Examples
+WebGL / texture2darray
+WebGL / rendertarget / texture2darray
+
+Properties
+See the base Texture class for common properties.
+
+.flipY : Boolean
+Whether the texture is flipped along the Y axis when uploaded to the GPU. Default is false.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps (if possible) for the texture. Default is false.
+
+.image : Object
+Overridden with a object holding data, width, height, and depth.
+
+.isDataArrayTexture : Boolean
+Read-only flag to check if a given object is of type DataArrayTexture.
+
+.magFilter : number
+How the texture is sampled when a texel covers more than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See the texture constants page for details.
+
+.minFilter : number
+How the texture is sampled when a texel covers less than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See the texture constants page for details.
+
+.unpackAlignment : number
+1 by default. Specifies the alignment requirements for the start of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows start on double-word boundaries). See glPixelStorei for more information.
+
+.wrapR : number
+This defines how the texture is wrapped in the depth direction.
+The default is THREE.ClampToEdgeWrapping, where the edge is clamped to the outer edge texels. The other two choices are THREE.RepeatWrapping and THREE.MirroredRepeatWrapping. See the texture constants page for details.
+
+.layerUpdates : Set
+A set of all layers which need to be updated in the texture. See addLayerUpdate.
+
+Methods
+.addLayerUpdate ( layerIndex ) : addLayerUpdate
+Describes that a specific layer of the texture needs to be updated. Normally when needsUpdate is set to true, the entire compressed texture array is sent to the GPU. Marking specific layers will only transmit subsets of all mipmaps associated with a specific depth in the array which is often much more performant.
+
+.clearLayerUpdates () : clearLayerUpdates
+Resets the layer updates registry. See addLayerUpdate.
+
+See the base Texture class for common methods.
+
+Source
+src/textures/DataArrayTexture.js
+
+Texture →
+DataTexture
+Creates a texture directly from raw data, width and height.
+
+Constructor
+DataTexture( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, colorSpace )
+The data argument must be an ArrayBufferView. Further parameters correspond to the properties inherited from Texture, where both magFilter and minFilter default to THREE.NearestFilter.
+
+The interpretation of the data depends on type and format: If the type is THREE.UnsignedByteType, a Uint8Array will be useful for addressing the texel data. If the format is THREE.RGBAFormat, data needs four values for one texel; Red, Green, Blue and Alpha (typically the opacity).
+For the packed types, THREE.UnsignedShort4444Type and THREE.UnsignedShort5551Type all color components of one texel can be addressed as bitfields within an integer element of a Uint16Array.
+In order to use the types THREE.FloatType and THREE.HalfFloatType, the WebGL implementation must support the respective extensions OES_texture_float and OES_texture_half_float. In order to use THREE.LinearFilter for component-wise, bilinear interpolation of the texels based on these types, the WebGL extensions OES_texture_float_linear or OES_texture_half_float_linear must also be present.
+
+Code Example
+// create a buffer with color data
+
+const width = 512;
+const height = 512;
+
+const size = width * height;
+const data = new Uint8Array( 4 * size );
+const color = new THREE.Color( 0xffffff );
+
+const r = Math.floor( color.r * 255 );
+const g = Math.floor( color.g * 255 );
+const b = Math.floor( color.b * 255 );
+
+for ( let i = 0; i < size; i ++ ) {
+	const stride = i * 4;
+	data[ stride ] = r;
+	data[ stride + 1 ] = g;
+	data[ stride + 2 ] = b;
+	data[ stride + 3 ] = 255;
+}
+
+// used the buffer to create a DataTexture
+const texture = new THREE.DataTexture( data, width, height );
+texture.needsUpdate = true;
+Properties
+See the base Texture class for common properties.
+
+.flipY : Boolean
+If set to true, the texture is flipped along the vertical axis when uploaded to the GPU. Default is false.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps (if possible) for a texture. False by default.
+
+.image : Object
+Overridden with a object holding data, width, and height.
+
+.isDataTexture : Boolean
+Read-only flag to check if a given object is of type DataTexture.
+
+.unpackAlignment : number
+1 by default. Specifies the alignment requirements for the start of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows start on double-word boundaries). See glPixelStorei for more information.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/DataTexture.js
+
+Texture →
+DepthTexture
+This class can be used to automatically save the depth information of a rendering into a texture.
+
+Examples
+depth / texture
+
+Constructor
+DepthTexture( width : Number, height : Number, type : Constant, mapping : Constant, wrapS : Constant, wrapT : Constant, magFilter : Constant, minFilter : Constant, anisotropy : Number, format : Constant )
+width -- width of the texture.
+height -- height of the texture.
+type -- Default is THREE.UnsignedIntType. See DepthTexture.type for other choices.
+mapping -- See mapping mode constants for details.
+wrapS -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+wrapT -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+magFilter -- How the texture is sampled when a texel covers more than one pixel. The default is THREE.NearestFilter. See magnification filter constants for other choices.
+minFilter -- How the texture is sampled when a texel covers less than one pixel. The default is THREE.NearestFilter. See minification filter constants for other choices.
+anisotropy -- The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+format -- must be either DepthFormat (default) or DepthStencilFormat. See format constants for details.
+
+Properties
+See the base Texture class for common properties - the following are also part of the texture class, but have different defaults here.
+
+format
+Either DepthFormat (default) or DepthStencilFormat. See format constants for details.
+
+type
+Default is THREE.UnsignedIntType. The following are options and how they map to internal gl depth format types depending on the stencil format, as well: THREE.UnsignedIntType -- Uses DEPTH_COMPONENT24 or DEPTH24_STENCIL8 internally.
+THREE.FloatType -- Uses DEPTH_COMPONENT32F or DEPTH32F_STENCIL8 internally.
+THREE.UnsignedShortType -- Uses DEPTH_COMPONENT16 internally. Stencil buffer is unsupported when using this type.
+
+magFilter
+How the texture is sampled when a texel covers more than one pixel. The default is THREE.NearestFilter. See magnification filter constants for other choices.
+
+minFilter
+How the texture is sampled when a texel covers less than one pixel. The default is THREE.NearestFilter. See magnification filter constants for other choices.
+
+flipY
+Depth textures do not need to be flipped so this is false by default.
+
+.generateMipmaps
+Depth textures do not use mipmaps.
+
+.isDepthTexture : Boolean
+Read-only flag to check if a given object is of type DepthTexture.
+
+.compareFunction : number
+This is used to define the comparison function used when comparing texels in the depth texture to the value in the depth buffer. Default is null which means comparison is disabled.
+
+See the texture constants page for details of other functions.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/DepthTexture.js
+
+Texture →
+FramebufferTexture
+This class can only be used in combination with WebGLRenderer.copyFramebufferToTexture().
+
+const pixelRatio = window.devicePixelRatio;
+const textureSize = 128 * pixelRatio;
+
+// instantiate a framebuffer texture
+const frameTexture = new FramebufferTexture( textureSize, textureSize );
+
+// calculate start position for copying part of the frame data
+const vector = new Vector2();
+vector.x = ( window.innerWidth * pixelRatio / 2 ) - ( textureSize / 2 );
+vector.y = ( window.innerHeight * pixelRatio / 2 ) - ( textureSize / 2 );
+
+// render the scene
+renderer.clear();
+renderer.render( scene, camera );
+
+// copy part of the rendered frame into the framebuffer texture
+renderer.copyFramebufferToTexture( frameTexture, vector );
+Examples
+webgl_framebuffer_texture
+
+Constructor
+FramebufferTexture( width : Number, height : Number )
+width -- The width of the texture.
+height -- The height of the texture.
+
+Properties
+See the base Texture class for common properties.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps for the FramebufferTexture. Default value is false.
+
+.isFramebufferTexture : Boolean
+Read-only flag to check if a given object is of type FramebufferTexture.
+
+.magFilter : number
+How the texture is sampled when a texel covers more than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See texture constants for details.
+
+.minFilter : number
+How the texture is sampled when a texel covers less than one pixel. The default is THREE.NearestFilter, which uses the value of the closest texel.
+
+See texture constants for details.
+
+.needsUpdate : Boolean
+True by default. This is required so that the canvas data is loaded.
+
+Methods
+See the base Texture class for common methods.
+
+Source
+src/textures/FramebufferTexture.js
+
+Source
+Represents the data source of a texture.
+
+Constructor
+Source( data : Any )
+data -- The data definition of a texture. Default is null.
+
+Properties
+.data : Any
+The actual data of a texture. The type of this property depends on the texture that uses this instance.
+
+.isSource : Boolean
+Read-only flag to check if a given object is of type Source.
+
+.needsUpdate : Boolean
+When the property is set to true, the engine allocates the memory for the texture (if necessary) and triggers the actual texture upload to the GPU next time the source is used.
+
+.dataReady : Boolean
+This property is only relevant when .needUpdate is set to true and provides more control on how texture data should be processed. When dataReady is set to false, the engine performs the memory allocation (if necessary) but does not transfer the data into the GPU memory. Default is true.
+
+.uuid : String
+UUID of this object instance. This gets automatically assigned, so this shouldn't be edited.
+
+.version : Integer
+This starts at 0 and counts how many times .needsUpdate is set to true.
+
+Methods
+.toJSON ( meta : Object ) : Object
+meta -- optional object containing metadata.
+Convert the data source to three.js JSON Object/Scene format.
+
+Source
+src/textures/Source.js
+
+Texture
+Create a texture to apply to a surface or as a reflection or refraction map.
+
+Note: After the initial use of a texture, its dimensions, format, and type cannot be changed. Instead, call .dispose() on the texture and instantiate a new one.
+
+Code Example
+// load a texture, set wrap mode to repeat
+const texture = new THREE.TextureLoader().load( "textures/water.jpg" );
+texture.wrapS = THREE.RepeatWrapping;
+texture.wrapT = THREE.RepeatWrapping;
+texture.repeat.set( 4, 4 );
+Constructor
+Texture( image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace )
+Properties
+.id : Integer
+Readonly - unique number for this texture instance.
+
+.isTexture : Boolean
+Read-only flag to check if a given object is of type Texture.
+
+.uuid : String
+UUID of this object instance. This gets automatically assigned, so this shouldn't be edited.
+
+.name : String
+Optional name of the object (doesn't need to be unique). Default is an empty string.
+
+.image : Image
+An image object, typically created using the TextureLoader.load method. This can be any image (e.g., PNG, JPG, GIF, DDS) or video (e.g., MP4, OGG/OGV) type supported by three.js.
+
+To use video as a texture you need to have a playing HTML5 video element as a source for your texture image and continuously update this texture as long as video is playing - the VideoTexture class handles this automatically.
+
+.mipmaps : Array
+Array of user-specified mipmaps (optional).
+
+.mapping : number
+How the image is applied to the object. An object type of THREE.UVMapping is the default, where the U,V coordinates are used to apply the map.
+See the texture constants page for other mapping types.
+
+.channel : Integer
+Lets you select the uv attribute to map the texture to. 0 for uv, 1 for uv1, 2 for uv2 and 3 for uv3.
+
+.wrapS : number
+This defines how the texture is wrapped horizontally and corresponds to U in UV mapping.
+The default is THREE.ClampToEdgeWrapping, where the edge is clamped to the outer edge texels. The other two choices are THREE.RepeatWrapping and THREE.MirroredRepeatWrapping. See the texture constants page for details.
+
+.wrapT : number
+This defines how the texture is wrapped vertically and corresponds to V in UV mapping.
+The same choices are available as for .wrapS : number.
+
+NOTE: tiling of images in textures only functions if image dimensions are powers of two (2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, ...) in terms of pixels. Individual dimensions need not be equal, but each must be a power of two. This is a limitation of WebGL, not three.js.
+
+.magFilter : number
+How the texture is sampled when a texel covers more than one pixel. The default is THREE.LinearFilter, which takes the four closest texels and bilinearly interpolates among them. The other option is THREE.NearestFilter, which uses the value of the closest texel.
+See the texture constants page for details.
+
+.minFilter : number
+How the texture is sampled when a texel covers less than one pixel. The default is THREE.LinearMipmapLinearFilter, which uses mipmapping and a trilinear filter.
+
+See the texture constants page for all possible choices.
+
+.anisotropy : number
+The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.capabilities.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+
+.format : number
+The default is THREE.RGBAFormat.
+
+See the texture constants page for details of other formats.
+
+.internalFormat : String
+The default value is obtained using a combination of .format and .type.
+The GPU format allows the developer to specify how the data is going to be stored on the GPU.
+
+See the texture constants page for details regarding all supported internal formats.
+
+.type : number
+This must correspond to the .format. The default is THREE.UnsignedByteType, which will be used for most texture formats.
+
+See the texture constants page for details of other formats.
+
+.offset : Vector2
+How much a single repetition of the texture is offset from the beginning, in each direction U and V. Typical range is 0.0 to 1.0.
+
+.repeat : Vector2
+How many times the texture is repeated across the surface, in each direction U and V. If repeat is set greater than 1 in either direction, the corresponding Wrap parameter should also be set to THREE.RepeatWrapping or THREE.MirroredRepeatWrapping to achieve the desired tiling effect.
+
+.rotation : number
+How much the texture is rotated around the center point, in radians. Positive values are counter-clockwise. Default is 0.
+
+.center : Vector2
+The point around which rotation occurs. A value of (0.5, 0.5) corresponds to the center of the texture. Default is (0, 0), the lower left.
+
+.matrixAutoUpdate : Boolean
+Whether to update the texture's uv-transform .matrix from the texture properties .offset, .repeat, .rotation, and .center. True by default. Set this to false if you are specifying the uv-transform matrix directly.
+
+.matrix : Matrix3
+The uv-transform matrix for the texture. Updated by the renderer from the texture properties .offset, .repeat, .rotation, and .center when the texture's .matrixAutoUpdate property is true. When .matrixAutoUpdate property is false, this matrix may be set manually. Default is the identity matrix.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps (if possible) for a texture. True by default. Set this to false if you are creating mipmaps manually.
+
+.premultiplyAlpha : Boolean
+If set to true, the alpha channel, if present, is multiplied into the color channels when the texture is uploaded to the GPU. Default is false.
+
+Note that this property has no effect for ImageBitmap. You need to configure on bitmap creation instead. See ImageBitmapLoader.
+
+.flipY : Boolean
+If set to true, the texture is flipped along the vertical axis when uploaded to the GPU. Default is true.
+
+Note that this property has no effect for ImageBitmap. You need to configure on bitmap creation instead. See ImageBitmapLoader.
+
+.unpackAlignment : number
+4 by default. Specifies the alignment requirements for the start of each pixel row in memory. The allowable values are 1 (byte-alignment), 2 (rows aligned to even-numbered bytes), 4 (word-alignment), and 8 (rows start on double-word boundaries). See glPixelStorei for more information.
+
+.colorSpace : string
+THREE.NoColorSpace is the default. Textures containing color data should be annotated with THREE.SRGBColorSpace or THREE.LinearSRGBColorSpace.
+
+.version : Integer
+This starts at 0 and counts how many times .needsUpdate is set to true.
+
+.onUpdate : Function
+A callback function, called when the texture is updated (e.g., when needsUpdate has been set to true and then the texture is used).
+
+.needsUpdate : Boolean
+Set this to true to trigger an update next time the texture is used. Particularly important for setting the wrap mode.
+
+.userData : Object
+An object that can be used to store custom data about the texture. It should not hold references to functions as these will not be cloned. Default is an empty object {}.
+
+.source : Source
+The data definition of a texture. A reference to the data source can be shared across textures. This is often useful in context of spritesheets where multiple textures render the same data but with different texture transformations.
+
+Methods
+EventDispatcher methods are available on this class.
+
+.updateMatrix () : undefined
+Update the texture's uv-transform .matrix from the texture properties .offset, .repeat, .rotation, and .center.
+
+.clone () : Texture
+Make copy of the texture. Note this is not a "deep copy", the image is shared. Cloning the texture automatically marks it for texture upload.
+
+.toJSON ( meta : Object ) : Object
+meta -- optional object containing metadata.
+Convert the texture to three.js JSON Object/Scene format.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.transformUv ( uv : Vector2 ) : Vector2
+Transform the uv based on the value of this texture's .offset, .repeat, .wrapS, .wrapT and .flipY properties.
+
+Source
+src/textures/Texture.js
+
+VideoTexture →
+VideoFrameTexture
+This class can be used as an alternative way to define video data. Instead of using an instance of HTMLVideoElement like with VideoTexture, VideoFrameTexture expects each frame is defined manually via setFrame(). A typical use case for this module is when video frames are decoded with the WebCodecs API.
+
+Code Example
+const texture = new THREE.VideoFrameTexture();
+texture.setFrame( frame );
+Examples
+video / frame
+
+Constructor
+VideoFrameTexture( mapping : Constant, wrapS : Constant, wrapT : Constant, magFilter : Constant, minFilter : Constant, format : Constant, type : Constant, anisotropy : Number )
+mapping -- How the image is applied to the object. An object type of THREE.UVMapping. See mapping constants for other choices.
+wrapS -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+wrapT -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+magFilter -- How the texture is sampled when a texel covers more than one pixel. The default is THREE.LinearFilter. See magnification filter constants for other choices.
+minFilter -- How the texture is sampled when a texel covers less than one pixel. The default is THREE.LinearFilter. See minification filter constants for other choices.
+format -- The default is THREE.RGBAFormat. See format constants for other choices.
+type -- Default is THREE.UnsignedByteType. See type constants for other choices.
+anisotropy -- The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+
+
+Properties
+See the base VideoTexture class for common properties.
+
+.isVideoFrameTexture : Boolean
+Read-only flag to check if a given object is of type VideoFrameTexture.
+
+Methods
+See the base VideoTexture class for common methods.
+
+.setFrame ( frame : VideoFrame ) : undefined
+Sets the current frame of the video. This will automatically update the texture so the data can be used for rendering.
+
+Source
+src/textures/VideoFrameTexture.js
+
+Texture →
+VideoTexture
+Creates a texture for use with a video.
+
+Note: After the initial use of a texture, the video cannot be changed. Instead, call .dispose() on the texture and instantiate a new one.
+
+Code Example
+// assuming you have created a HTML video element with id="video"
+const video = document.getElementById( 'video' );
+const texture = new THREE.VideoTexture( video );
+Examples
+materials / video
+materials / video / webcam
+video / kinect
+video / panorama / equirectangular
+vr / video
+
+Constructor
+VideoTexture( video : Video, mapping : Constant, wrapS : Constant, wrapT : Constant, magFilter : Constant, minFilter : Constant, format : Constant, type : Constant, anisotropy : Number )
+video -- The video element to use as the texture.
+mapping -- How the image is applied to the object. An object type of THREE.UVMapping. See mapping constants for other choices.
+wrapS -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+wrapT -- The default is THREE.ClampToEdgeWrapping. See wrap mode constants for other choices.
+magFilter -- How the texture is sampled when a texel covers more than one pixel. The default is THREE.LinearFilter. See magnification filter constants for other choices.
+minFilter -- How the texture is sampled when a texel covers less than one pixel. The default is THREE.LinearFilter. See minification filter constants for other choices.
+format -- The default is THREE.RGBAFormat. See format constants for other choices.
+type -- Default is THREE.UnsignedByteType. See type constants for other choices.
+anisotropy -- The number of samples taken along the axis through the pixel that has the highest density of texels. By default, this value is 1. A higher value gives a less blurry result than a basic mipmap, at the cost of more texture samples being used. Use renderer.getMaxAnisotropy() to find the maximum valid anisotropy value for the GPU; this value is usually a power of 2.
+
+
+Properties
+See the base Texture class for common properties.
+
+.generateMipmaps : Boolean
+Whether to generate mipmaps. false by default.
+
+.isVideoTexture : Boolean
+Read-only flag to check if a given object is of type VideoTexture.
+
+.needsUpdate : Boolean
+You will not need to set this manually here as it is handled by the update() method.
+
+Methods
+See the base Texture class for common methods.
+
+.update () : undefined
+This is called automatically and sets .needsUpdate to true every time a new frame is available.
+
+Source
+src/textures/VideoTexture.js
+

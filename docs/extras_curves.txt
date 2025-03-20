@@ -1,0 +1,386 @@
+ArcCurve
+Alias for EllipseCurve.
+
+Properties
+See the EllipseCurve class for common properties.
+
+Curve →
+CatmullRomCurve3
+Create a smooth 3d spline curve from a series of points using the Catmull-Rom algorithm.
+
+Code Example
+//Create a closed wavey loop
+const curve = new THREE.CatmullRomCurve3( [
+	new THREE.Vector3( -10, 0, 10 ),
+	new THREE.Vector3( -5, 5, 5 ),
+	new THREE.Vector3( 0, 0, 0 ),
+	new THREE.Vector3( 5, -5, 5 ),
+	new THREE.Vector3( 10, 0, 10 )
+] );
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const curveObject = new THREE.Line( geometry, material );
+Examples
+WebGL / geometry / extrude / splines
+
+Constructor
+CatmullRomCurve3( points : Array, closed : Boolean, curveType : String, tension : Float )
+points – An array of Vector3 points
+closed – Whether the curve is closed. Default is false.
+curveType – Type of the curve. Default is centripetal.
+tension – Tension of the curve. Default is 0.5.
+
+Properties
+See the base Curve class for common properties.
+
+.points : Array
+The array of Vector3 points that define the curve. It needs at least two entries.
+
+.closed : Boolean
+The curve will loop back onto itself when this is true.
+
+.curveType : String
+Possible values are centripetal, chordal and catmullrom.
+
+.tension : Float
+When .curveType is catmullrom, defines catmullrom's tension.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/CatmullRomCurve3.js
+
+Curve →
+CubicBezierCurve
+Create a smooth 2d cubic bezier curve, defined by a start point, endpoint and two control points.
+
+Code Example
+const curve = new THREE.CubicBezierCurve(
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( -5, 15 ),
+	new THREE.Vector2( 20, 15 ),
+	new THREE.Vector2( 10, 0 )
+);
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const curveObject = new THREE.Line( geometry, material );
+Constructor
+CubicBezierCurve ( v0 : Vector2, v1 : Vector2, v2 : Vector2, v3 : Vector2 )
+v0 – The starting point.
+v1 – The first control point.
+v2 – The second control point.
+v3 – The ending point.
+
+Properties
+See the base Curve class for common properties.
+
+.v0 : Vector2
+The starting point.
+
+.v1 : Vector2
+The first control point.
+
+.v2 : Vector2
+The second control point.
+
+.v3 : Vector2
+The ending point.
+
+Methods
+See the base Curve class for common Methods.
+
+Source
+src/extras/curves/CubicBezierCurve.js
+
+Curve →
+CubicBezierCurve3
+Create a smooth 3d cubic bezier curve, defined by a start point, endpoint and two control points.
+
+Code Example
+const curve = new THREE.CubicBezierCurve3(
+	new THREE.Vector3( -10, 0, 0 ),
+	new THREE.Vector3( -5, 15, 0 ),
+	new THREE.Vector3( 20, 15, 0 ),
+	new THREE.Vector3( 10, 0, 0 )
+);
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const curveObject = new THREE.Line( geometry, material );
+Constructor
+CubicBezierCurve3( v0 : Vector3, v1 : Vector3, v2 : Vector3, v3 : Vector3 )
+v0 – The starting point.
+v1 – The first control point.
+v2 – The second control point.
+v3 – The ending point.
+
+Properties
+See the base Curve class for common properties.
+
+.v0 : Vector3
+The starting point.
+
+.v1 : Vector3
+The first control point.
+
+.v2 : Vector3
+The second control point.
+
+.v3 : Vector3
+The ending point.
+
+Methods
+See the base Curve class for common Methods.
+
+Source
+src/extras/curves/CubicBezierCurve3.js
+
+Curve →
+EllipseCurve
+Creates a 2d curve in the shape of an ellipse. Setting the xRadius equal to the yRadius will result in a circle.
+
+Code Example
+const curve = new THREE.EllipseCurve(
+	0,  0,            // ax, aY
+	10, 10,           // xRadius, yRadius
+	0,  2 * Math.PI,  // aStartAngle, aEndAngle
+	false,            // aClockwise
+	0                 // aRotation
+);
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const ellipse = new THREE.Line( geometry, material );
+Constructor
+EllipseCurve( aX : Float, aY : Float, xRadius : Float, yRadius : Float, aStartAngle : Radians, aEndAngle : Radians, aClockwise : Boolean, aRotation : Radians )
+aX – The X center of the ellipse. Default is 0.
+aY – The Y center of the ellipse. Default is 0.
+xRadius – The radius of the ellipse in the x direction. Default is 1.
+yRadius – The radius of the ellipse in the y direction. Default is 1.
+aStartAngle – The start angle of the curve in radians starting from the positive X axis. Default is 0.
+aEndAngle – The end angle of the curve in radians starting from the positive X axis. Default is 2 x Math.PI.
+aClockwise – Whether the ellipse is drawn clockwise. Default is false.
+aRotation – The rotation angle of the ellipse in radians, counterclockwise from the positive X axis (optional). Default is 0.
+
+
+Properties
+See the base Curve class for common properties.
+
+.aX : Float
+The X center of the ellipse.
+
+.aY : Float
+The Y center of the ellipse.
+
+.xRadius : Radians
+The radius of the ellipse in the x direction.
+
+.yRadius : Radians
+The radius of the ellipse in the y direction.
+
+.aStartAngle : Float
+The start angle of the curve in radians starting from the middle right side.
+
+.aEndAngle : Float
+The end angle of the curve in radians starting from the middle right side.
+
+.aClockwise : Boolean
+Whether the ellipse is drawn clockwise.
+
+.aRotation : Float
+The rotation angle of the ellipse in radians, counterclockwise from the positive X axis (optional). Default is 0.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/EllipseCurve.js
+
+Curve →
+LineCurve
+A curve representing a 2d line segment.
+
+Constructor
+LineCurve( v1 : Vector2, v2 : Vector2 )
+v1 – The start point.
+v2 - The end point.
+
+Properties
+See the base Curve class for common properties.
+
+.v1 : Vector2
+The start point.
+
+.v2 : Vector2
+The end point
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/LineCurve.js
+
+Curve →
+LineCurve3
+A curve representing a 3d line segment.
+
+Constructor
+LineCurve3( v1 : Vector3, v2 : Vector3 )
+v1 – The start point.
+v2 - The end point.
+
+Properties
+See the base Curve class for common properties.
+
+.v1 : Vector3
+The start point.
+
+.v2 : Vector3
+The end point.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/LineCurve3.js
+
+Curve →
+QuadraticBezierCurve
+Create a smooth 2d quadratic bezier curve, defined by a startpoint, endpoint and a single control point.
+
+Code Example
+const curve = new THREE.QuadraticBezierCurve(
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( 20, 15 ),
+	new THREE.Vector2( 10, 0 )
+);
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const curveObject = new THREE.Line( geometry, material );
+Constructor
+QuadraticBezierCurve( v0 : Vector2, v1 : Vector2, v2 : Vector2 )
+v0 – The startpoint.
+v1 – The control point.
+v2 – The endpoint.
+
+Properties
+See the base Curve class for common properties.
+
+.v0 : Vector2
+The startpoint.
+
+.v1 : Vector2
+The control point.
+
+.v2 : Vector2
+The endpoint.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/QuadraticBezierCurve.js
+
+Curve →
+QuadraticBezierCurve3
+Create a smooth 3d quadratic bezier curve, defined by a startpoint, endpoint and a single control point.
+
+Code Example
+const curve = new THREE.QuadraticBezierCurve3(
+	new THREE.Vector3( -10, 0, 0 ),
+	new THREE.Vector3( 20, 15, 0 ),
+	new THREE.Vector3( 10, 0, 0 )
+);
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const curveObject = new THREE.Line( geometry, material );
+Constructor
+QuadraticBezierCurve3( v0 : Vector3, v1 : Vector3, v2 : Vector3 )
+v0 – The starting point
+v1 – The middle control point
+v2 – The ending point
+
+Properties
+See the base Curve class for common properties.
+
+.v0 : Vector3
+The startpoint.
+
+.v1 : Vector3
+The control point.
+
+.v2 : Vector3
+The endpoint.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/QuadraticBezierCurve3.js
+
+Curve →
+SplineCurve
+Create a smooth 2d spline curve from a series of points. Internally this uses Interpolations.CatmullRom to create the curve.
+
+Code Example
+// Create a sine-like wave
+const curve = new THREE.SplineCurve( [
+	new THREE.Vector2( -10, 0 ),
+	new THREE.Vector2( -5, 5 ),
+	new THREE.Vector2( 0, 0 ),
+	new THREE.Vector2( 5, -5 ),
+	new THREE.Vector2( 10, 0 )
+] );
+
+const points = curve.getPoints( 50 );
+const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// Create the final object to add to the scene
+const splineObject = new THREE.Line( geometry, material );
+Constructor
+SplineCurve( points : Array )
+points – An array of Vector2 points that define the curve.
+
+Properties
+See the base Curve class for common properties.
+
+.points : Array
+The array of Vector2 points that define the curve.
+
+Methods
+See the base Curve class for common methods.
+
+Source
+src/extras/curves/SplineCurve.js
+

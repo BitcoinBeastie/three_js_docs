@@ -1,0 +1,463 @@
+Object3D → Light →
+AmbientLight
+This light globally illuminates all objects in the scene equally.
+
+This light cannot be used to cast shadows as it does not have a direction.
+
+Code Example
+const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light );
+Constructor
+AmbientLight( color : Integer, intensity : Float )
+color - (optional) Numeric value of the RGB component of the color. Default is 0xffffff.
+intensity - (optional) Numeric value of the light's strength/intensity. Default is 1.
+
+Creates a new AmbientLight.
+
+Properties
+See the base Light class for common properties.
+
+.isAmbientLight : Boolean
+Read-only flag to check if a given object is of type AmbientLight.
+
+Methods
+See the base Light class for common methods.
+
+Source
+src/lights/AmbientLight.js
+
+Object3D → Light →
+DirectionalLight
+A light that gets emitted in a specific direction. This light will behave as though it is infinitely far away and the rays produced from it are all parallel. The common use case for this is to simulate daylight; the sun is far enough away that its position can be considered to be infinite, and all light rays coming from it are parallel.
+
+This light can cast shadows - see the DirectionalLightShadow page for details.
+
+A Note about Position, Target and rotation
+A common point of confusion for directional lights is that setting the rotation has no effect. This is because three.js's DirectionalLight is the equivalent to what is often called a 'Target Direct Light' in other applications.
+
+This means that its direction is calculated as pointing from the light's position to the target's position (as opposed to a 'Free Direct Light' that just has a rotation component).
+
+The reason for this is to allow the light to cast shadows - the shadow camera needs a position to calculate shadows from.
+
+See the target property below for details on updating the target.
+
+Code Example
+// White directional light at half intensity shining from the top.
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+scene.add( directionalLight );
+Examples
+controls / fly
+effects / parallaxbarrier
+effects / stereo
+geometry / extrude / splines
+materials / bumpmap
+
+Constructor
+DirectionalLight( color : Integer, intensity : Float )
+color - (optional) hexadecimal color of the light. Default is 0xffffff (white).
+intensity - (optional) numeric value of the light's strength/intensity. Default is 1.
+
+Creates a new DirectionalLight.
+
+Properties
+See the base Light class for common properties.
+
+.castShadow : Boolean
+If set to true light will cast dynamic shadows. Warning: This is expensive and requires tweaking to get shadows looking right. See the DirectionalLightShadow for details. The default is false.
+
+.isDirectionalLight : Boolean
+Read-only flag to check if a given object is of type DirectionalLight.
+
+.position : Vector3
+This is set equal to Object3D.DEFAULT_UP (0, 1, 0), so that the light shines from the top down.
+
+.shadow : DirectionalLightShadow
+A DirectionalLightShadow used to calculate shadows for this light.
+
+.target : Object3D
+The DirectionalLight points from its position to target.position. The default position of the target is (0, 0, 0).
+Note: For the target's position to be changed to anything other than the default, it must be added to the scene using
+
+scene.add( light.target );
+This is so that the target's matrixWorld gets automatically updated each frame.
+
+It is also possible to set the target to be another object in the scene (anything with a position property), like so:
+
+const targetObject = new THREE.Object3D(); 
+scene.add(targetObject);
+
+light.target = targetObject;
+The directionalLight will now track the target object.
+
+Methods
+See the base Light class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.copy ( source : DirectionalLight ) : this
+Copies value of all the properties from the source to this DirectionalLight.
+
+Source
+src/lights/DirectionalLight.js
+
+Object3D → Light →
+HemisphereLight
+A light source positioned directly above the scene, with color fading from the sky color to the ground color.
+
+This light cannot be used to cast shadows.
+
+Code Example
+const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+scene.add( light );
+Examples
+animation / skinning / blending
+lights / hemisphere
+controls / pointerlock
+loader / collada / kinematics
+loader / stl
+
+Constructor
+HemisphereLight( skyColor : Integer, groundColor : Integer, intensity : Float )
+skyColor - (optional) hexadecimal color of the sky. Default is 0xffffff.
+groundColor - (optional) hexadecimal color of the ground. Default is 0xffffff.
+intensity - (optional) numeric value of the light's strength/intensity. Default is 1.
+
+Creates a new HemisphereLight.
+
+Properties
+See the base Light class for common properties.
+
+.color : Float
+The light's sky color, as passed in the constructor. Default is a new Color set to white (0xffffff).
+
+.groundColor : Float
+The light's ground color, as passed in the constructor. Default is a new Color set to white (0xffffff).
+
+.isHemisphereLight : Boolean
+Read-only flag to check if a given object is of type HemisphereLight.
+
+.position : Vector3
+This is set equal to Object3D.DEFAULT_UP (0, 1, 0), so that the light shines from the top down.
+
+Methods
+See the base Light class for common methods.
+
+.copy ( source : HemisphereLight ) : this
+Copies the value of color, intensity and groundColor from the source light into this one.
+
+Source
+src/lights/HemisphereLight.js
+
+Object3D →
+Light
+Abstract base class for lights - all other light types inherit the properties and methods described here.
+
+Constructor
+Light( color : Integer, intensity : Float )
+color - (optional) hexadecimal color of the light. Default is 0xffffff (white).
+intensity - (optional) numeric value of the light's strength/intensity. Default is 1.
+
+Creates a new Light. Note that this is not intended to be called directly (use one of derived classes instead).
+
+Properties
+See the base Object3D class for common properties.
+
+.color : Color
+Color of the light. Defaults to a new Color set to white, if not passed in the constructor.
+
+.intensity : Float
+The light's intensity, or strength.
+The units of intensity depend on the type of light.
+Default - 1.0.
+
+.isLight : Boolean
+Read-only flag to check if a given object is of type Light.
+
+Methods
+See the base Object3D class for common methods.
+
+.dispose () : undefined
+Abstract dispose method for classes that extend this class; implemented by subclasses that have disposable GPU-related resources.
+
+.copy ( source : Light ) : this
+Copies the value of color and intensity from the source light into this one.
+
+.toJSON ( meta : Object ) : Object
+meta -- object containing metadata such as materials, textures for objects.
+Convert the light to three.js JSON Object/Scene format.
+
+Source
+src/lights/Light.js
+
+Object3D → Light →
+LightProbe
+Light probes are an alternative way of adding light to a 3D scene. Unlike classical light sources (e.g. directional, point or spot lights), light probes do not emit light. Instead they store information about light passing through 3D space. During rendering, the light that hits a 3D object is approximated by using the data from the light probe.
+
+Light probes are usually created from (radiance) environment maps. The class LightProbeGenerator can be used to create light probes from instances of CubeTexture or WebGLCubeRenderTarget. However, light estimation data could also be provided in other forms e.g. by WebXR. This enables the rendering of augmented reality content that reacts to real world lighting.
+
+The current probe implementation in three.js supports so-called diffuse light probes. This type of light probe is functionally equivalent to an irradiance environment map.
+
+Examples
+WebGL / light probe
+WebGL / light probe / cube camera
+
+Constructor
+LightProbe( sh : SphericalHarmonics3, intensity : Float )
+sh - (optional) An instance of SphericalHarmonics3.
+intensity - (optional) Numeric value of the light probe's intensity. Default is 1.
+
+Creates a new LightProbe.
+
+Properties
+See the base Light class for common properties. The color property is currently not evaluated and thus has no effect.
+
+.isLightProbe : Boolean
+Read-only flag to check if a given object is of type LightProbe.
+
+.sh : SphericalHarmonics3
+A light probe uses spherical harmonics to encode lighting information.
+
+Methods
+See the base Light class for common methods.
+
+Source
+src/lights/LightProbe.js
+
+Object3D → Light →
+PointLight
+A light that gets emitted from a single point in all directions. A common use case for this is to replicate the light emitted from a bare lightbulb.
+
+This light can cast shadows - see PointLightShadow page for details.
+
+Code Example
+const light = new THREE.PointLight( 0xff0000, 1, 100 );
+light.position.set( 50, 50, 50 );
+scene.add( light );
+Examples
+lights / pointlights
+effects / anaglyph
+geometry / text
+lensflares
+
+Constructor
+PointLight( color : Integer, intensity : Float, distance : Number, decay : Float )
+color - (optional) hexadecimal color of the light. Default is 0xffffff (white).
+intensity - (optional) numeric value of the light's strength/intensity. Default is 1.
+distance - Maximum range of the light. Default is 0 (no limit).
+decay - The amount the light dims along the distance of the light. Default is 2.
+
+Creates a new PointLight.
+
+Properties
+See the base Light class for common properties.
+
+.castShadow : Boolean
+If set to true light will cast dynamic shadows. Warning: This is expensive and requires tweaking to get shadows looking right. See the PointLightShadow for details. The default is false.
+
+.decay : Float
+The amount the light dims along the distance of the light. Default is 2.
+In context of physically-correct rendering the default value should not be changed.
+
+.distance : Float
+When distance is zero, light will attenuate according to inverse-square law to infinite distance. When distance is non-zero, light will attenuate according to inverse-square law until near the distance cutoff, where it will then attenuate quickly and smoothly to 0. Inherently, cutoffs are not physically correct.
+
+Default is 0.0.
+
+.intensity : Float
+The light's luminous intensity measured in candela (cd). Default is 1.
+
+Changing the intensity will also change the light's power.
+
+.power : Float
+The light's power.
+Power is the luminous power of the light measured in lumens (lm).
+
+Changing the power will also change the light's intensity.
+
+.shadow : PointLightShadow
+A PointLightShadow used to calculate shadows for this light.
+
+The lightShadow's camera is set to a PerspectiveCamera with fov of 90, aspect of 1, near clipping plane at 0.5 and far clipping plane at 500.
+
+Methods
+See the base Light class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.copy ( source : PointLight ) : this
+Copies value of all the properties from the source to this PointLight.
+
+Source
+src/lights/PointLight.js
+
+Object3D → Light →
+RectAreaLight
+RectAreaLight emits light uniformly across the face a rectangular plane. This light type can be used to simulate light sources such as bright windows or strip lighting.
+
+Important Notes:
+
+There is no shadow support.
+Only MeshStandardMaterial and MeshPhysicalMaterial are supported.
+You have to include RectAreaLightUniformsLib into your scene and call init().
+Code Example
+const width = 10;
+const height = 10;
+const intensity = 1;
+const rectLight = new THREE.RectAreaLight( 0xffffff, intensity,  width, height );
+rectLight.position.set( 5, 5, 0 );
+rectLight.lookAt( 0, 0, 0 );
+scene.add( rectLight )
+
+const rectLightHelper = new RectAreaLightHelper( rectLight );
+rectLight.add( rectLightHelper );
+Examples
+WebGL / rectarealight
+
+Constructor
+RectAreaLight( color : Integer, intensity : Float, width : Float, height : Float )
+color - (optional) hexadecimal color of the light. Default is 0xffffff (white).
+intensity - (optional) the light's intensity, or brightness. Default is 1.
+width - (optional) width of the light. Default is 10.
+height - (optional) height of the light. Default is 10.
+
+Creates a new RectAreaLight.
+
+Properties
+See the base Light class for common properties.
+
+.height : Float
+The height of the light.
+
+.intensity : Float
+The light's intensity. It is the luminance (brightness) of the light measured in nits (cd/m^2). Default is 1.
+
+Changing the intensity will also change the light's power.
+
+.isRectAreaLight : Boolean
+Read-only flag to check if a given object is of type RectAreaLight.
+
+.power : Float
+The light's power.
+Power is the luminous power of the light measured in lumens (lm).
+
+Changing the power will also change the light's intensity.
+
+.width : Float
+The width of the light.
+
+Methods
+See the base Light class for common methods.
+
+.copy ( source : RectAreaLight ) : this
+Copies value of all the properties from the source to this RectAreaLight.
+
+src/lights/RectAreaLight.js
+
+Object3D → Light →
+SpotLight
+This light gets emitted from a single point in one direction, along a cone that increases in size the further from the light it gets.
+
+This light can cast shadows - see the SpotLightShadow page for details.
+
+Code Example
+// white spotlight shining from the side, modulated by a texture, casting a shadow
+
+const spotLight = new THREE.SpotLight( 0xffffff );
+spotLight.position.set( 100, 1000, 100 );
+spotLight.map = new THREE.TextureLoader().load( url );
+
+spotLight.castShadow = true;
+
+spotLight.shadow.mapSize.width = 1024;
+spotLight.shadow.mapSize.height = 1024;
+
+spotLight.shadow.camera.near = 500;
+spotLight.shadow.camera.far = 4000;
+spotLight.shadow.camera.fov = 30;
+
+scene.add( spotLight );
+Examples
+lights / spotlight
+lights / spotlights
+
+Constructor
+SpotLight( color : Integer, intensity : Float, distance : Float, angle : Radians, penumbra : Float, decay : Float )
+color - (optional) hexadecimal color of the light. Default is 0xffffff (white).
+intensity - (optional) numeric value of the light's strength/intensity. Default is 1.
+distance - Maximum range of the light. Default is 0 (no limit).
+angle - Maximum angle of light dispersion from its direction whose upper bound is Math.PI/2.
+penumbra - Percent of the spotlight cone that is attenuated due to penumbra. Takes values between zero and 1. Default is zero.
+decay - The amount the light dims along the distance of the light.
+
+Creates a new SpotLight.
+
+Properties
+See the base Light class for common properties.
+
+.angle : Float
+Maximum extent of the spotlight, in radians, from its direction. Should be no more than Math.PI/2. The default is Math.PI/3.
+
+.castShadow : Boolean
+If set to true light will cast dynamic shadows. Warning: This is expensive and requires tweaking to get shadows looking right. See the SpotLightShadow for details. The default is false.
+
+.decay : Float
+The amount the light dims along the distance of the light. Default is 2.
+In context of physically-correct rendering the default value should not be changed.
+
+.distance : Float
+When distance is zero, light will attenuate according to inverse-square law to infinite distance. When distance is non-zero, light will attenuate according to inverse-square law until near the distance cutoff, where it will then attenuate quickly and smoothly to 0. Inherently, cutoffs are not physically correct.
+
+Default is 0.0.
+
+.intensity : Float
+The light's luminous intensity measured in candela (cd). Default is 1.
+
+Changing the intensity will also change the light's power.
+
+.isSpotLight : Boolean
+Read-only flag to check if a given object is of type SpotLight.
+
+.penumbra : Float
+Percent of the spotlight cone that is attenuated due to penumbra. Takes values between zero and 1. The default is 0.0.
+
+.position : Vector3
+This is set equal to Object3D.DEFAULT_UP (0, 1, 0), so that the light shines from the top down.
+
+.power : Float
+The light's power.
+Power is the luminous power of the light measured in lumens (lm).
+
+Changing the power will also change the light's intensity.
+
+.shadow : SpotLightShadow
+A SpotLightShadow used to calculate shadows for this light.
+
+.target : Object3D
+The Spotlight points from its position to target.position. The default position of the target is (0, 0, 0).
+Note: For the target's position to be changed to anything other than the default, it must be added to the scene using
+ scene.add( light.target ); 
+This is so that the target's matrixWorld gets automatically updated each frame.
+
+It is also possible to set the target to be another object in the scene (anything with a position property), like so:
+const targetObject = new THREE.Object3D(); 
+scene.add(targetObject);
+
+light.target = targetObject;
+The spotlight will now track the target object.
+
+.map : Texture
+A Texture used to modulate the color of the light. The spot light color is mixed with the RGB value of this texture, with a ratio corresponding to its alpha value. The cookie-like masking effect is reproduced using pixel values (0, 0, 0, 1-cookie_value). Warning: .map is disabled if .castShadow is false.
+
+Methods
+See the base Light class for common methods.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.copy ( source : SpotLight ) : this
+Copies value of all the properties from the source to this SpotLight.
+
+src/lights/SpotLight.js
+

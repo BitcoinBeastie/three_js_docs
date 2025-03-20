@@ -1,0 +1,216 @@
+Object3D → Mesh → LineSegments2 →
+Line2
+A polyline drawn between vertices.
+
+This adds functionality beyond Line, like arbitrary line width and changing width to be in world units. It extends LineSegments2, simplifying constructing segments from a chain of points.
+
+Import
+Line2 is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { Line2 } from 'three/addons/lines/Line2.js';
+Examples
+WebGL / lines / fat
+WebGL / lines / fat / raycasting
+WebGPU / lines / fat / raycasting
+
+Constructor
+Line2( geometry : LineGeometry, material : LineMaterial )
+geometry — (optional) Pair(s) of vertices representing each line segment.
+material — (optional) Material for the line. Default is a LineMaterial with random color.
+
+Properties
+See the base LineSegments2 class for common properties.
+
+.isLine2 : Boolean
+Read-only flag to check if a given object is of type Line2.
+
+Methods
+See the base LineSegments2 class for common methods.
+
+Source
+examples/jsm/lines/Line2.js
+
+BufferGeometry → InstancedBufferGeometry → LineSegmentsGeometry →
+LineGeometry
+A chain of vertices, forming a polyline.
+
+This is used in Line2 to describe the shape.
+
+Import
+LineGeometry is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+Examples
+WebGL / lines / fat
+WebGL / lines / fat / raycasting
+WebGPU / lines / fat / raycasting
+
+Constructor
+LineGeometry()
+Creates a new geometry. Call setPositions to add segments.
+
+Properties
+See the base LineSegmentsGeometry class for common properties.
+
+.isLineGeometry : Boolean
+Read-only flag to check if a given object is of type LineGeometry.
+
+Methods
+See the base LineSegmentsGeometry class for common methods.
+
+.fromLine ( line : Line ) : this
+Copy the vertex positions of a Line object into this geometry. Assumes the source geometry is not using indices.
+
+.setColors ( array : Array ) : this
+Replace the per-vertex colors. Every triple describes a line vertex: [r1, g1, b1]. The array can be an Array or Float32Array.
+
+.setPositions ( array : Array ) : this
+Replace the vertex positions with a new set. The array can be an Array or Float32Array. The length must be a multiple of three.
+
+.setFromPoints ( points : Array ) : this
+Replace the vertex positions with an array of points. Can be either a Vector3 or Vector2 array.
+
+Source
+examples/jsm/lines/LineGeometry.js
+
+Material → ShaderMaterial →
+LineMaterial
+A material for drawing wireframe-style geometries. Unlike LineBasicMaterial, it supports arbitrary line widths and allows using world units instead of screen space units. This material is used with LineSegments2 and Line2.
+
+Lines are always rendered with round caps and round joints.
+
+Examples
+WebGL / lines / fat
+WebGL / lines / fat / raycasting
+WebGL / lines / fat / wireframe
+WebGPU / lines / fat / raycasting
+
+Constructor
+LineMaterial( parameters : Object )
+parameters - (optional) an object with one or more properties defining the material's appearance. Any property of the material (including any property inherited from ShaderMaterial) can be passed in here.
+
+The exception is the property color, which can be passed in as a number or hexadecimal string and is 0xffffff (white) by default. Color.set( color ) is called internally.
+
+Properties
+See the base ShaderMaterial class for common properties.
+
+.color : Color
+Color of the material, by default set to white (0xffffff).
+
+.dashed : Boolean
+Whether the line is dashed, or solid. Default is false.
+
+.dashOffset : number
+Where in the dash cycle the dash starts. Default is 0.
+
+.dashScale : number
+The scale of the dashes and gaps. Default is 1.
+
+.dashSize : number
+The size of the dash. Default is 1.
+
+.gapSize : number
+The size of the gap. Default is 1.
+
+.linewidth : Float
+Controls line thickness in CSS pixel units when worldUnits is false (default), or in world units when worldUnits is true. Default is 1.
+
+.resolution : Vector2
+The size of the viewport, in screen pixels. This must be kept updated to make screen-space rendering accurate. The LineSegments2.onBeforeRender callback performs the update for visible objects. Default is [1, 1].
+
+.worldUnits : Boolean
+Whether the material's sizes (width, dash gaps) are in world units. Default is false (screen space units.)
+
+Methods
+See the base ShaderMaterial class for common methods.
+
+Source
+examples/jsm/lines/LineMaterial.js
+
+Object3D → Mesh →
+LineSegments2
+A series of lines drawn between pairs of vertices.
+
+This adds functionality beyond LineSegments, like arbitrary line width and changing width to be in world units. The Line2 extends this object, forming a polyline instead of individual segments.
+
+Import
+LineSegments2 is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+Example
+WebGL / lines / fat / raycasting
+
+Constructor
+LineSegments2( geometry : LineSegmentsGeometry, material : LineMaterial )
+geometry — (optional) Pair(s) of vertices representing each line segment.
+material — (optional) Material for the line. Default is a LineMaterial with random color.
+
+Properties
+See the base Mesh class for common properties.
+
+.isLineSegments2 : Boolean
+Read-only flag to check if a given object is of type LineSegments2.
+
+Methods
+See the base Mesh class for common methods.
+
+.onBeforeRender ( renderer : WebGLRenderer ) : undefined
+Called by the framework to update the material's resolution property, needed for screen-scaled widths.
+
+If your object is not visible to a camera (e.g. by layers or visible,) you must call this manually whenever the viewport changes.
+
+Source
+examples/jsm/lines/LineSegments2.js
+
+BufferGeometry → InstancedBufferGeometry →
+LineSegmentsGeometry
+A series of vertex pairs, forming line segments.
+
+This is used in LineSegments2 to describe the shape.
+
+Import
+LineSegmentsGeometry is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+Example
+WebGL / lines / fat / raycasting
+
+Constructor
+LineSegmentsGeometry()
+Creates a new geometry. Call setPositions to add segments.
+
+Properties
+See the base InstancedBufferGeometry class for common properties.
+
+.isLineSegmentsGeometry : Boolean
+Read-only flag to check if a given object is of type LineSegmentsGeometry.
+
+Methods
+See the base Mesh class for common methods.
+
+.fromEdgesGeometry ( geometry : EdgesGeometry ) : this
+Copy the vertex positions of an edge geometry into this geometry.
+
+.fromLineSegments ( lineSegments : LineSegments ) : this
+Copy the vertex positions of a LineSegments object into this geometry. Assumes the source geometry is not using indices.
+
+.fromMesh ( mesh : Mesh ) : this
+Copy the vertex positions of a mesh object into this geometry.
+
+.fromWireframeGeometry ( geometry : WireframeGeometry ) : this
+Copy the vertex positions of a wireframe geometry into this geometry.
+
+.setColors ( array : Array ) : this
+Replace the per-vertex colors. Every sixtuple describes a segment: [r1, g1, b1, r2, g2, b2]. The array can be an Array or Float32Array.
+
+.setPositions ( array : Array ) : this
+Replace the vertex positions with a new set. The array can be an Array or Float32Array. The length must be a multiple of six.
+
+See also positions.
+
+.toJSON () : undefined
+Unimplemented.
+
+Source
+examples/jsm/lines/LineSegmentsGeometry.js
+

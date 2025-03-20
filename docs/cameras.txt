@@ -1,0 +1,390 @@
+Object3D → Camera → PerspectiveCamera →
+ArrayCamera
+ArrayCamera can be used in order to efficiently render a scene with a predefined set of cameras. This is an important performance aspect for rendering VR scenes.
+An instance of ArrayCamera always has an array of sub cameras. It's mandatory to define for each sub camera the viewport property which determines the part of the viewport that is rendered with this camera.
+
+Examples
+camera / array
+
+Constructor
+ArrayCamera( array : Array )
+An array of cameras.
+
+Properties
+See the base PerspectiveCamera class for common properties.
+
+.cameras : Array
+An array of cameras.
+
+.isArrayCamera : Boolean
+Read-only flag to check if a given object is of type ArrayCamera.
+
+Methods
+See the base PerspectiveCamera class for common methods.
+
+Source
+src/cameras/ArrayCamera.js
+
+Object3D →
+Camera
+Abstract base class for cameras. This class should always be inherited when you build a new camera.
+
+Constructor
+Camera()
+Creates a new Camera. Note that this class is not intended to be called directly; you probably want a PerspectiveCamera or OrthographicCamera instead.
+
+Properties
+See the base Object3D class for common properties.
+
+.isCamera : Boolean
+Read-only flag to check if a given object is of type Camera.
+
+.layers : Layers
+The layers that the camera is a member of. This is an inherited property from Object3D.
+
+Objects must share at least one layer with the camera to be seen when the camera's viewpoint is rendered.
+
+.matrixWorldInverse : Matrix4
+This is the inverse of matrixWorld. MatrixWorld contains the Matrix which has the world transform of the Camera.
+
+.projectionMatrix : Matrix4
+This is the matrix which contains the projection.
+
+.projectionMatrixInverse : Matrix4
+The inverse of projectionMatrix.
+
+Methods
+See the base Object3D class for common methods.
+
+.clone ( ) : Camera
+Return a new camera with the same properties as this one.
+
+.copy ( source : Camera, recursive : Boolean ) : this
+Copy the properties from the source camera into this one.
+
+.getWorldDirection ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns a Vector3 representing the world space direction in which the camera is looking. (Note: A camera looks down its local, negative z-axis).
+
+
+Source
+src/cameras/Camera.js
+
+Object3D →
+CubeCamera
+Creates 6 cameras that render to a WebGLCubeRenderTarget.
+
+Code Example
+// Create cube render target
+const cubeRenderTarget = new THREE.WebGLCubeRenderTarget( 128, { generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter } );
+
+// Create cube camera
+const cubeCamera = new THREE.CubeCamera( 1, 100000, cubeRenderTarget );
+scene.add( cubeCamera );
+
+// Create car
+const chromeMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, envMap: cubeRenderTarget.texture } );
+const car = new THREE.Mesh( carGeometry, chromeMaterial );
+scene.add( car );
+
+// Update the render target cube
+car.visible = false;
+cubeCamera.position.copy( car.position );
+cubeCamera.update( renderer, scene );
+
+// Render the scene
+car.visible = true;
+renderer.render( scene, camera );
+Examples
+materials / cubemap / dynamic
+
+Constructor
+CubeCamera( near : Number, far : Number, renderTarget : WebGLCubeRenderTarget )
+near -- The near clipping distance.
+far -- The far clipping distance.
+renderTarget -- The destination cube render target.
+
+Constructs a CubeCamera that contains 6 PerspectiveCameras that render to a WebGLCubeRenderTarget.
+
+Properties
+See the base Object3D class for common properties.
+
+.renderTarget : WebGLCubeRenderTarget
+The destination cube render target.
+
+Methods
+See the base Object3D class for common methods.
+
+.update ( renderer : WebGLRenderer, scene : Scene ) : undefined
+renderer -- The current WebGL renderer
+scene -- The current scene
+
+Call this to update the renderTarget.
+
+Source
+src/cameras/CubeCamera.js
+
+Object3D → Camera →
+OrthographicCamera
+Camera that uses orthographic projection.
+
+In this projection mode, an object's size in the rendered image stays constant regardless of its distance from the camera.
+
+This can be useful for rendering 2D scenes and UI elements, amongst other things.
+
+Code Example
+const camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 1, 1000 );
+scene.add( camera );
+Examples
+camera
+interactive / cubes / ortho
+materials / cubemap / dynamic
+postprocessing / advanced
+postprocessing / dof2
+postprocessing / godrays
+rtt
+shadowmap
+
+Constructor
+OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
+left — Camera frustum left plane.
+right — Camera frustum right plane.
+top — Camera frustum top plane.
+bottom — Camera frustum bottom plane.
+near — Camera frustum near plane.
+far — Camera frustum far plane.
+
+Together these define the camera's viewing frustum.
+
+Properties
+See the base Camera class for common properties.
+Note that after making changes to most of these properties you will have to call .updateProjectionMatrix for the changes to take effect.
+
+.bottom : Float
+Camera frustum bottom plane.
+
+.far : Float
+Camera frustum far plane. Default is 2000.
+
+Must be greater than the current value of near plane.
+
+.isOrthographicCamera : Boolean
+Read-only flag to check if a given object is of type OrthographicCamera.
+
+.left : Float
+Camera frustum left plane.
+
+.near : Float
+Camera frustum near plane. Default is 0.1.
+
+The valid range is between 0 and the current value of the far plane. Note that, unlike for the PerspectiveCamera, 0 is a valid value for an OrthographicCamera's near plane.
+
+.right : Float
+Camera frustum right plane.
+
+.top : Float
+Camera frustum top plane.
+
+.view : Object
+Set by setViewOffset. Default is null.
+
+.zoom : number
+Gets or sets the zoom factor of the camera. Default is 1.
+
+Methods
+See the base Camera class for common methods.
+
+.setViewOffset ( fullWidth : Float, fullHeight : Float, x : Float, y : Float, width : Float, height : Float ) : undefined
+fullWidth — full width of multiview setup
+fullHeight — full height of multiview setup
+x — horizontal offset of subcamera
+y — vertical offset of subcamera
+width — width of subcamera
+height — height of subcamera
+
+Sets an offset in a larger viewing frustum. This is useful for multi-window or multi-monitor/multi-machine setups. For an example on how to use it see PerspectiveCamera.
+
+.clearViewOffset () : undefined
+Removes any offset set by the .setViewOffset method.
+
+.updateProjectionMatrix () : undefined
+Updates the camera projection matrix. Must be called after any change of parameters.
+
+.toJSON (meta : Object) : Object
+meta -- object containing metadata such as textures or images in objects' descendants.
+Convert the camera to three.js JSON Object/Scene format.
+
+Source
+src/cameras/OrthographicCamera.js
+
+Object3D → Camera →
+PerspectiveCamera
+Camera that uses perspective projection.
+
+This projection mode is designed to mimic the way the human eye sees. It is the most common projection mode used for rendering a 3D scene.
+
+Code Example
+const camera = new THREE.PerspectiveCamera( 45, width / height, 1, 1000 );
+scene.add( camera );
+Examples
+animation / skinning / blending
+animation / skinning / morph
+effects / stereo
+interactive / cubes
+loader / collada / skinning
+
+Constructor
+PerspectiveCamera( fov : Number, aspect : Number, near : Number, far : Number )
+fov — Camera frustum vertical field of view.
+aspect — Camera frustum aspect ratio.
+near — Camera frustum near plane.
+far — Camera frustum far plane.
+
+Together these define the camera's viewing frustum.
+
+Properties
+See the base Camera class for common properties.
+Note that after making changes to most of these properties you will have to call .updateProjectionMatrix for the changes to take effect.
+
+.aspect : Float
+Camera frustum aspect ratio, usually the canvas width / canvas height. Default is 1 (square canvas).
+
+.far : Float
+Camera frustum far plane. Default is 2000.
+
+Must be greater than the current value of near plane.
+
+.filmGauge : Float
+Film size used for the larger axis. Default is 35 (millimeters). This parameter does not influence the projection matrix unless .filmOffset is set to a nonzero value.
+
+.filmOffset : Float
+Horizontal off-center offset in the same unit as .filmGauge. Default is 0.
+
+.focus : Float
+Object distance used for stereoscopy and depth-of-field effects. This parameter does not influence the projection matrix unless a StereoCamera is being used. Default is 10.
+
+.fov : Float
+Camera frustum vertical field of view, from bottom to top of view, in degrees. Default is 50.
+
+.isPerspectiveCamera : Boolean
+Read-only flag to check if a given object is of type PerspectiveCamera.
+
+.near : Float
+Camera frustum near plane. Default is 0.1.
+
+The valid range is greater than 0 and less than the current value of the far plane. Note that, unlike for the OrthographicCamera, 0 is not a valid value for a PerspectiveCamera's near plane.
+
+.view : Object
+Frustum window specification or null. This is set using the .setViewOffset method and cleared using .clearViewOffset.
+
+.zoom : number
+Gets or sets the zoom factor of the camera. Default is 1.
+
+Methods
+See the base Camera class for common methods.
+
+.clearViewOffset () : undefined
+Removes any offset set by the .setViewOffset method.
+
+.getEffectiveFOV () : Float
+Returns the current vertical field of view angle in degrees considering .zoom.
+
+.getFilmHeight () : Float
+Returns the height of the image on the film. If .aspect is less than or equal to one (portrait format), the result equals .filmGauge.
+
+.getFilmWidth () : Float
+Returns the width of the image on the film. If .aspect is greater than or equal to one (landscape format), the result equals .filmGauge.
+
+.getFocalLength () : Float
+Returns the focal length of the current .fov in respect to .filmGauge.
+
+.setFocalLength ( focalLength : Float ) : undefined
+Sets the FOV by focal length in respect to the current .filmGauge.
+
+By default, the focal length is specified for a 35mm (full frame) camera.
+
+.getViewBounds ( distance : Float, minTarget : Vector2, maxTarget : Vector2 ) : undefined
+Computes the 2D bounds of the camera's viewable rectangle at a given distance along the viewing direction. Sets minTarget and maxTarget to the coordinates of the lower-left and upper-right corners of the view rectangle.
+
+.getViewSize ( distance : Float, target : Vector2 ) : Vector2
+Computes the width and height of the camera's viewable rectangle at a given distance along the viewing direction. Copies the result into the target Vector2, where x is width and y is height.
+
+.setViewOffset ( fullWidth : Float, fullHeight : Float, x : Float, y : Float, width : Float, height : Float ) : undefined
+fullWidth — full width of multiview setup
+fullHeight — full height of multiview setup
+x — horizontal offset of subcamera
+y — vertical offset of subcamera
+width — width of subcamera
+height — height of subcamera
+
+Sets an offset in a larger frustum. This is useful for multi-window or multi-monitor/multi-machine setups.
+
+For example, if you have 3x2 monitors and each monitor is 1920x1080 and the monitors are in grid like this:
+
++---+---+---+
+| A | B | C |
++---+---+---+
+| D | E | F |
++---+---+---+
+		
+then for each monitor you would call it like this:
+const w = 1920;
+const h = 1080;
+const fullWidth = w * 3;
+const fullHeight = h * 2;
+
+// A
+camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 0, w, h );
+// B
+camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 0, w, h );
+// C
+camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 0, w, h );
+// D
+camera.setViewOffset( fullWidth, fullHeight, w * 0, h * 1, w, h );
+// E
+camera.setViewOffset( fullWidth, fullHeight, w * 1, h * 1, w, h );
+// F
+camera.setViewOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
+Note there is no reason monitors have to be the same size or in a grid.
+
+.updateProjectionMatrix () : undefined
+Updates the camera projection matrix. Must be called after any change of parameters.
+
+.toJSON (meta : Object) : Object
+meta -- object containing metadata such as textures or images in objects' descendants.
+Convert the camera to three.js JSON Object/Scene format.
+
+Source
+src/cameras/PerspectiveCamera.js
+
+StereoCamera
+Dual PerspectiveCameras used for effects such as 3D Anaglyph or Parallax Barrier.
+
+Examples
+effects / anaglyph
+effects / parallaxbarrier
+effects / stereo
+
+Constructor
+StereoCamera( )
+Properties
+.aspect : Float
+Default is 1.
+
+.eyeSep : Float
+Default is 0.064.
+
+.cameraL : PerspectiveCamera
+Left camera. This is added to layer 1 - objects to be rendered by the left camera must also be added to this layer.
+
+.cameraR : PerspectiveCamera
+Right camera.This is added to layer 2 - objects to be rendered by the right camera must also be added to this layer.
+
+Methods
+.update ( camera : PerspectiveCamera ) : undefined
+Update the stereo cameras based on the camera passed in.
+
+Source
+src/cameras/StereoCamera.js
+

@@ -1,0 +1,271 @@
+LightShadow
+Serves as a base class for the other shadow classes.
+
+Constructor
+LightShadow( camera : Camera )
+camera - the light's view of the world.
+
+Create a new LightShadow. This is not intended to be called directly - it is used as a base class by other light shadows.
+
+Properties
+.autoUpdate : Boolean
+Enables automatic updates of the light's shadow. Default is true. If you do not require dynamic lighting / shadows, you may set this to false.
+
+.camera : Camera
+The light's view of the world. This is used to generate a depth map of the scene; objects behind other objects from the light's perspective will be in shadow.
+
+.bias : Float
+Shadow map bias, how much to add or subtract from the normalized depth when deciding whether a surface is in shadow.
+The default is 0. Very tiny adjustments here (in the order of 0.0001) may help reduce artifacts in shadows
+
+.blurSamples : Integer
+The amount of samples to use when blurring a VSM shadow map.
+
+.intensity : Float
+The intensity of the shadow. The default is 1. Valid values are in the range [0, 1].
+
+.map : WebGLRenderTarget
+The depth map generated using the internal camera; a location beyond a pixel's depth is in shadow. Computed internally during rendering.
+
+.mapPass : WebGLRenderTarget
+The distribution map generated using the internal camera; an occlusion is calculated based on the distribution of depths. Computed internally during rendering.
+
+.mapSize : Vector2
+A Vector2 defining the width and height of the shadow map.
+
+Higher values give better quality shadows at the cost of computation time. Values must be powers of 2, up to the WebGLRenderer.capabilities.maxTextureSize for a given device, although the width and height don't have to be the same (so, for example, (512, 1024) is valid). The default is ( 512, 512 ).
+
+.matrix : Matrix4
+Model to shadow camera space, to compute location and depth in shadow map. Stored in a Matrix4. This is computed internally during rendering.
+
+.needsUpdate : Boolean
+When set to true, shadow maps will be updated in the next render call. Default is false. If you have set .autoUpdate to false, you will need to set this property to true and then make a render call to update the light's shadow.
+
+.normalBias : Float
+Defines how much the position used to query the shadow map is offset along the object normal. The default is 0. Increasing this value can be used to reduce shadow acne especially in large scenes where light shines onto geometry at a shallow angle. The cost is that shadows may appear distorted.
+
+.radius : Float
+Setting this to values greater than 1 will blur the edges of the shadow.
+High values will cause unwanted banding effects in the shadows - a greater mapSize will allow for a higher value to be used here before these effects become visible.
+If WebGLRenderer.shadowMap.type is set to PCFSoftShadowMap, radius has no effect and it is recommended to increase softness by decreasing mapSize instead.
+
+Note that this has no effect if the WebGLRenderer.shadowMap.type is set to BasicShadowMap.
+
+Methods
+.getFrameExtents () : Vector2
+Used internally by the renderer to extend the shadow map to contain all viewports
+
+.updateMatrices ( light : Light ) : undefined
+Update the matrices for the camera and shadow, used internally by the renderer.
+
+light -- the light for which the shadow is being rendered.
+
+.getFrustum () : Frustum
+Gets the shadow cameras frustum. Used internally by the renderer to cull objects.
+
+.getViewportCount () : number
+Used internally by the renderer to get the number of viewports that need to be rendered for this shadow.
+
+.dispose () : undefined
+Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer used in your app.
+
+.copy ( source : LightShadow ) : this
+Copies value of all the properties from the source to this Light.
+
+.clone () : LightShadow
+Creates a new LightShadow with the same properties as this one.
+
+.toJSON () : Object
+Serialize this LightShadow.
+
+Source
+src/lights/LightShadow.js
+
+LightShadow →
+PointLightShadow
+This is used internally by PointLights for calculating shadows.
+
+Code Example
+//Create a WebGLRenderer and turn on shadows in the renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+//Create a PointLight and turn on shadows for the light
+const light = new THREE.PointLight( 0xffffff, 1, 100 );
+light.position.set( 0, 10, 4 );
+light.castShadow = true; // default false
+scene.add( light );
+
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500; // default
+
+//Create a sphere that cast shadows (but does not receive them)
+const sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
+const sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere.castShadow = true; //default is false
+sphere.receiveShadow = false; //default
+scene.add( sphere );
+
+//Create a plane that receives shadows (but does not cast them)
+const planeGeometry = new THREE.PlaneGeometry( 20, 20, 32, 32 );
+const planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+scene.add( plane );
+
+//Create a helper for the shadow camera (optional)
+const helper = new THREE.CameraHelper( light.shadow.camera );
+scene.add( helper );
+Constructor
+PointLightShadow( )
+Creates a new PointLightShadow. This is not intended to be called directly - it is called internally by PointLight.
+
+Properties
+See the base LightShadow class for common properties.
+
+.isPointLightShadow : Boolean
+Read-only flag to check if a given object is of type PointLightShadow.
+
+Methods
+See the base LightShadow class for common methods.
+
+.updateMatrices ( light : Light, viewportIndex : number) : undefined
+Update the matrices for the camera and shadow, used internally by the renderer.
+
+light -- the light for which the shadow is being rendered.
+viewportIndex -- calculates the matrix for this viewport
+
+Source
+src/lights/PointLightShadow.js
+
+LightShadow →
+DirectionalLightShadow
+This is used internally by DirectionalLights for calculating shadows.
+
+Unlike the other shadow classes, this uses an OrthographicCamera to calculate the shadows, rather than a PerspectiveCamera. This is because light rays from a DirectionalLight are parallel.
+
+Code Example
+//Create a WebGLRenderer and turn on shadows in the renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+//Create a DirectionalLight and turn on shadows for the light
+const light = new THREE.DirectionalLight( 0xffffff, 1 );
+light.position.set( 0, 1, 0 ); //default; light shining from top
+light.castShadow = true; // default false
+scene.add( light );
+
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500; // default
+
+//Create a sphere that cast shadows (but does not receive them)
+const sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
+const sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere.castShadow = true; //default is false
+sphere.receiveShadow = false; //default
+scene.add( sphere );
+
+//Create a plane that receives shadows (but does not cast them)
+const planeGeometry = new THREE.PlaneGeometry( 20, 20, 32, 32 );
+const planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+scene.add( plane );
+
+//Create a helper for the shadow camera (optional)
+const helper = new THREE.CameraHelper( light.shadow.camera );
+scene.add( helper );
+Constructor
+DirectionalLightShadow( )
+Creates a new DirectionalLightShadow. This is not intended to be called directly - it is called internally by DirectionalLight.
+
+Properties
+See the base LightShadow class for common properties.
+
+.camera : Camera
+The light's view of the world. This is used to generate a depth map of the scene; objects behind other objects from the light's perspective will be in shadow.
+
+The default is an OrthographicCamera with left and bottom set to -5, right and top set to 5, the near clipping plane at 0.5 and the far clipping plane at 500.
+
+.isDirectionalLightShadow : Boolean
+Read-only flag to check if a given object is of type DirectionalLightShadow.
+
+Methods
+See the base LightShadow class for common methods.
+
+Source
+src/lights/DirectionalLightShadow.js
+
+LightShadow →
+SpotLightShadow
+This is used internally by SpotLights for calculating shadows.
+
+Code Example
+//Create a WebGLRenderer and turn on shadows in the renderer
+const renderer = new THREE.WebGLRenderer();
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+//Create a SpotLight and turn on shadows for the light
+const light = new THREE.SpotLight( 0xffffff );
+light.castShadow = true; // default false
+scene.add( light );
+
+//Set up shadow properties for the light
+light.shadow.mapSize.width = 512; // default
+light.shadow.mapSize.height = 512; // default
+light.shadow.camera.near = 0.5; // default
+light.shadow.camera.far = 500; // default
+light.shadow.focus = 1; // default
+
+//Create a sphere that cast shadows (but does not receive them)
+const sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
+const sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere.castShadow = true; //default is false
+sphere.receiveShadow = false; //default
+scene.add( sphere );
+
+//Create a plane that receives shadows (but does not cast them)
+const planeGeometry = new THREE.PlaneGeometry( 20, 20, 32, 32 );
+const planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+const plane = new THREE.Mesh( planeGeometry, planeMaterial );
+plane.receiveShadow = true;
+scene.add( plane );
+
+//Create a helper for the shadow camera (optional)
+const helper = new THREE.CameraHelper( light.shadow.camera );
+scene.add( helper );
+Constructor
+The constructor creates a PerspectiveCamera : PerspectiveCamera to manage the shadow's view of the world.
+
+Properties
+See the base LightShadow class for common properties.
+
+.camera : Camera
+The light's view of the world. This is used to generate a depth map of the scene; objects behind other objects from the light's perspective will be in shadow.
+
+The default is a PerspectiveCamera with near clipping plane at 0.5. The fov will track the angle property of the owning SpotLight via the update method. Similarly, the aspect property will track the aspect of the mapSize. If the distance property of the light is set, the far clipping plane will track that, otherwise it defaults to 500.
+
+.focus : Number
+Used to focus the shadow camera. The camera's field of view is set as a percentage of the spotlight's field-of-view. Range is [0, 1]. Default is 1.0.
+
+.isSpotLightShadow : Boolean
+Read-only flag to check if a given object is of type SpotLightShadow.
+
+Methods
+See the base LightShadow class for common methods.
+
+Source
+src/lights/SpotLightShadow.js
+

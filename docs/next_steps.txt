@@ -1,0 +1,441 @@
+How to update things
+All objects by default automatically update their matrices if they have been added to the scene with
+
+const object = new THREE.Object3D();
+scene.add( object );
+or if they are the child of another object that has been added to the scene:
+const object1 = new THREE.Object3D();
+const object2 = new THREE.Object3D();
+
+object1.add( object2 );
+scene.add( object1 ); //object1 and object2 will automatically update their matrices
+However, if you know the object will be static, you can disable this and update the transform matrix manually just when needed.
+
+object.matrixAutoUpdate = false;
+object.updateMatrix();
+BufferGeometry
+BufferGeometries store information (such as vertex positions, face indices, normals, colors, UVs, and any custom attributes) in buffers - that is, typed arrays. This makes them generally faster than standard Geometries, at the cost of being somewhat harder to work with.
+
+With regards to updating BufferGeometries, the most important thing to understand is that you cannot resize buffers (this is very costly, basically the equivalent to creating a new geometry). You can however update the content of buffers.
+
+This means that if you know an attribute of your BufferGeometry will grow, say the number of vertices, you must pre-allocate a buffer large enough to hold any new vertices that may be created. Of course, this also means that there will be a maximum size for your BufferGeometry - there is no way to create a BufferGeometry that can efficiently be extended indefinitely.
+
+We'll use the example of a line that gets extended at render time. We'll allocate space in the buffer for 500 vertices but draw only two at first, using BufferGeometry.drawRange.
+
+const MAX_POINTS = 500;
+
+// geometry
+const geometry = new THREE.BufferGeometry();
+
+// attributes
+const positions = new Float32Array( MAX_POINTS * 3 ); // 3 floats (x, y and z) per point
+geometry.setAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+
+// draw range
+const drawCount = 2; // draw the first 2 points, only
+geometry.setDrawRange( 0, drawCount );
+
+// material
+const material = new THREE.LineBasicMaterial( { color: 0xff0000 } );
+
+// line
+const line = new THREE.Line( geometry, material );
+scene.add( line );
+Next we'll randomly add points to the line using a pattern like:
+
+const positionAttribute = line.geometry.getAttribute( 'position' );
+
+let x = 0, y = 0, z = 0;
+
+for ( let i = 0; i < positionAttribute.count; i ++ ) {
+
+	positionAttribute.setXYZ( i, x, y, z );
+
+    x += ( Math.random() - 0.5 ) * 30;
+    y += ( Math.random() - 0.5 ) * 30;
+    z += ( Math.random() - 0.5 ) * 30;
+
+}
+If you want to change the number of points rendered after the first render, do this:
+
+line.geometry.setDrawRange( 0, newValue );
+If you want to change the position data values after the first render, you need to set the needsUpdate flag like so:
+
+positionAttribute.needsUpdate = true; // required after the first render
+If you change the position data values after the initial render, you may need to recompute bounding volumes so other features of the engine like view frustum culling or helpers properly work.
+
+line.geometry.computeBoundingBox();
+line.geometry.computeBoundingSphere();
+Here is a fiddle showing an animated line which you can adapt to your use case.
+
+Examples
+WebGL / custom / attributes
+WebGL / buffergeometry / custom / attributes / particles
+
+Materials
+All uniforms values can be changed freely (e.g. colors, textures, opacity, etc), values are sent to the shader every frame.
+
+Also GLstate related parameters can change any time (depthTest, blending, polygonOffset, etc).
+
+The following properties can't be easily changed at runtime (once the material is rendered at least once):
+
+numbers and types of uniforms
+presence or not of
+texture
+fog
+vertex colors
+morphing
+shadow map
+alpha test
+transparent
+Changes in these require building of new shader program. You'll need to set
+
+material.needsUpdate = true
+Bear in mind this might be quite slow and induce jerkiness in framerate (especially on Windows, as shader compilation is slower in DirectX than OpenGL).
+
+For smoother experience you can emulate changes in these features to some degree by having "dummy" values like zero intensity lights, white textures, or zero density fog.
+
+You can freely change the material used for geometry chunks, however you cannot change how an object is divided into chunks (according to face materials).
+
+If you need to have different configurations of materials during runtime:
+If the number of materials / chunks is small, you could pre-divide the object beforehand (e.g. hair / face / body / upper clothes / trousers for a human, front / sides / top / glass / tire / interior for a car).
+
+If the number is large (e.g. each face could be potentially different), consider a different solution, such as using attributes / textures to drive different per-face look.
+
+Examples
+WebGL / materials / car
+WebGL / webgl_postprocessing / dof
+
+Textures
+Image, canvas, video and data textures need to have the following flag set if they are changed:
+
+texture.needsUpdate = true;
+Render targets update automatically.
+
+Examples
+WebGL / materials / video
+WebGL / rtt
+
+Cameras
+A camera's position and target is updated automatically. If you need to change
+
+fov
+aspect
+near
+far
+then you'll need to recompute the projection matrix:
+
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+InstancedMesh
+InstancedMesh is a class for conveniently access instanced rendering in three.js. Certain library features like view frustum culling or ray casting rely on up-to-date bounding volumes (bounding sphere and bounding box). Because of the way how InstancedMesh works, the class has its own boundingBox and boundingSphere properties that supersede the bounding volumes on geometry level.
+
+Similar to geometries you have to recompute the bounding box and sphere whenever you change the underlying data. In context of InstancedMesh, that happens when you transform instances via setMatrixAt(). You can use the same pattern like with geometries.
+
+instancedMesh.computeBoundingBox();
+instancedMesh.computeBoundingSphere();
+SkinnedMesh
+SkinnedMesh follows the same principles like InstancedMesh in context of bounding volumes. Meaning the class has its own version of boundingBox and boundingSphere to correctly enclose animated meshes. When calling computeBoundingBox() and computeBoundingSphere(), the class computes the respective bounding volumes based on the current bone transformation (or in other words the current animation state).
+
+How to dispose of objects
+One important aspect in order to improve performance and avoid memory leaks in your application is the disposal of unused library entities. Whenever you create an instance of a three.js type, you allocate a certain amount of memory. However, three.js creates for specific objects like geometries or materials WebGL related entities like buffers or shader programs which are necessary for rendering. It's important to highlight that these objects are not released automatically. Instead, the application has to use a special API in order to free such resources. This guide provides a brief overview about how this API is used and what objects are relevant in this context.
+
+Geometries
+A geometry usually represents vertex information defined as a collection of attributes. three.js internally creates an object of type WebGLBuffer for each attribute. These entities are only deleted if you call BufferGeometry.dispose(). If a geometry becomes obsolete in your application, execute the method to free all related resources.
+
+Materials
+A material defines how objects are rendered. three.js uses the information of a material definition in order to construct a shader program for rendering. Shader programs can only be deleted if the respective material is disposed. For performance reasons, three.js tries to reuse existing shader programs if possible. So a shader program is only deleted if all related materials are disposed. You can indicate the disposal of a material by executing Material.dispose().
+
+Textures
+The disposal of a material has no effect on textures. They are handled separately since a single texture can be used by multiple materials at the same time. Whenever you create an instance of Texture, three.js internally creates an instance of WebGLTexture. Similar to buffers, this object can only be deleted by calling Texture.dispose().
+
+If you use an ImageBitmap as the texture's data source, you have to call ImageBitmap.close() at the application level to dispose of all CPU-side resources. An automated call of ImageBitmap.close() in Texture.dispose() is not possible, since the image bitmap becomes unusable, and the engine has no way of knowing if the image bitmap is used elsewhere.
+
+Render Targets
+Objects of type WebGLRenderTarget not only allocate an instance of WebGLTexture but also WebGLFramebuffers and WebGLRenderbuffers for realizing custom rendering destinations. These objects are only deallocated by executing WebGLRenderTarget.dispose().
+
+Skinned Mesh
+Skinned meshes represent their bone hierarchy as skeletons. If you don't need a skinned mesh anymore, consider to call Skeleton.dispose() on the skeleton to free internal resources. Keep in mind that skeletons can be shared across multiple skinned meshes, so only call dispose() if the skeleton is not used by other active skinned meshes.
+
+Miscellaneous
+There are other classes from the examples directory like controls or post processing passes which provide dispose() methods in order to remove internal event listeners or render targets. In general, it's recommended to check the API or documentation of a class and watch for dispose(). If present, you should use it when cleaning things up.
+
+FAQ
+Why can't three.js dispose objects automatically?
+This question was asked many times by the community so it's important to clarify this matter. Fact is that three.js does not know the lifetime or scope of user-created entities like geometries or materials. This is the responsibility of the application. For example even if a material is currently not used for rendering, it might be necessary for the next frame. So if the application decides that a certain object can be deleted, it has to notify the engine via calling the respective dispose() method.
+
+Does removing a mesh from the scene also dispose its geometry and material?
+No, you have to explicitly dispose the geometry and material via dispose(). Keep in mind that geometries and materials can be shared among 3D objects like meshes.
+
+Does three.js provide information about the amount of cached objects?
+Yes. It's possible to evaluate WebGLRenderer.info, a special property of the renderer with a series of statistical information about the graphics board memory and the rendering process. Among other things, it tells you how many textures, geometries and shader programs are internally stored. If you notice performance problems in your application, it's a good idea to debug this property in order to easily identify a memory leak.
+
+What happens when you call dispose() on a texture but the image is not loaded yet?
+Internal resources for a texture are only allocated if the image has fully loaded. If you dispose a texture before the image was loaded, nothing happens. No resources were allocated so there is also no need for clean up.
+
+What happens when I call dispose() and then use the respective object at a later point?
+That depends. For geometries, materials, textures, render targets and post processing passes the deleted internal resources can be created again by the engine. So no runtime error will occur but you might notice a negative performance impact for the current frame, especially when shader programs have to be compiled. Controls and renderers are an exception. Instances of these classes can not be used after dispose() has been called. You have to create new instances in this case.
+
+How should I manage three.js objects in my app? When do I know how to dispose things?
+In general, there is no definite recommendation for this. It highly depends on the specific use case when calling dispose() is appropriate. It's important to highlight that it's not always necessary to dispose objects all the time. A good example for this is a game which consists of multiple levels. A good place for object disposal is when switching the level. The app could traverse through the old scene and dispose all obsolete materials, geometries and textures. As mentioned in the previous section, it does not produce a runtime error if you dispose an object that is actually still in use. The worst thing that can happen is performance drop for a single frame.
+
+Why renderer.info.memory is still reporting geometries and textures after traversing the scene and disposing all reachable textures and geometries?
+In certain cases, there are some textures and geometries used internally by Three.js that are not reachable when traversing the scene graph in order to be disposed. It is expected that renderer.info.memory will still report them even after a full scene cleanup. However, they do not leak, but they are reused on consecutive scene cleanup/repopulating cycles. These cases could be related to using material.envMap, scene.background, scene.environment, or other contexts that would require the engine to create textures or geometries for internal use.
+
+Examples that demonstrate the usage of dispose()
+WebGL / test / memory
+WebGL / test / memory2
+
+How to create VR content
+This guide provides a brief overview of the basic components of a web-based VR application made with three.js.
+
+Workflow
+First, you have to include VRButton.js into your project.
+
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+VRButton.createButton() does two important things: It creates a button which indicates VR compatibility. Besides, it initiates a VR session if the user activates the button. The only thing you have to do is to add the following line of code to your app.
+
+document.body.appendChild( VRButton.createButton( renderer ) );
+Next, you have to tell your instance of WebGLRenderer to enable XR rendering.
+
+renderer.xr.enabled = true;
+Finally, you have to adjust your animation loop since we can't use our well known window.requestAnimationFrame() function. For VR projects we use setAnimationLoop. The minimal code looks like this:
+
+renderer.setAnimationLoop( function () {
+
+	renderer.render( scene, camera );
+
+} );
+Next Steps
+Have a look at one of the official WebVR examples to see this workflow in action.
+
+WebXR / XR / ballshooter
+WebXR / XR / cubes
+WebXR / XR / dragging
+WebXR / XR / paint
+WebXR / XR / sculpt
+WebXR / VR / panorama_depth
+WebXR / VR / panorama
+WebXR / VR / rollercoaster
+WebXR / VR / sandbox
+WebXR / VR / video
+
+How to use post-processing
+Many three.js applications render their 3D objects directly to the screen. Sometimes, however, you want to apply one or more graphical effects like Depth-Of-Field, Bloom, Film Grain or various types of Anti-aliasing. Post-processing is a widely used approach to implement such effects. First, the scene is rendered to a render target which represents a buffer in the video card's memory. In the next step one or more post-processing passes apply filters and effects to the image buffer before it is eventually rendered to the screen.
+
+three.js provides a complete post-processing solution via EffectComposer to implement such a workflow.
+
+Workflow
+The first step in the process is to import all necessary files from the examples directory. The guide assumes you are using the official npm package of three.js. For our basic demo in this guide we need the following files.
+
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+After all files are successfully imported, we can create our composer by passing in an instance of WebGLRenderer.
+
+const composer = new EffectComposer( renderer );
+When using a composer, it's necessary to change the application's animation loop. Instead of calling the render method of WebGLRenderer, we now use the respective counterpart of EffectComposer.
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	composer.render();
+
+}
+Our composer is now ready so it's possible to configure the chain of post-processing passes. These passes are responsible for creating the final visual output of the application. They are processed in order of their addition/insertion. In our example, the instance of RenderPass is executed first, then the instance of GlitchPass and finally OutputPass. The last enabled pass in the chain is automatically rendered to the screen. The setup of the passes looks like so:
+
+const renderPass = new RenderPass( scene, camera );
+composer.addPass( renderPass );
+
+const glitchPass = new GlitchPass();
+composer.addPass( glitchPass );
+
+const outputPass = new OutputPass();
+composer.addPass( outputPass );
+RenderPass is normally placed at the beginning of the chain in order to provide the rendered scene as an input for the next post-processing step. In our case, GlitchPass is going to use these image data to apply a wild glitch effect. OutputPass is usually the last pass in the chain which performs sRGB color space conversion and tone mapping. Check out this live example to see it in action.
+
+Built-in Passes
+You can use a wide range of pre-defined post-processing passes provided by the engine. They are located in the postprocessing directory.
+
+Custom Passes
+Sometimes you want to write a custom post-processing shader and include it into the chain of post-processing passes. For this scenario, you can utilize ShaderPass. After importing the file and your custom shader, you can use the following code to setup the pass.
+
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { LuminosityShader } from 'three/addons/shaders/LuminosityShader.js';
+
+// later in your init routine
+
+const luminosityPass = new ShaderPass( LuminosityShader );
+composer.addPass( luminosityPass );
+The repository provides a file called CopyShader which is a good starting code for your own custom shader. CopyShader just copies the image contents of the EffectComposer's read buffer to its write buffer without applying any effects.
+
+Matrix transformations
+Three.js uses matrices to encode 3D transformations---translations (position), rotations, and scaling. Every instance of Object3D has a matrix which stores that object's position, rotation, and scale. This page describes how to update an object's transformation.
+
+Convenience properties and matrixAutoUpdate
+There are two ways to update an object's transformation:
+
+Modify the object's position, quaternion, and scale properties, and let three.js recompute the object's matrix from these properties:
+object.position.copy( start_position );
+object.quaternion.copy( quaternion );
+By default, the matrixAutoUpdate property is set true, and the matrix will be automatically recalculated. If the object is static, or you wish to manually control when recalculation occurs, better performance can be obtained by setting the property false:
+object.matrixAutoUpdate = false;
+And after changing any properties, manually update the matrix:
+object.updateMatrix();
+Modify the object's matrix directly. The Matrix4 class has various methods for modifying the matrix:
+object.matrix.setRotationFromQuaternion( quaternion );
+object.matrix.setPosition( start_position );
+object.matrixAutoUpdate = false;
+Note that matrixAutoUpdate must be set to false in this case, and you should make sure not to call updateMatrix. Calling updateMatrix will clobber the manual changes made to the matrix, recalculating the matrix from position, scale, and so on.
+Object and world matrices
+An object's matrix stores the object's transformation relative to the object's parent; to get the object's transformation in world coordinates, you must access the object's Object3D.matrixWorld.
+
+When either the parent or the child object's transformation changes, you can request that the child object's matrixWorld be updated by calling updateMatrixWorld().
+
+An object can be transformed via Object3D.applyMatrix4. Note: Under-the-hood, this method relies on Matrix4.decompose, and not all matrices are decomposable in this way. For example, if an object has a non-uniformly scaled parent, then the object's world matrix may not be decomposable, and this method may not be appropriate.
+
+Rotation and Quaternion
+Three.js provides two ways of representing 3D rotations: Euler angles and Quaternions, as well as methods for converting between the two. Euler angles are subject to a problem called "gimbal lock," where certain configurations can lose a degree of freedom (preventing the object from being rotated about one axis). For this reason, object rotations are always stored in the object's quaternion.
+
+Previous versions of the library included a useQuaternion property which, when set to false, would cause the object's matrix to be calculated from an Euler angle. This practice is deprecated---instead, you should use the setRotationFromEuler method, which will update the quaternion.
+
+Animation system
+Overview
+Within the three.js animation system you can animate various properties of your models: the bones of a skinned and rigged model, morph targets, different material properties (colors, opacity, booleans), visibility and transforms. The animated properties can be faded in, faded out, crossfaded and warped. The weight and time scales of different simultaneous animations on the same object as well as on different objects can be changed independently. Various animations on the same and on different objects can be synchronized.
+
+To achieve all this in one homogeneous system, the three.js animation system has completely changed in 2015 (beware of outdated information!), and it has now an architecture similar to Unity/Unreal Engine 4. This page gives a short overview of the main components of the system and how they work together.
+
+Animation Clips
+If you have successfully imported an animated 3D object (it doesn't matter if it has bones or morph targets or both) — for example exporting it from Blender with the glTF Blender exporter and loading it into a three.js scene using GLTFLoader — one of the response fields should be an array named "animations", containing the AnimationClips for this model (see a list of possible loaders below).
+
+Each AnimationClip usually holds the data for a certain activity of the object. If the mesh is a character, for example, there may be one AnimationClip for a walkcycle, a second for a jump, a third for sidestepping and so on.
+
+Keyframe Tracks
+Inside of such an AnimationClip the data for each animated property are stored in a separate KeyframeTrack. Assuming a character object has a skeleton, one keyframe track could store the data for the position changes of the lower arm bone over time, a different track the data for the rotation changes of the same bone, a third the track position, rotation or scaling of another bone, and so on. It should be clear, that an AnimationClip can be composed of lots of such tracks.
+
+Assuming the model has morph targets (for example one morph target showing a friendly face and another showing an angry face), each track holds the information as to how the influence of a certain morph target changes during the performance of the clip.
+
+Animation Mixer
+The stored data forms only the basis for the animations - actual playback is controlled by the AnimationMixer. You can imagine this not only as a player for animations, but as a simulation of a hardware like a real mixer console, which can control several animations simultaneously, blending and merging them.
+
+Animation Actions
+The AnimationMixer itself has only very few (general) properties and methods, because it can be controlled by the AnimationActions. By configuring an AnimationAction you can determine when a certain AnimationClip shall be played, paused or stopped on one of the mixers, if and how often the clip has to be repeated, whether it shall be performed with a fade or a time scaling, and some additional things, such crossfading or synchronizing.
+
+Animation Object Groups
+If you want a group of objects to receive a shared animation state, you can use an AnimationObjectGroup.
+
+Supported Formats and Loaders
+Note that not all model formats include animation (OBJ notably does not), and that only some three.js loaders support AnimationClip sequences. Several that do support this animation type:
+
+THREE.ObjectLoader
+THREE.BVHLoader
+THREE.ColladaLoader
+THREE.FBXLoader
+THREE.GLTFLoader
+Note that 3ds max and Maya currently can't export multiple animations (meaning animations which are not on the same timeline) directly to a single file.
+
+Example
+let mesh;
+
+// Create an AnimationMixer, and get the list of AnimationClip instances
+const mixer = new THREE.AnimationMixer( mesh );
+const clips = mesh.animations;
+
+// Update the mixer on each frame
+function update () {
+	mixer.update( deltaSeconds );
+}
+
+// Play a specific animation
+const clip = THREE.AnimationClip.findByName( clips, 'dance' );
+const action = mixer.clipAction( clip );
+action.play();
+
+// Play all animations
+clips.forEach( function ( clip ) {
+	mixer.clipAction( clip ).play();
+} );
+Color management
+What is a color space?
+Every color space is a collection of several design decisions, chosen together to support a large range of colors while satisfying technical constraints related to precision and display technologies. When creating a 3D asset, or assembling 3D assets together into a scene, it is important to know what these properties are, and how the properties of one color space relate to other color spaces in the scene.
+
+
+sRGB colors and white point (D65) displayed in the reference CIE 1931 chromaticity diagram. Colored region represents a 2D projection of the sRGB gamut, which is a 3D volume. Source: Wikipedia
+Color primaries: Primary colors (e.g. red, green, blue) are not absolutes; they are selected from the visible spectrum based on constraints of limited precision and capabilities of available display devices. Colors are expressed as a ratio of the primary colors.
+White point: Most color spaces are engineered such that an equally weighted sum of primaries R = G = B will appear to be without color, or "achromatic". The appearance of achromatic values (like white or grey) depend on human perception, which in turn depends heavily on the context of the observer. A color space specifies its "white point" to balance these needs. The white point defined by the sRGB color space is D65.
+Transfer functions: After choosing the color gamut and a color model, we still need to define mappings ("transfer functions") of numerical values to/from the color space. Does r = 0.5 represent 50% less physical illumination than r = 1.0? Or 50% less bright, as perceived by an average human eye? These are different things, and that difference can be represented as a mathematical function. Transfer functions may be linear or nonlinear, depending on the objectives of the color space. sRGB defines nonlinear transfer functions. Those functions are sometimes approximated as gamma functions, but the term "gamma" is ambiguous and should be avoided in this context.
+These three parameters — color primaries, white point, and transfer functions — define a color space, with each chosen for particular goals. Having defined the parameters, a few additional terms are helpful:
+Color model: Syntax for numerically identifying colors within chosen the color gamut — a coordinate system for colors. In three.js we're mainly concerned with the RGB color model, having three coordinates r, g, b ∈ [0,1] ("closed domain") or r, g, b ∈ [0,∞] ("open domain") each representing a fraction of a primary color. Other color models (HSL, Lab, LCH) are commonly used for artistic control.
+Color gamut: Once color primaries and a white point have been chosen, these represent a volume within the visible spectrum (a "gamut"). Colors not within this volume ("out of gamut") cannot be expressed by closed domain [0,1] RGB values. In the open domain [0,∞], the gamut is technically infinite.
+Consider two very common color spaces: SRGBColorSpace ("sRGB") and LinearSRGBColorSpace ("Linear-sRGB"). Both use the same primaries and white point, and therefore have the same color gamut. Both use the RGB color model. They differ only in the transfer functions — Linear-sRGB is linear with respect to physical light intensity. sRGB uses the nonlinear sRGB transfer functions, and more closely resembles the way that the human eye perceives light and the responsiveness of common display devices.
+
+That difference is important. Lighting calculations and other rendering operations must generally occur in a linear color space. However, a linear colors are less efficient to store in an image or framebuffer, and do not look correct when viewed by a human observer. As a result, input textures and the final rendered image will generally use the nonlinear sRGB color space.
+
+ℹ️ NOTICE: While some modern displays support wider gamuts like Display-P3, the web platform's graphics APIs largely rely on sRGB. Applications using three.js today will typically use only the sRGB and Linear-sRGB color spaces.
+
+Roles of color spaces
+Linear workflows — required for modern rendering methods — generally involve more than one color space, each assigned to a particular role. Linear and nonlinear color spaces are appropriate for different roles, explained below.
+
+Input color space
+Colors supplied to three.js — from color pickers, textures, 3D models, and other sources — each have an associated color space. Those not already in the Linear-sRGB working color space must be converted, and textures be given the correct texture.colorSpace assignment. Certain conversions (for hexadecimal and CSS colors in sRGB) can be made automatically if the THREE.ColorManagement API is enabled before initializing colors:
+
+THREE.ColorManagement.enabled = true;
+THREE.ColorManagement is enabled by default.
+
+Materials, lights, and shaders: Colors in materials, lights, and shaders store RGB components in the Linear-sRGB working color space.
+Vertex colors: BufferAttributes store RGB components in the Linear-sRGB working color space.
+Color textures: PNG or JPEG Textures containing color information (like .map or .emissiveMap) use the closed domain sRGB color space, and must be annotated with texture.colorSpace = SRGBColorSpace. Formats like OpenEXR (sometimes used for .envMap or .lightMap) use the Linear-sRGB color space indicated with texture.colorSpace = LinearSRGBColorSpace, and may contain values in the open domain [0,∞].
+Non-color textures: Textures that do not store color information (like .normalMap or .roughnessMap) do not have an associated color space, and generally use the (default) texture annotation of texture.colorSpace = NoColorSpace. In rare cases, non-color data may be represented with other nonlinear encodings for technical reasons.
+⚠️ WARNING: Many formats for 3D models do not correctly or consistently define color space information. While three.js attempts to handle most cases, problems are common with older file formats. For best results, use glTF 2.0 (GLTFLoader) and test 3D models in online viewers early to confirm the asset itself is correct.
+
+Working color space
+Rendering, interpolation, and many other operations must be performed in an open domain linear working color space, in which RGB components are proportional to physical illumination. In three.js, the working color space is Linear-sRGB.
+
+Output color space
+Output to a display device, image, or video may involve conversion from the open domain Linear-sRGB working color space to another color space. The conversion is defined by (WebGLRenderer.outputColorSpace). When using post-processing, this requires OutputPass.
+
+Display: Colors written to a WebGL canvas for display should be in the sRGB color space.
+Image: Colors written to an image should use the color space appropriate for the format and usage. Fully-rendered images written to PNG or JPEG textures generally use the sRGB color space. Images containing emission, light maps, or other data not confined to the [0,1] range will generally use the open domain Linear-sRGB color space, and a compatible image format like OpenEXR.
+⚠️ WARNING: Render targets may use either sRGB or Linear-sRGB. sRGB makes better use of limited precision. In the closed domain, 8 bits often suffice for sRGB whereas ≥12 bits (half float) may be required for Linear-sRGB. If later pipeline stages require Linear-sRGB input, the additional conversions may have a small performance cost.
+
+Custom materials based on ShaderMaterial and RawShaderMaterial have to implement their own output color space conversion. For instances of ShaderMaterial, adding the colorspace_fragment shader chunk to the fragment shader's main() function should be sufficient.
+
+Working with THREE.Color instances
+Methods reading or modifying Color instances assume data is already in the three.js working color space, Linear-sRGB. RGB and HSL components are direct representations of data stored by the Color instance, and are never converted implicitly. Color data may be explicitly converted with .convertLinearToSRGB() or .convertSRGBToLinear().
+
+// RGB components (no change).
+color.r = color.g = color.b = 0.5;
+console.log( color.r ); // → 0.5
+
+// Manual conversion.
+color.r = 0.5;
+color.convertSRGBToLinear();
+console.log( color.r ); // → 0.214041140
+With ColorManagement.enabled = true set (recommended), certain conversions are made automatically. Because hexadecimal and CSS colors are generally sRGB, Color methods will automatically convert these inputs from sRGB to Linear-sRGB in setters, or convert from Linear-sRGB to sRGB when returning hexadecimal or CSS output from getters.
+
+// Hexadecimal conversion.
+color.setHex( 0x808080 );
+console.log( color.r ); // → 0.214041140
+console.log( color.getHex() ); // → 0x808080
+
+// CSS conversion.
+color.setStyle( 'rgb( 0.5, 0.5, 0.5 )' );
+console.log( color.r ); // → 0.214041140
+
+// Override conversion with 'colorSpace' argument.
+color.setHex( 0x808080, LinearSRGBColorSpace );
+console.log( color.r ); // → 0.5
+console.log( color.getHex( LinearSRGBColorSpace ) ); // → 0x808080
+console.log( color.getHex( SRGBColorSpace ) ); // → 0xBCBCBC
+Common mistakes
+When an individual color or texture is misconfigured, it will appear darker or lighter than expected. When the renderer's output color space is misconfigured, the entire scene may appear darker (e.g. missing conversion to sRGB) or lighter (e.g. a double conversion to sRGB with post-processing). In each case the problem may not be uniform, and simply increasing/decreasing lighting does not solve it.
+
+A more subtle issue appears when both the input color spaces and the output color spaces are incorrect — the overall brightness levels may be fine, but colors may change unexpectedly under different lighting, or shading may appear more blown-out and less soft than intended. These two wrongs do not make a right, and it's important that the working color space be linear ("scene referred") and the output color space be nonlinear ("display referred").
+
+Further reading
+GPU Gems 3: The Importance of Being Linear, by Larry Gritz and Eugene d'Eon
+What every coder should know about gamma, by John Novak
+The Hitchhiker's Guide to Digital Color, by Troy Sobotka
+Color Management, Blender

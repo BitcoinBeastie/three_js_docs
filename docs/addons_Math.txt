@@ -1,0 +1,240 @@
+Lut
+Represents a lookup table for colormaps. It is used to determine the color values from a range of data values.
+
+Import
+Lut is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { Lut } from 'three/addons/math/Lut.js';
+Code Example
+const lut = new Lut( 'rainbow', 512 );
+const color = lut.getColor( 0.5 );
+Constructor
+Lut( colormap : String, count : Number )
+colormap - Sets a colormap from predefined colormaps. Available colormaps are: rainbow, cooltowarm, blackbody, grayscale. Default is rainbow.
+count - Sets the number of colors used to represent the data array. Default is 32.
+
+Properties
+.lut : Array
+The lookup table for the selected color map represented as an array of Colors.
+
+.map : Array
+The currently selected color map. Default is the rainbow color map.
+
+.minV : Number
+The minimum value to be represented with the lookup table. Default is 0.
+
+.maxV : Number
+The maximum value to be represented with the lookup table. Default is 1.
+
+.n : Number
+The number of colors of the current selected color map. Default is 32.
+
+Methods
+.copy ( lut : Lut ) : this this : Lut
+color — Lut to copy.
+
+Copies the given lut.
+
+.addColorMap ( name : String, arrayOfColors : Array ) : this
+name — The name of the color map.
+arrayOfColors — An array of color values. Each value is an array holding a threshold and the actual color value as a hexadecimal number.
+
+Adds a color map to this Lut instance.
+
+.createCanvas () : HTMLCanvasElement
+Creates a canvas in order to visualize the lookup table as a texture.
+
+.getColor ( alpha : Number ) : Color
+value -- the data value to be displayed as a color.
+
+Returns an instance of Color for the given data value.
+
+.setColorMap ( colormap : String, count : Number ) : this
+colormap — The name of the color map.
+count — The number of colors. Default is 32.
+
+Configure the lookup table for the given color map and number of colors.
+
+.setMin ( minV : Number ) : this
+minV — The minimum value to be represented with the lookup table
+
+Sets this Lut with the minimum value to be represented.
+
+.setMax ( maxV : Number ) : this
+maxV — The maximum value to be represented with the lookup table.
+
+Sets this Lut with the maximum value to be represented.
+
+.updateCanvas ( canvas : HTMLCanvasElement ) : HTMLCanvasElement
+Updates the canvas with the Lut's data.
+
+Source
+examples/jsm/math/Lut.js
+
+MeshSurfaceSampler
+Utility class for sampling weighted random points on the surface of a mesh.
+
+Weighted sampling is useful for effects like heavier foliage growth in certain areas of terrain, or concentrated particle emissions from specific parts of a mesh. Vertex weights may be written programmatically, or painted by hand as vertex colors in 3D tools like Blender.
+
+Import
+MeshSurfaceSampler is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { MeshSurfaceSampler } from 'three/addons/math/MeshSurfaceSampler.js';
+Code Example
+// Create a sampler for a Mesh surface.
+const sampler = new MeshSurfaceSampler( surfaceMesh )
+	.setWeightAttribute( 'color' )
+	.build();
+
+const mesh = new THREE.InstancedMesh( sampleGeometry, sampleMaterial, 100 );
+
+const position = new THREE.Vector3();
+const matrix = new THREE.Matrix4();
+
+// Sample randomly from the surface, creating an instance of the sample
+// geometry at each sample point.
+for ( let i = 0; i < 100; i ++ ) {
+
+	sampler.sample( position );
+
+	matrix.makeTranslation( position.x, position.y, position.z );
+
+	mesh.setMatrixAt( i, matrix );
+
+}
+
+scene.add( mesh );
+Examples
+webgl_instancing_scatter
+
+Constructor
+MeshSurfaceSampler( mesh : Mesh )
+mesh — Surface mesh from which to sample.
+
+Creates a new MeshSurfaceSampler. If the input geometry is indexed, a non-indexed copy is made. After construction, the sampler is not able to return samples until build is called.
+
+Methods
+.setWeightAttribute ( name : String ) : this
+Specifies a vertex attribute to be used as a weight when sampling from the surface. Faces with higher weights are more likely to be sampled, and those with weights of zero will not be sampled at all. For vector attributes, only .x is used in sampling.
+
+If no weight attribute is selected, sampling is randomly distributed by area.
+
+.build () : this
+Processes the input geometry and prepares to return samples. Any configuration of the geometry or sampler must occur before this method is called. Time complexity is O(n) for a surface with n faces.
+
+.sample ( targetPosition : Vector3, targetNormal : Vector3, targetColor : Color, targetUV : Vector2 ) : this
+Selects a random point on the surface of the input geometry, returning the position and optionally the normal vector, color and UV Coordinate at that point. Time complexity is O(log n) for a surface with n faces.
+
+Source
+examples/jsm/math/MeshSurfaceSampler.js
+
+OBB
+Represents an oriented bounding box (OBB) in 3D space.
+
+Import
+OBB is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { OBB } from 'three/addons/math/OBB.js';
+Examples
+webgl_math_obb
+
+Constructor
+OBB( center : Vector3, halfSize : Vector3, rotation : Matrix3 )
+center — The center of the OBB. (optional)
+halfSize — Positive halfwidth extents of the OBB along each axis. (optional)
+rotation — The rotation of the OBB. (optional)
+
+Creates a new OBB.
+
+Properties
+.center : Vector3
+The center of the OBB. Default is ( 0, 0, 0 ).
+
+.halfSize : Vector3
+Positive halfwidth extents of the OBB along each axis. Default is ( 0, 0, 0 ).
+
+.rotation : Matrix3
+The rotation of the OBB. Default is the identity matrix.
+
+Methods
+.applyMatrix4 ( matrix : Matrix4 ) : this
+matrix — A 4x4 transformation matrix.
+
+Applies the given transformation matrix to this OBB. This method can be used to transform the bounding volume with the world matrix of a 3D object in order to keep both entities in sync.
+
+.clampPoint ( point : Vector3, clampedPoint : Vector3 ) : Vector3
+point — The point that should be clamped within the bounds of this OBB.
+clampedPoint — The result will be copied into this vector.
+
+Clamps the given point within the bounds of this OBB.
+
+.clone () : OBB
+Creates a cloned OBB for this instance.
+
+.containsPoint ( point : Vector3 ) : Boolean
+point — The point to test.
+
+Whether the given point lies within this OBB or not.
+
+.copy ( obb : OBB ) : this
+obb — The OBB to copy.
+
+Copies the properties of the given OBB to this OBB.
+
+.equals ( obb : OBB ) : Boolean
+obb — The OBB to test.
+
+Whether the given OBB is equal to this OBB or not.
+
+.fromBox3 ( box3 : Box3 ) : this
+box3 — An AABB.
+
+Defines an OBB based on the given AABB.
+
+.getSize ( size : Vector3 ) : Vector3
+size — The result will be copied into this vector.
+
+Returns the size of this OBB into the given vector.
+
+.intersectsBox3 ( box3 : Box3 ) : Boolean
+box3 — The AABB to test.
+
+Whether the given AABB intersects this OBB or not.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere — The bounding sphere to test.
+
+Whether the given bounding sphere intersects this OBB or not.
+
+.intersectsOBB ( obb : OBB, epsilon : Number ) : Boolean
+obb — The OBB to test.
+epsilon — An optional numeric value to counteract arithmetic errors. Default is Number.EPSILON.
+
+Whether the given OBB intersects this OBB or not.
+
+.intersectsPlane ( plane : Plane ) : Boolean
+plane — The plane to test.
+
+Whether the given plane intersects this OBB or not.
+
+.intersectsRay ( ray : Ray ) : Boolean
+ray — The ray to test.
+
+Whether the given ray intersects this OBB or not.
+
+.intersectRay ( ray : Ray, intersectionPoint : Vector3 ) : Vector3
+ray — The ray to test.
+intersectionPoint — The result will be copied into this vector.
+
+Performs a Ray/OBB intersection test and stores the intersection point to the given 3D vector. If no intersection is detected, null is returned.
+
+.set ( center : Vector3, halfSize : Vector3, rotation : Matrix3 ) : this
+center — The center of the OBB.
+halfSize — Positive halfwidth extents of the OBB along each axis.
+rotation — The rotation of the OBB.
+
+Defines the OBB for the given values.
+
+Source
+examples/jsm/math/OBB.js
+

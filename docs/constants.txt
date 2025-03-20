@@ -1,0 +1,628 @@
+Animation Constants
+Loop Modes
+THREE.LoopOnce
+THREE.LoopRepeat
+THREE.LoopPingPong
+Interpolation Modes
+THREE.InterpolateDiscrete
+THREE.InterpolateLinear
+THREE.InterpolateSmooth
+Ending Modes
+THREE.ZeroCurvatureEnding
+THREE.ZeroSlopeEnding
+THREE.WrapAroundEnding
+Animation Blend Modes
+THREE.NormalAnimationBlendMode
+THREE.AdditiveAnimationBlendMode
+Source
+src/constants.js
+
+Core Constants
+Revision Number
+THREE.REVISION
+The current three.js revision number.
+Color Spaces
+THREE.NoColorSpace = ""
+THREE.SRGBColorSpace = "srgb"
+THREE.LinearSRGBColorSpace = "srgb-linear"
+NoColorSpace defines no specific color space. It is commonly used for textures including normal maps, roughness maps, metalness maps, ambient occlusion maps, and other non-color data.
+
+SRGBColorSpace (“srgb”) refers to the color space defined by the Rec. 709 primaries, D65 white point, and nonlinear sRGB transfer functions. sRGB is the default color space in CSS, and is often found in color palettes and color pickers. Colors expressed in hexadecimal or CSS notation are typically in the sRGB color space.
+
+LinearSRGBColorSpace (“srgb-linear”) refers to the sRGB color space (above) with linear transfer functions. Linear-sRGB is the working color space in three.js, used throughout most of the rendering process. RGB components found in three.js materials and shaders are in the Linear-sRGB color space.
+
+For further background and usage, see Color management.
+
+Mouse Buttons
+THREE.MOUSE.LEFT 
+THREE.MOUSE.MIDDLE 
+THREE.MOUSE.RIGHT 
+THREE.MOUSE.ROTATE
+THREE.MOUSE.DOLLY 
+THREE.MOUSE.PAN
+The constants LEFT and ROTATE have the same underlying value. The constants MIDDLE and DOLLY have the same underlying value. The constants RIGHT and PAN have the same underlying value.
+
+Touch Actions
+THREE.TOUCH.ROTATE THREE.TOUCH.PAN THREE.TOUCH.DOLLY_PAN
+THREE.TOUCH.DOLLY_ROTATE
+Source
+src/constants.js
+
+Custom Blending Equation Constants
+These work with all material types. First set the material's blending mode to THREE.CustomBlending, then set the desired Blending Equation, Source Factor and Destination Factor.
+
+Code Example
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+material.blending = THREE.CustomBlending; 
+material.blendEquation = THREE.AddEquation; //default 
+material.blendSrc = THREE.SrcAlphaFactor;  //default 
+material.blendDst = THREE.OneMinusSrcAlphaFactor; //default
+Examples
+materials / blending / custom
+
+Blending Equations
+THREE.AddEquation 
+THREE.SubtractEquation 
+THREE.ReverseSubtractEquation
+THREE.MinEquation 
+THREE.MaxEquation
+Source Factors
+THREE.ZeroFactor 
+THREE.OneFactor 
+THREE.SrcColorFactor
+THREE.OneMinusSrcColorFactor 
+THREE.SrcAlphaFactor
+THREE.OneMinusSrcAlphaFactor 
+THREE.DstAlphaFactor
+THREE.OneMinusDstAlphaFactor 
+THREE.DstColorFactor
+THREE.OneMinusDstColorFactor 
+THREE.SrcAlphaSaturateFactor
+THREE.ConstantColorFactor
+THREE.OneMinusConstantColorFactor
+THREE.ConstantAlphaFactor
+THREE.OneMinusConstantAlphaFactor
+Destination Factors
+All of the Source Factors are valid as Destination Factors, except for
+THREE.SrcAlphaSaturateFactor
+
+Source
+src/constants.js
+
+Buffer Attribute Usage Constants
+The usage constants can be used to provide a hint to the API regarding how the geometry buffer attribute will be used in order to optimize performance.
+
+Code Example
+const geometry = new THREE.BufferGeometry();
+const positionAttribute = new THREE.BufferAttribute( array, 3 , false );
+positionAttribute.setUsage( THREE.DynamicDrawUsage );
+geometry.setAttribute( 'position', positionAttribute );
+Examples
+materials / buffergeometry / drawrange
+
+Geometry Usage
+THREE.StaticDrawUsage 
+THREE.DynamicDrawUsage 
+THREE.StreamDrawUsage
+		
+THREE.StaticReadUsage 
+THREE.DynamicReadUsage 
+THREE.StreamReadUsage
+		
+THREE.StaticCopyUsage 
+THREE.DynamicCopyUsage 
+THREE.StreamCopyUsage
+For more detailed information on each of these constants see this OpenGL documentation.
+Source
+src/constants.js
+
+Material Constants
+These constants define properties common to all material types, with the exception of Texture Combine Operations which only apply to MeshBasicMaterial, MeshLambertMaterial and MeshPhongMaterial.
+
+Side
+THREE.FrontSide 
+THREE.BackSide 
+THREE.DoubleSide
+Defines which side of faces will be rendered - front, back or both. Default is FrontSide.
+
+Blending Mode
+THREE.NoBlending 
+THREE.NormalBlending 
+THREE.AdditiveBlending
+THREE.SubtractiveBlending 
+THREE.MultiplyBlending 
+THREE.CustomBlending
+These control the source and destination blending equations for the material's RGB and Alpha sent to the WebGLRenderer for use by WebGL.
+NormalBlending is the default.
+Note that CustomBlending must be set to use Custom Blending Equations.
+See the materials / blending example.
+
+Depth Mode
+THREE.NeverDepth
+THREE.AlwaysDepth 
+THREE.EqualDepth 
+THREE.LessDepth
+THREE.LessEqualDepth 
+THREE.GreaterEqualDepth 
+THREE.GreaterDepth
+THREE.NotEqualDepth
+Which depth function the material uses to compare incoming pixels Z-depth against the current Z-depth buffer value. If the result of the comparison is true, the pixel will be drawn.
+NeverDepth will never return true.
+AlwaysDepth will always return true.
+EqualDepth will return true if the incoming pixel Z-depth is equal to the current buffer Z-depth.
+LessDepth will return true if the incoming pixel Z-depth is less than the current buffer Z-depth.
+LessEqualDepth is the default and will return true if the incoming pixel Z-depth is less than or equal to the current buffer Z-depth.
+GreaterEqualDepth will return true if the incoming pixel Z-depth is greater than or equal to the current buffer Z-depth.
+GreaterDepth will return true if the incoming pixel Z-depth is greater than the current buffer Z-depth.
+NotEqualDepth will return true if the incoming pixel Z-depth is not equal to the current buffer Z-depth.
+
+Texture Combine Operations
+THREE.MultiplyOperation 
+THREE.MixOperation 
+THREE.AddOperation
+These define how the result of the surface's color is combined with the environment map (if present), for MeshBasicMaterial, MeshLambertMaterial and MeshPhongMaterial.
+MultiplyOperation is the default and multiplies the environment map color with the surface color.
+MixOperation uses reflectivity to blend between the two colors.
+AddOperation adds the two colors.
+
+Stencil Functions
+THREE.NeverStencilFunc 
+THREE.LessStencilFunc 
+THREE.EqualStencilFunc
+THREE.LessEqualStencilFunc 
+THREE.GreaterStencilFunc
+THREE.NotEqualStencilFunc 
+THREE.GreaterEqualStencilFunc
+THREE.AlwaysStencilFunc
+Which stencil function the material uses to determine whether or not to perform a stencil operation.
+NeverStencilFunc will never return true.
+LessStencilFunc will return true if the stencil reference value is less than the current stencil value.
+EqualStencilFunc will return true if the stencil reference value is equal to the current stencil value.
+LessEqualStencilFunc will return true if the stencil reference value is less than or equal to the current stencil value.
+GreaterStencilFunc will return true if the stencil reference value is greater than the current stencil value.
+NotEqualStencilFunc will return true if the stencil reference value is not equal to the current stencil value.
+GreaterEqualStencilFunc will return true if the stencil reference value is greater than or equal to the current stencil value.
+AlwaysStencilFunc will always return true.
+
+Stencil Operations
+THREE.ZeroStencilOp 
+THREE.KeepStencilOp 
+THREE.ReplaceStencilOp
+THREE.IncrementStencilOp 
+THREE.DecrementStencilOp
+THREE.IncrementWrapStencilOp 
+THREE.DecrementWrapStencilOp
+THREE.InvertStencilOp
+Which stencil operation the material will perform on the stencil buffer pixel if the provided stencil function passes.
+ZeroStencilOp will set the stencil value to 0.
+KeepStencilOp will not change the current stencil value.
+ReplaceStencilOp will replace the stencil value with the specified stencil reference value.
+IncrementStencilOp will increment the current stencil value by 1.
+DecrementStencilOp will decrement the current stencil value by 1.
+IncrementWrapStencilOp will increment the current stencil value by 1. If the value increments past 255 it will be set to 0.
+DecrementWrapStencilOp will increment the current stencil value by 1. If the value decrements below 0 it will be set to 255.
+InvertStencilOp will perform a bitwise inversion of the current stencil value.
+
+Normal map type
+THREE.TangentSpaceNormalMap 
+THREE.ObjectSpaceNormalMap
+Defines the type of the normal map. For TangentSpaceNormalMap, the information is relative to the underlying surface. For ObjectSpaceNormalMap, the information is relative to the object orientation. Default is TangentSpaceNormalMap.
+
+GLSL Version
+THREE.GLSL1 
+THREE.GLSL3
+Source
+src/constants.js
+
+WebGLRenderer Constants
+Cull Face Modes
+THREE.CullFaceNone
+THREE.CullFaceBack
+THREE.CullFaceFront
+THREE.CullFaceFrontBack
+CullFaceNone disables face culling.
+CullFaceBack culls back faces (default).
+CullFaceFront culls front faces.
+CullFaceFrontBack culls both front and back faces.
+
+Shadow Types
+THREE.BasicShadowMap
+THREE.PCFShadowMap
+THREE.PCFSoftShadowMap
+THREE.VSMShadowMap
+These define the WebGLRenderer's shadowMap.type property.
+
+BasicShadowMap gives unfiltered shadow maps - fastest, but lowest quality.
+PCFShadowMap filters shadow maps using the Percentage-Closer Filtering (PCF) algorithm (default).
+PCFSoftShadowMap filters shadow maps using the Percentage-Closer Filtering (PCF) algorithm with better soft shadows especially when using low-resolution shadow maps.
+VSMShadowMap filters shadow maps using the Variance Shadow Map (VSM) algorithm. When using VSMShadowMap all shadow receivers will also cast shadows.
+
+Tone Mapping
+THREE.NoToneMapping
+THREE.LinearToneMapping
+THREE.ReinhardToneMapping
+THREE.CineonToneMapping
+THREE.ACESFilmicToneMapping
+THREE.AgXToneMapping
+THREE.NeutralToneMapping
+THREE.CustomToneMapping
+These define the WebGLRenderer's toneMapping property. This is used to approximate the appearance of high dynamic range (HDR) on the low dynamic range medium of a standard computer monitor or mobile device's screen.
+
+THREE.LinearToneMapping, THREE.ReinhardToneMapping, THREE.CineonToneMapping, THREE.ACESFilmicToneMapping, THREE.AgXToneMapping and THREE.NeutralToneMapping are built-in implementations of tone mapping. THREE.CustomToneMapping expects a custom implementation by modifying GLSL code of the material's fragment shader. See the WebGL / tonemapping example.
+
+THREE.NeutralToneMapping is an implementation based on the Khronos 3D Commerce Group standard tone mapping.
+
+Source
+src/constants.js
+
+Texture Constants
+Mapping Modes
+THREE.UVMapping
+THREE.CubeReflectionMapping 
+THREE.CubeRefractionMapping
+THREE.EquirectangularReflectionMapping
+THREE.EquirectangularRefractionMapping 
+THREE.CubeUVReflectionMapping
+These define the texture's mapping mode.
+UVMapping is the default, and maps the texture using the mesh's UV coordinates.
+
+The rest define environment mapping types.
+
+CubeReflectionMapping and CubeRefractionMapping are for use with a CubeTexture, which is made up of six textures, one for each face of the cube. CubeReflectionMapping is the default for a CubeTexture.
+
+EquirectangularReflectionMapping and EquirectangularRefractionMapping are for use with an equirectangular environment map. Also called a lat-long map, an equirectangular texture represents a 360-degree view along the horizontal centerline, and a 180-degree view along the vertical axis, with the top and bottom edges of the image corresponding to the north and south poles of a mapped sphere.
+
+See the materials / envmaps example.
+
+Wrapping Modes
+THREE.RepeatWrapping 
+THREE.ClampToEdgeWrapping
+THREE.MirroredRepeatWrapping
+These define the texture's wrapS and wrapT properties, which define horizontal and vertical texture wrapping.
+
+With RepeatWrapping the texture will simply repeat to infinity.
+
+ClampToEdgeWrapping is the default. The last pixel of the texture stretches to the edge of the mesh.
+
+With MirroredRepeatWrapping the texture will repeats to infinity, mirroring on each repeat.
+
+Magnification Filters
+THREE.NearestFilter 
+THREE.LinearFilter
+For use with a texture's magFilter property, these define the texture magnification function to be used when the pixel being textured maps to an area less than or equal to one texture element (texel).
+
+NearestFilter returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates.
+
+LinearFilter is the default and returns the weighted average of the four texture elements that are closest to the specified texture coordinates, and can include items wrapped or repeated from other parts of a texture, depending on the values of wrapS and wrapT, and on the exact mapping.
+
+Minification Filters
+THREE.NearestFilter 
+THREE.NearestMipmapNearestFilter
+THREE.NearestMipmapLinearFilter 
+THREE.LinearFilter
+THREE.LinearMipmapNearestFilter 
+THREE.LinearMipmapLinearFilter
+For use with a texture's minFilter property, these define the texture minifying function that is used whenever the pixel being textured maps to an area greater than one texture element (texel).
+
+In addition to NearestFilter and LinearFilter, the following four functions can be used for minification:
+
+NearestMipmapNearestFilter chooses the mipmap that most closely matches the size of the pixel being textured and uses the NearestFilter criterion (the texel nearest to the center of the pixel) to produce a texture value.
+
+NearestMipmapLinearFilter chooses the two mipmaps that most closely match the size of the pixel being textured and uses the NearestFilter criterion to produce a texture value from each mipmap. The final texture value is a weighted average of those two values.
+
+LinearMipmapNearestFilter chooses the mipmap that most closely matches the size of the pixel being textured and uses the LinearFilter criterion (a weighted average of the four texels that are closest to the center of the pixel) to produce a texture value.
+
+LinearMipmapLinearFilter is the default and chooses the two mipmaps that most closely match the size of the pixel being textured and uses the LinearFilter criterion to produce a texture value from each mipmap. The final texture value is a weighted average of those two values.
+
+See the materials / texture / filters example.
+
+Types
+THREE.UnsignedByteType 
+THREE.ByteType 
+THREE.ShortType
+THREE.UnsignedShortType 
+THREE.IntType 
+THREE.UnsignedIntType
+THREE.FloatType 
+THREE.HalfFloatType 
+THREE.UnsignedShort4444Type
+THREE.UnsignedShort5551Type 
+THREE.UnsignedInt248Type
+THREE.UnsignedInt5999Type
+For use with a texture's type property, which must correspond to the correct format. See below for details.
+
+UnsignedByteType is the default.
+
+Formats
+THREE.AlphaFormat 
+THREE.RedFormat 
+THREE.RedIntegerFormat 
+THREE.RGFormat
+THREE.RGIntegerFormat 
+THREE.RGBFormat
+THREE.RGBAFormat 
+THREE.RGBAIntegerFormat
+THREE.LuminanceFormat 
+THREE.LuminanceAlphaFormat 
+THREE.DepthFormat
+THREE.DepthStencilFormat
+For use with a texture's format property, these define how elements of a 2d texture, or texels, are read by shaders.
+
+AlphaFormat discards the red, green and blue components and reads just the alpha component.
+
+RedFormat discards the green and blue components and reads just the red component.
+
+RedIntegerFormat discards the green and blue components and reads just the red component. The texels are read as integers instead of floating point.
+
+RGFormat discards the alpha, and blue components and reads the red, and green components.
+
+RGIntegerFormat discards the alpha, and blue components and reads the red, and green components. The texels are read as integers instead of floating point.
+
+RGBAFormat is the default and reads the red, green, blue and alpha components.
+
+RGBAIntegerFormat is the default and reads the red, green, blue and alpha components. The texels are read as integers instead of floating point.
+
+LuminanceFormat reads each element as a single luminance component. This is then converted to a floating point, clamped to the range [0,1], and then assembled into an RGBA element by placing the luminance value in the red, green and blue channels, and attaching 1.0 to the alpha channel.
+
+LuminanceAlphaFormat reads each element as a luminance/alpha double. The same process occurs as for the LuminanceFormat, except that the alpha channel may have values other than 1.0.
+
+DepthFormat reads each element as a single depth value, converts it to floating point, and clamps to the range [0,1]. This is the default for DepthTexture.
+
+DepthStencilFormat reads each element is a pair of depth and stencil values. The depth component of the pair is interpreted as in DepthFormat. The stencil component is interpreted based on the depth + stencil internal format.
+
+Note that the texture must have the correct type set, as described above. See WebGLRenderingContext.texImage2D for details.
+
+DDS / ST3C Compressed Texture Formats
+THREE.RGB_S3TC_DXT1_Format 
+THREE.RGBA_S3TC_DXT1_Format
+THREE.RGBA_S3TC_DXT3_Format 
+THREE.RGBA_S3TC_DXT5_Format
+For use with a CompressedTexture's format property, these require support for the WEBGL_compressed_texture_s3tc extension.
+
+There are four S3TC formats available via this extension. These are:
+RGB_S3TC_DXT1_Format: A DXT1-compressed image in an RGB image format.
+RGBA_S3TC_DXT1_Format: A DXT1-compressed image in an RGB image format with a simple on/off alpha value.
+RGBA_S3TC_DXT3_Format: A DXT3-compressed image in an RGBA image format. Compared to a 32-bit RGBA texture, it offers 4:1 compression.
+RGBA_S3TC_DXT5_Format: A DXT5-compressed image in an RGBA image format. It also provides a 4:1 compression, but differs to the DXT3 compression in how the alpha compression is done.
+
+PVRTC Compressed Texture Formats
+THREE.RGB_PVRTC_4BPPV1_Format
+THREE.RGB_PVRTC_2BPPV1_Format
+THREE.RGBA_PVRTC_4BPPV1_Format 
+THREE.RGBA_PVRTC_2BPPV1_Format
+For use with a CompressedTexture's format property, these require support for the [link:https://www.khronos.org/registry/webgl/extensions/WEBGL_compressed_texture_pvrtc/ WEBGL_compressed_texture_pvrtc] extension.
+PVRTC is typically only available on mobile devices with PowerVR chipsets, which are mainly Apple devices.
+
+There are four PVRTC formats available via this extension. These are:
+RGB_PVRTC_4BPPV1_Format: RGB compression in 4-bit mode. One block for each 4×4 pixels.
+RGB_PVRTC_2BPPV1_Format: RGB compression in 2-bit mode. One block for each 8×4 pixels.
+RGBA_PVRTC_4BPPV1_Format: RGBA compression in 4-bit mode. One block for each 4×4 pixels.
+RGBA_PVRTC_2BPPV1_Format: RGBA compression in 2-bit mode. One block for each 8×4 pixels.
+
+ETC Compressed Texture Format
+THREE.RGB_ETC1_Format 
+THREE.RGB_ETC2_Format 
+THREE.RGBA_ETC2_EAC_Format
+For use with a CompressedTexture's format property, these require support for the WEBGL_compressed_texture_etc1 (ETC1) or WEBGL_compressed_texture_etc (ETC2) extensions.
+
+
+ASTC Compressed Texture Format
+THREE.RGBA_ASTC_4x4_Format 
+THREE.RGBA_ASTC_5x4_Format
+THREE.RGBA_ASTC_5x5_Format 
+THREE.RGBA_ASTC_6x5_Format
+THREE.RGBA_ASTC_6x6_Format 
+THREE.RGBA_ASTC_8x5_Format
+THREE.RGBA_ASTC_8x6_Format 
+THREE.RGBA_ASTC_8x8_Format
+THREE.RGBA_ASTC_10x5_Format 
+THREE.RGBA_ASTC_10x6_Format
+THREE.RGBA_ASTC_10x8_Format 
+THREE.RGBA_ASTC_10x10_Format
+THREE.RGBA_ASTC_12x10_Format 
+THREE.RGBA_ASTC_12x12_Format
+For use with a CompressedTexture's format property, these require support for the WEBGL_compressed_texture_astc extension.
+
+
+BPTC Compressed Texture Format
+THREE.RGBA_BPTC_Format
+For use with a CompressedTexture's format property, these require support for the EXT_texture_compression_bptc extension.
+
+
+Texture Comparison functions
+THREE.NeverCompare
+THREE.LessCompare
+THREE.EqualCompare
+THREE.LessEqualCompare
+THREE.GreaterCompare
+THREE.NotEqualCompare
+THREE.GreaterEqualCompare
+THREE.AlwaysCompare
+Internal Formats
+'ALPHA'
+'RGB'
+'RGBA'
+'LUMINANCE'
+'LUMINANCE_ALPHA'
+'RED_INTEGER'
+'R8'
+'R8_SNORM'
+'R8I'
+'R8UI'
+'R16I'
+'R16UI'
+'R16F'
+'R32I'
+'R32UI'
+'R32F'
+'RG8'
+'RG8_SNORM'
+'RG8I'
+'RG8UI'
+'RG16I'
+'RG16UI'
+'RG16F'
+'RG32I'
+'RG32UI'
+'RG32F'
+'RGB565'
+'RGB8'
+'RGB8_SNORM'
+'RGB8I'
+'RGB8UI'
+'RGB16I'
+'RGB16UI'
+'RGB16F'
+'RGB32I'
+'RGB32UI'
+'RGB32F'
+'RGB9_E5'
+'SRGB8'
+'R11F_G11F_B10F'
+'RGBA4'
+'RGBA8'
+'RGBA8_SNORM'
+'RGBA8I'
+'RGBA8UI'
+'RGBA16I'
+'RGBA16UI'
+'RGBA16F'
+'RGBA32I'
+'RGBA32UI'
+'RGBA32F'
+'RGB5_A1'
+'RGB10_A2'
+'RGB10_A2UI'
+'SRGB8_ALPHA8'
+'DEPTH_COMPONENT16'
+'DEPTH_COMPONENT24'
+'DEPTH_COMPONENT32F'
+'DEPTH24_STENCIL8'
+'DEPTH32F_STENCIL8'
+For use with a texture's internalFormat property, these define how elements of a texture, or texels, are stored on the GPU.
+
+R8 stores the red component on 8 bits.
+
+R8_SNORM stores the red component on 8 bits. The component is stored as normalized.
+
+R8I stores the red component on 8 bits. The component is stored as an integer.
+
+R8UI stores the red component on 8 bits. The component is stored as an unsigned integer.
+
+R16I stores the red component on 16 bits. The component is stored as an integer.
+
+R16UI stores the red component on 16 bits. The component is stored as an unsigned integer.
+
+R16F stores the red component on 16 bits. The component is stored as floating point.
+
+R32I stores the red component on 32 bits. The component is stored as an integer.
+
+R32UI stores the red component on 32 bits. The component is stored as an unsigned integer.
+
+R32F stores the red component on 32 bits. The component is stored as floating point.
+
+RG8 stores the red and green components on 8 bits each.
+
+RG8_SNORM stores the red and green components on 8 bits each. Every component is stored as normalized.
+
+RG8I stores the red and green components on 8 bits each. Every component is stored as an integer.
+
+RG8UI stores the red and green components on 8 bits each. Every component is stored as an unsigned integer.
+
+RG16I stores the red and green components on 16 bits each. Every component is stored as an integer.
+
+RG16UI stores the red and green components on 16 bits each. Every component is stored as an unsigned integer.
+
+RG16F stores the red and green components on 16 bits each. Every component is stored as floating point.
+
+RG32I stores the red and green components on 32 bits each. Every component is stored as an integer.
+
+RG32UI stores the red and green components on 32 bits. Every component is stored as an unsigned integer.
+
+RG32F stores the red and green components on 32 bits. Every component is stored as floating point.
+
+RGB8 stores the red, green, and blue components on 8 bits each. RGB8_SNORM stores the red, green, and blue components on 8 bits each. Every component is stored as normalized.
+
+RGB8I stores the red, green, and blue components on 8 bits each. Every component is stored as an integer.
+
+RGB8UI stores the red, green, and blue components on 8 bits each. Every component is stored as an unsigned integer.
+
+RGB16I stores the red, green, and blue components on 16 bits each. Every component is stored as an integer.
+
+RGB16UI stores the red, green, and blue components on 16 bits each. Every component is stored as an unsigned integer.
+
+RGB16F stores the red, green, and blue components on 16 bits each. Every component is stored as floating point
+
+RGB32I stores the red, green, and blue components on 32 bits each. Every component is stored as an integer.
+
+RGB32UI stores the red, green, and blue components on 32 bits each. Every component is stored as an unsigned integer.
+
+RGB32F stores the red, green, and blue components on 32 bits each. Every component is stored as floating point
+
+R11F_G11F_B10F stores the red, green, and blue components respectively on 11 bits, 11 bits, and 10bits. Every component is stored as floating point.
+
+RGB565 stores the red, green, and blue components respectively on 5 bits, 6 bits, and 5 bits.
+
+RGB9_E5 stores the red, green, and blue components on 9 bits each.
+
+RGBA8 stores the red, green, blue, and alpha components on 8 bits each.
+
+RGBA8_SNORM stores the red, green, blue, and alpha components on 8 bits. Every component is stored as normalized.
+
+RGBA8I stores the red, green, blue, and alpha components on 8 bits each. Every component is stored as an integer.
+
+RGBA8UI stores the red, green, blue, and alpha components on 8 bits. Every component is stored as an unsigned integer.
+
+RGBA16I stores the red, green, blue, and alpha components on 16 bits. Every component is stored as an integer.
+
+RGBA16UI stores the red, green, blue, and alpha components on 16 bits. Every component is stored as an unsigned integer.
+
+RGBA16F stores the red, green, blue, and alpha components on 16 bits. Every component is stored as floating point.
+
+RGBA32I stores the red, green, blue, and alpha components on 32 bits. Every component is stored as an integer.
+
+RGBA32UI stores the red, green, blue, and alpha components on 32 bits. Every component is stored as an unsigned integer.
+
+RGBA32F stores the red, green, blue, and alpha components on 32 bits. Every component is stored as floating point.
+
+RGB5_A1 stores the red, green, blue, and alpha components respectively on 5 bits, 5 bits, 5 bits, and 1 bit.
+
+RGB10_A2 stores the red, green, blue, and alpha components respectively on 10 bits, 10 bits, 10 bits and 2 bits.
+
+RGB10_A2UI stores the red, green, blue, and alpha components respectively on 10 bits, 10 bits, 10 bits and 2 bits. Every component is stored as an unsigned integer.
+
+SRGB8 stores the red, green, and blue components on 8 bits each.
+
+SRGB8_ALPHA8 stores the red, green, blue, and alpha components on 8 bits each.
+
+DEPTH_COMPONENT16 stores the depth component on 16bits.
+
+DEPTH_COMPONENT24 stores the depth component on 24bits.
+
+DEPTH_COMPONENT32F stores the depth component on 32bits. The component is stored as floating point.
+
+DEPTH24_STENCIL8 stores the depth, and stencil components respectively on 24 bits and 8 bits. The stencil component is stored as an unsigned integer.
+
+DEPTH32F_STENCIL8 stores the depth, and stencil components respectively on 32 bits and 8 bits. The depth component is stored as floating point, and the stencil component as an unsigned integer.
+
+Note that the texture must have the correct type set, as well as the correct format. See WebGLRenderingContext.texImage2D, and WebGL2RenderingContext.texImage3D, for more details regarding the possible combination of format, internalFormat, and type.
+
+For more in-depth information regarding internal formats, you can also refer directly to the WebGL2 Specification and to the OpenGL ES 3.0 Specification.
+
+Depth Packing
+THREE.BasicDepthPacking 
+THREE.RGBADepthPacking
+For use with the depthPacking property of MeshDepthMaterial.
+
+Color Space
+THREE.NoColorSpace = ""
+THREE.SRGBColorSpace = "srgb"
+THREE.LinearSRGBColorSpace = "srgb-linear"
+Used to define the color space of textures (and the output color space of the renderer).
+
+If the color space type is changed after the texture has already been used by a material, you will need to set Material.needsUpdate to true to make the material recompile.
+
+
+Source
+src/constants.js
+

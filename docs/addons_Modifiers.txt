@@ -1,0 +1,30 @@
+EdgeSplitModifier
+EdgeSplitModifier is intended to modify the geometry "dissolving" the edges to give a smoother look.
+
+Import
+EdgeSplitModifier is an add-on, and therefore must be imported explicitly. See Installation / Addons.
+
+import { EdgeSplitModifier } from 'three/addons/modifiers/EdgeSplitModifier.js';
+Code Example
+const geometry = new THREE.IcosahedronGeometry( 10, 3 );
+const modifier = new EdgeSplitModifier();
+const cutOffAngle = 0.5;
+const tryKeepNormals = false;
+
+modifier.modify( geometry, cutOffAngle, tryKeepNormals );
+Examples
+misc / modifiers / EdgeSplit
+
+Constructor
+EdgeSplitModifier()
+Create a new EdgeSplitModifier object.
+
+Methods
+.modify ( geometry : geometry, cutOffAngle : cutOffAngle, tryKeepNormals : tryKeepNormals ) : undefined
+Using interpolated vertex normals, the mesh faces will blur at the edges and appear smooth.
+You can control the smoothness by setting the cutOffAngle.
+To try to keep the original normals, set tryKeepNormals to true.
+
+Source
+examples/jsm/modifiers/EdgeSplitModifier.js
+

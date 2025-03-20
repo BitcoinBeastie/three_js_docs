@@ -1,0 +1,976 @@
+Controls →
+ArcballControls
+Arcball controls allow the camera to be controlled by a virtual trackball with full touch support and advanced navigation functionality.
+Cursor/finger positions and movements are mapped over a virtual trackball surface represented by a gizmo and mapped in intuitive and consistent camera movements. Dragging cursor/fingers will cause camera to orbit around the center of the trackball in a conservative way (returning to the starting point will make the camera to return to its starting orientation).
+
+In addition to supporting pan, zoom and pinch gestures, Arcball controls provide focus functionality with a double click/tap for intuitively moving the object's point of interest in the center of the virtual trackball. Focus allows a much better inspection and navigation in complex environment. Moreover Arcball controls allow FOV manipulation (in a vertigo-style method) and z-rotation. Saving and restoring of Camera State is supported also through clipboard (use ctrl+c and ctrl+v shortcuts for copy and paste the state).
+
+Unlike OrbitControls and TrackballControls, ArcballControls doesn't require .update to be called externally in an animation loop when animations are on.
+
+To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
+
+Import
+ArcballControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { ArcballControls } from 'three/addons/controls/ArcballControls.js';
+Code Example
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+
+const controls = new ArcballControls( camera, renderer.domElement, scene );
+
+controls.addEventListener( 'change', function () {
+
+	renderer.render( scene, camera );
+
+} );
+
+//controls.update() must be called after any manual changes to the camera's transform
+camera.position.set( 0, 20, 100 );
+controls.update();
+Examples
+misc / controls / arcball
+
+Constructor
+ArcballControls( camera : Camera, domElement : HTMLDOMElement, scene : Scene )
+camera: (required) The camera to be controlled. The camera must not be a child of another object, unless that object is the scene itself.
+
+domElement: The HTML element used for event listeners. (optional)
+
+scene: The scene rendered by the camera. If not given, gizmos cannot be shown. (optional)
+
+Events
+change
+Fires when the camera has been transformed by the controls.
+
+start
+Fires when an interaction was initiated.
+
+end
+Fires when an interaction has finished.
+
+Properties
+See the base Controls class for common properties.
+
+.adjustNearFar : Boolean
+If true, camera's near and far values will be adjusted every time zoom is performed trying to maintain the same visible portion given by initial near and far values ( PerspectiveCamera only ). Default is false.
+
+.camera : Camera
+The camera being controlled.
+
+.cursorZoom : Boolean
+Set to true to make zoom become cursor centered.
+
+.dampingFactor : Float
+The damping inertia used if .enableAnimations is set to true.
+
+.enableAnimations : Boolean
+Set to true to enable animations for rotation (damping) and focus operation. Default is true.
+
+.enableFocus : Boolean
+Enable or disable camera focusing on double-tap (or click) operations. Default is true.
+
+.enableGrid : Boolean
+When set to true, a grid will appear when panning operation is being performed (desktop interaction only). Default is false.
+
+.enablePan : Boolean
+Enable or disable camera panning. Default is true.
+
+.enableRotate : Boolean
+Enable or disable camera rotation. Default is true.
+
+.enableZoom : Boolean
+Enable or disable zooming of the camera.
+
+.focusAnimationTime : Float
+Duration time of focus animation.
+
+.maxDistance : Float
+How far you can dolly out ( PerspectiveCamera only ). Default is Infinity.
+
+.maxZoom : Float
+How far you can zoom out ( OrthographicCamera only ). Default is Infinity.
+
+.minDistance : Float
+How far you can dolly in ( PerspectiveCamera only ). Default is 0.
+
+.minZoom : Float
+How far you can zoom in ( OrthographicCamera only ). Default is 0.
+
+.radiusFactor : Float
+The size of the gizmo relative to the screen width and height. Default is 0.67.
+
+.rotateSpeed : Float
+Speed of rotation. Default is 1.
+
+.scaleFactor : Float
+The scaling factor used when performing zoom operation.
+
+.scene : Scene
+The scene rendered by the camera.
+
+.wMax : Float
+Maximum angular velocity allowed on rotation animation start.
+
+Methods
+See the base Controls class for common methods.
+
+.activateGizmos ( isActive : Boolean ) : undefined
+Make gizmos more or less visible.
+
+.copyState () : undefined
+Copy the current state to clipboard (as a readable JSON text).
+
+.pasteState () : undefined
+Set the controls state from the clipboard, assumes that the clipboard stores a JSON text as saved from .copyState.
+
+.reset () : undefined
+Reset the controls to their state from either the last time the .saveState was called, or the initial state.
+
+.saveState () : undefined
+Save the current state of the controls. This can later be recovered with .reset.
+
+.setCamera ( camera : Camera ) : undefined
+Set the camera to be controlled. Must be called in order to set a new camera to be controlled.
+
+.setGizmosVisible ( value : Boolean ) : undefined
+Set the visible property of gizmos.
+
+.setTbRadius ( value : Float ) : undefined
+Update the radiusFactor value, redraw the gizmo and send a changeEvent to visualize the changes.
+
+.setMouseAction ( operation : String, mouse, key ) : Boolean
+Set a new mouse action by specifying the operation to be performed and a mouse/key combination. In case of conflict, replaces the existing one.
+
+Operations can be specified as 'ROTATE', 'PAN', 'FOV' or 'ZOOM'.
+Mouse inputs can be specified as mouse buttons 0, 1 and 2 or 'WHEEL' for wheel notches.
+Keyboard modifiers can be specified as 'CTRL', 'SHIFT' or null if not needed.
+
+.unsetMouseAction ( mouse, key ) : Boolean
+Removes a mouse action by specifying its mouse/key combination.
+
+Mouse inputs can be specified as mouse buttons 0, 1 and 2 or 'WHEEL' for wheel notches.
+Keyboard modifiers can be specified as 'CTRL', 'SHIFT' or null if not needed.
+
+.getRaycaster () : Raycaster
+Returns the Raycaster object that is used for user interaction. This object is shared between all instances of ArcballControls. If you set the .layers property of the ArcballControls, you will also want to set the .layers property on the Raycaster with a matching value, or else the ArcballControls won't work as expected.
+
+Source
+examples/jsm/controls/ArcballControls.js
+
+Controls →
+DragControls
+This class can be used to provide a drag'n'drop interaction.
+
+Import
+DragControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { DragControls } from 'three/addons/controls/DragControls.js';
+Code Example
+const controls = new DragControls( objects, camera, renderer.domElement );
+
+// add event listener to highlight dragged objects
+
+controls.addEventListener( 'dragstart', function ( event ) {
+
+	event.object.material.emissive.set( 0xaaaaaa );
+
+} );
+
+controls.addEventListener( 'dragend', function ( event ) {
+
+	event.object.material.emissive.set( 0x000000 );
+
+} );
+Examples
+misc / controls / drag
+
+Constructor
+DragControls( objects : Array, camera : Camera, domElement : HTMLDOMElement )
+objects: An array of draggable 3D objects.
+
+camera: The camera of the rendered scene.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Creates a new instance of DragControls.
+
+Events
+dragstart
+Fires when the user starts to drag a 3D object.
+
+drag
+Fires when the user drags a 3D object.
+
+dragend
+Fires when the user has finished dragging a 3D object.
+
+hoveron
+Fires when the pointer is moved onto a 3D object, or onto one of its children.
+
+hoveroff
+Fires when the pointer is moved out of a 3D object.
+
+Properties
+See the base Controls class for common properties.
+
+.objects : Array
+An array of draggable 3D objects.
+
+.raycaster : Raycaster
+The internal raycaster used for detecting 3D objects.
+
+.recursive : Boolean
+Whether children of draggable objects can be dragged independently from their parent. Default is true.
+
+.rotateSpeed : Float
+The speed at which the object will rotate when dragged in rotate mode. The higher the number the faster the rotation. Default is 1.
+
+.transformGroup : Boolean
+This option only works if the DragControls.objects array contains a single draggable group object. If set to true, DragControls does not transform individual objects but the entire group. Default is false.
+
+Methods
+See the base Controls class for common methods.
+
+Source
+examples/jsm/controls/DragControls.js
+
+Controls →
+FirstPersonControls
+This class is an alternative implementation of FlyControls.
+
+Import
+FirstPersonControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+Examples
+webgl / geometry / terrain
+
+Constructor
+FirstPersonControls( object : Camera, domElement : HTMLDOMElement )
+object: The camera to be controlled.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Creates a new instance of FirstPersonControls.
+
+Properties
+.activeLook : Boolean
+Whether or not it's possible to look around. Default is true.
+
+.autoForward : Boolean
+Whether or not the camera is automatically moved forward. Default is false.
+
+.constrainVertical : Boolean
+Whether or not looking around is vertically constrained by [.verticalMin, .verticalMax]. Default is false.
+
+.heightCoef : Number
+Determines how much faster the camera moves when it's y-component is near .heightMax. Default is 1.
+
+.heightMax : Number
+Upper camera height limit used for movement speed adjustment. Default is 1.
+
+.heightMin : Number
+Lower camera height limit used for movement speed adjustment. Default is 0.
+
+.heightSpeed : Boolean
+Whether or not the camera's height influences the forward movement speed. Default is false. Use the properties .heightCoef, .heightMin and .heightMax for configuration.
+
+.lookVertical : Boolean
+Whether or not it's possible to vertically look around. Default is true.
+
+.lookSpeed : Number
+The look around speed. Default is 0.005.
+
+.mouseDragOn : Boolean
+Whether or not the mouse is pressed down. Read-only property.
+
+.movementSpeed : Number
+The movement speed. Default is 1.
+
+.verticalMax : Number
+How far you can vertically look around, upper limit. Range is 0 to Math.PI radians. Default is Math.PI.
+
+.verticalMin : Number
+How far you can vertically look around, lower limit. Range is 0 to Math.PI radians. Default is 0.
+
+Methods
+.handleResize () : undefined
+Should be called if the application window is resized.
+
+.lookAt ( vector : Vector3 ) : FirstPersonControls
+.lookAt ( x : Float, y : Float, z : Float ) : FirstPersonControls
+
+
+vector - A vector representing the target position.
+
+Optionally, the x, y, z components of the world space position.
+
+Ensures the controls orient the camera towards the defined target position.
+
+Source
+examples/jsm/controls/FirstPersonControls.js
+
+Controls →
+FlyControls
+FlyControls enables a navigation similar to fly modes in DCC tools like Blender. You can arbitrarily transform the camera in 3D space without any limitations (e.g. focus on a specific target).
+
+Import
+FlyControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { FlyControls } from 'three/addons/controls/FlyControls.js';
+Examples
+misc / controls / fly
+
+Constructor
+FlyControls( object : Camera, domElement : HTMLDOMElement )
+object: The camera to be controlled.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Creates a new instance of FlyControls.
+
+Events
+change
+Fires when the camera has been transformed by the controls.
+
+Properties
+See the base Controls class for common properties.
+
+.autoForward : Boolean
+If set to true, the camera automatically moves forward (and does not stop) when initially translated. Default is false.
+
+.dragToLook : Boolean
+If set to true, you can only look around by performing a drag interaction. Default is false.
+
+.movementSpeed : Number
+The movement speed. Default is 1.
+
+.rollSpeed : Number
+The rotation speed. Default is 0.005.
+
+Methods
+See the base Controls class for common methods.
+
+Source
+examples/jsm/controls/FlyControls.js
+
+OrbitControls →
+MapControls
+MapControls is intended for transforming a camera over a map from bird's eye perspective. The class shares its implementation with OrbitControls but uses a specific preset for mouse/touch interaction and disables screen space panning by default.
+
+Import
+MapControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { MapControls } from 'three/addons/controls/MapControls.js';
+Code Example
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+camera.position.set( 0, 20, 100 );
+
+const controls = new MapControls( camera, renderer.domElement );
+controls.enableDamping = true;
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	// required if controls.enableDamping or controls.autoRotate are set to true
+	controls.update();
+
+	renderer.render( scene, camera );
+
+}
+Examples
+misc / controls / map
+
+Constructor
+MapControls( object : Camera, domElement : HTMLDOMElement )
+object: (required) The camera to be controlled. The camera must not be a child of another object, unless that object is the scene itself.
+
+domElement: The HTML element used for event listeners.
+
+Events
+See the base OrbitControls class for common events.
+
+Properties
+See the base OrbitControls class for common properties.
+
+.mouseButtons : Object
+This object contains references to the mouse actions used by the controls.
+controls.mouseButtons = {
+	LEFT: THREE.MOUSE.PAN,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	RIGHT: THREE.MOUSE.ROTATE
+}
+
+.screenSpacePanning : Boolean
+Defines how the camera's position is translated when panning. If true, the camera pans in screen space. Otherwise, the camera pans in the plane orthogonal to the camera's up direction. Default is false.
+
+.touches : Object
+This object contains references to the touch actions used by the controls.
+controls.touches = {
+	ONE: THREE.TOUCH.PAN,
+	TWO: THREE.TOUCH.DOLLY_ROTATE
+}
+
+Methods
+See the base OrbitControls class for common methods.
+
+Source
+examples/jsm/controls/MapControls.js
+
+Controls →
+OrbitControls
+Orbit controls allow the camera to orbit around a target.
+To use this, as with all files in the /examples directory, you will have to include the file separately in your HTML.
+
+Import
+OrbitControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+Code Example
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+
+const controls = new OrbitControls( camera, renderer.domElement );
+
+//controls.update() must be called after any manual changes to the camera's transform
+camera.position.set( 0, 20, 100 );
+controls.update();
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	// required if controls.enableDamping or controls.autoRotate are set to true
+	controls.update();
+
+	renderer.render( scene, camera );
+
+}
+Examples
+misc / controls / orbit
+
+Constructor
+OrbitControls( object : Camera, domElement : HTMLDOMElement )
+object: (required) The camera to be controlled. The camera must not be a child of another object, unless that object is the scene itself.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Events
+change
+Fires when the camera has been transformed by the controls.
+
+start
+Fires when an interaction was initiated.
+
+end
+Fires when an interaction has finished.
+
+Properties
+See the base Controls class for common properties.
+
+.autoRotate : Boolean
+Set to true to automatically rotate around the target.
+Note that if this is enabled, you must call .update () in your animation loop. If you want the auto-rotate speed to be independent of the frame rate (the refresh rate of the display), you must pass the time deltaTime, in seconds, to .update().
+
+.autoRotateSpeed : Float
+How fast to rotate around the target if .autoRotate is true. Default is 2.0, which equates to 30 seconds per orbit at 60fps.
+Note that if .autoRotate is enabled, you must call .update () in your animation loop.
+
+.dampingFactor : Float
+The damping inertia used if .enableDamping is set to true. Default is 0.05.
+Note that for this to work, you must call .update () in your animation loop.
+
+.enableDamping : Boolean
+Set to true to enable damping (inertia), which can be used to give a sense of weight to the controls. Default is false.
+Note that if this is enabled, you must call .update () in your animation loop.
+
+.enablePan : Boolean
+Enable or disable camera panning. Default is true.
+
+.enableRotate : Boolean
+Enable or disable horizontal and vertical rotation of the camera. Default is true.
+Note that it is possible to disable a single axis by setting the min and max of the polar angle or azimuth angle to the same value, which will cause the vertical or horizontal rotation to be fixed at that value.
+
+.enableZoom : Boolean
+Enable or disable zooming (dollying) of the camera.
+
+.keyPanSpeed : Float
+How fast to pan the camera when the keyboard is used. Default is 7.0 pixels per keypress.
+
+.keyRotateSpeed : Float
+How fast to rotate the camera when the keyboard is used. Default is 1.
+
+.keys : Object
+This object contains references to the keycodes for controlling camera panning. Default is the 4 arrow keys.
+controls.keys = {
+	LEFT: 'ArrowLeft', //left arrow
+	UP: 'ArrowUp', // up arrow
+	RIGHT: 'ArrowRight', // right arrow
+	BOTTOM: 'ArrowDown' // down arrow
+}
+See KeyboardEvent.code for a full list of keycodes.
+
+.maxAzimuthAngle : Float
+How far you can orbit horizontally, upper limit. If set, the interval [ min, max ] must be a sub-interval of [ - 2 PI, 2 PI ], with ( max - min < 2 PI ). Default is Infinity.
+
+.maxDistance : Float
+How far you can dolly out ( PerspectiveCamera only ). Default is Infinity.
+
+.maxPolarAngle : Float
+How far you can orbit vertically, upper limit. Range is 0 to Math.PI radians, and default is Math.PI.
+
+.maxZoom : Float
+How far you can zoom out ( OrthographicCamera only ). Default is Infinity.
+
+.minTargetRadius : Float
+How close you can get the target to the 3D .cursor. Default is 0.
+
+.maxTargetRadius : Float
+How far you can move the target from the 3D .cursor. Default is Infinity.
+
+.minAzimuthAngle : Float
+How far you can orbit horizontally, lower limit. If set, the interval [ min, max ] must be a sub-interval of [ - 2 PI, 2 PI ], with ( max - min < 2 PI ). Default is Infinity.
+
+.minDistance : Float
+How far you can dolly in ( PerspectiveCamera only ). Default is 0.
+
+.minPolarAngle : Float
+How far you can orbit vertically, lower limit. Range is 0 to Math.PI radians, and default is 0.
+
+.minZoom : Float
+How far you can zoom in ( OrthographicCamera only ). Default is 0.
+
+.mouseButtons : Object
+This object contains references to the mouse actions used by the controls.
+controls.mouseButtons = {
+	LEFT: THREE.MOUSE.ROTATE,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	RIGHT: THREE.MOUSE.PAN
+}
+
+.panSpeed : Float
+Speed of panning. Default is 1.
+
+.position0 : Vector3
+Used internally by the .saveState and .reset methods.
+
+.rotateSpeed : Float
+Speed of rotation. Default is 1.
+
+.screenSpacePanning : Boolean
+Defines how the camera's position is translated when panning. If true, the camera pans in screen space. Otherwise, the camera pans in the plane orthogonal to the camera's up direction. Default is true.
+
+.target0 : Vector3
+Used internally by the .saveState and .reset methods.
+
+.target : Vector3
+The focus point of the controls, the .object orbits around this. It can be updated manually at any point to change the focus of the controls.
+
+.cursor : Vector3
+The focus point of the .minTargetRadius and .maxTargetRadius limits. It can be updated manually at any point to change the center of interest for the .target.
+
+.touches : Object
+This object contains references to the touch actions used by the controls.
+controls.touches = {
+	ONE: THREE.TOUCH.ROTATE,
+	TWO: THREE.TOUCH.DOLLY_PAN
+}
+
+.zoom0 : Float
+Used internally by the .saveState and .reset methods.
+
+.zoomSpeed : Float
+Speed of zooming / dollying. Default is 1.
+
+.zoomToCursor : Boolean
+Setting this property to true allows to zoom to the cursor's position. Default is false.
+
+Methods
+See the base Controls class for common methods.
+
+.getAzimuthalAngle () : radians
+Get the current horizontal rotation, in radians.
+
+.getPolarAngle () : radians
+Get the current vertical rotation, in radians.
+
+.getDistance () : Float
+Returns the distance from the camera to the target.
+
+.listenToKeyEvents ( domElement : HTMLDOMElement ) : undefined
+Adds key event listeners to the given DOM element. window is a recommended argument for using this method.
+
+.reset () : undefined
+Reset the controls to their state from either the last time the .saveState was called, or the initial state.
+
+.saveState () : undefined
+Save the current state of the controls. This can later be recovered with .reset.
+
+.stopListenToKeyEvents () : undefined
+Removes the key event listener previously defined with .listenToKeyEvents().
+
+.update ( deltaTime : Number ) : Boolean
+Update the controls. Must be called after any manual changes to the camera's transform, or in the update loop if .autoRotate or .enableDamping are set. deltaTime, in seconds, is optional, and is only required if you want the auto-rotate speed to be independent of the frame rate (the refresh rate of the display).
+
+Source
+examples/jsm/controls/OrbitControls.js
+
+Controls →
+PointerLockControls
+The implementation of this class is based on the Pointer Lock API. PointerLockControls is a perfect choice for first person 3D games.
+
+Import
+PointerLockControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+Code Example
+const controls = new PointerLockControls( camera, document.body );
+
+// add event listener to show/hide a UI (e.g. the game's menu)
+
+controls.addEventListener( 'lock', function () {
+
+	menu.style.display = 'none';
+
+} );
+
+controls.addEventListener( 'unlock', function () {
+
+	menu.style.display = 'block';
+
+} );
+Examples
+misc / controls / pointerlock
+
+Constructor
+PointerLockControls( camera : Camera, domElement : HTMLDOMElement )
+camera: The camera of the rendered scene.
+
+domElement: The HTML element used for event listeners.
+
+Creates a new instance of PointerLockControls.
+
+Events
+change
+Fires when the user moves the mouse.
+
+lock
+Fires when the pointer lock status is "locked" (in other words: the mouse is captured).
+
+unlock
+Fires when the pointer lock status is "unlocked" (in other words: the mouse is not captured anymore).
+
+Properties
+See the base Controls class for common properties.
+
+.isLocked : Boolean
+Whether or not the controls are locked.
+
+.maxPolarAngle : Float
+Camera pitch, upper limit. Range is 0 to Math.PI radians. Default is Math.PI.
+
+.minPolarAngle : Float
+Camera pitch, lower limit. Range is 0 to Math.PI radians. Default is 0.
+
+.pointerSpeed : Float
+Multiplier for how much the pointer movement influences the camera rotation. Default is 1.
+
+Methods
+See the base Controls class for common methods.
+
+.getDirection ( target : Vector3 ) : Vector3
+
+target: The target vector.
+
+Returns the look direction of the camera.
+
+.lock () : undefined
+Activates the pointer lock.
+
+.moveForward ( distance : Number ) : undefined
+
+distance: The signed distance.
+
+Moves the camera forward parallel to the xz-plane. Assumes camera.up is y-up.
+
+.moveRight ( distance : Number ) : undefined
+
+distance: The signed distance.
+
+Moves the camera sidewards parallel to the xz-plane.
+
+.unlock () : undefined
+Exits the pointer lock.
+
+Source
+examples/jsm/controls/PointerLockControls.js
+
+Controls →
+TrackballControls
+TrackballControls is similar to OrbitControls. However, it does not maintain a constant camera up vector. That means if the camera orbits over the “north” and “south” poles, it does not flip to stay "right side up".
+
+Import
+TrackballControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+Examples
+misc / controls / trackball
+
+Constructor
+TrackballControls( camera : Camera, domElement : HTMLDOMElement )
+camera: The camera of the rendered scene.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Creates a new instance of TrackballControls.
+
+Events
+change
+Fires when the camera has been transformed by the controls.
+
+start
+Fires when an interaction (e.g. touch) was initiated.
+
+end
+Fires when an interaction has finished.
+
+Properties
+See the base Controls class for common properties.
+
+.dynamicDampingFactor : Number
+Defines the intensity of damping. Only considered if staticMoving is set to false. Default is 0.2.
+
+.keys : Array
+This array holds keycodes for controlling interactions.
+When the first defined key is pressed, all mouse interactions (left, middle, right) performs orbiting.
+When the second defined key is pressed, all mouse interactions (left, middle, right) performs zooming.
+When the third defined key is pressed, all mouse interactions (left, middle, right) performs panning.
+Default is KeyA, KeyS, KeyD which represents A, S, D.
+.maxDistance : Number
+How far you can dolly out ( PerspectiveCamera only ). Default is Infinity.
+
+.minDistance : Number
+How far you can dolly in ( PerspectiveCamera only ). Default is 0.
+
+.maxZoom : Float
+How far you can zoom out ( OrthographicCamera only ). Default is Infinity.
+
+.minZoom : Float
+How far you can zoom in ( OrthographicCamera only ). Default is 0.
+
+.mouseButtons : Object
+This object contains references to the mouse actions used by the controls.
+.LEFT is assigned with THREE.MOUSE.ROTATE
+.MIDDLE is assigned with THREE.MOUSE.ZOOM
+.RIGHT is assigned with THREE.MOUSE.PAN
+.noPan : Boolean
+Whether or not panning is disabled. Default is false.
+
+.noRotate : Boolean
+Whether or not rotation is disabled. Default is false.
+
+.noZoom : Boolean
+Whether or not zooming is disabled. Default is false.
+
+.panSpeed : Number
+The pan speed. Default is 0.3.
+
+.rotateSpeed : Number
+The rotation speed. Default is 1.0.
+
+.screen : Object
+Represents the properties of the screen. Automatically set when handleResize() is called.
+left: Represents the offset in pixels to the screen's left boundary.
+top: Represents the offset in pixels to the screen's top boundary.
+width: Represents the screen width in pixels.
+height: Represents the screen height in pixels.
+.staticMoving : Boolean
+Whether or not damping is disabled. Default is false.
+
+.target : Vector3
+The focus point of the controls.
+
+.zoomSpeed : Number
+The zoom speed. Default is 1.2.
+
+Methods
+See the base Controls class for common methods.
+
+.handleResize () : undefined
+Should be called if the application window is resized.
+
+.reset () : undefined
+Resets the controls to its initial state.
+
+Source
+examples/jsm/controls/TrackballControls.js
+
+Controls →
+TransformControls
+This class can be used to transform objects in 3D space by adapting a similar interaction model of DCC tools like Blender. Unlike other controls, it is not intended to transform the scene's camera.
+
+TransformControls expects that its attached 3D object is part of the scene graph.
+
+Import
+TransformControls is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
+Examples
+misc / controls / transform
+
+Constructor
+TransformControls( camera : Camera, domElement : HTMLDOMElement )
+camera: The camera of the rendered scene.
+
+domElement: The HTML element used for event listeners. (optional)
+
+Creates a new instance of TransformControls.
+
+Events
+change
+Fires if any type of change (object or property change) is performed. Property changes are separate events you can add event listeners to. The event type is "propertyname-changed".
+
+mouseDown
+Fires if a pointer (mouse/touch) becomes active.
+
+mouseUp
+Fires if a pointer (mouse/touch) is no longer active.
+
+objectChange
+Fires if the controlled 3D object is changed.
+
+Properties
+See the base Controls class for common properties.
+
+.axis : String
+The current transformation axis.
+
+.camera : Camera
+The camera of the rendered scene.
+
+.dragging : Boolean
+Whether or not dragging is currently performed. Read-only property.
+
+.mode : String
+The current transformation mode. Possible values are "translate", "rotate" and "scale". Default is translate.
+
+.rotationSnap : Number
+By default, 3D objects are continuously rotated. If you set this property to a numeric value (radians), you can define in which steps the 3D object should be rotated. Default is null.
+
+.showX : Boolean
+Whether or not the x-axis helper should be visible. Default is true.
+
+.showY : Boolean
+Whether or not the y-axis helper should be visible. Default is true.
+
+.showZ : Boolean
+Whether or not the z-axis helper should be visible. Default is true.
+
+.size : Number
+The size of the helper UI (axes/planes). Default is 1.
+
+.space : String
+Defines in which coordinate space transformations should be performed. Possible values are "world" and "local". Default is world.
+
+.translationSnap : Number
+By default, 3D objects are continuously translated. If you set this property to a numeric value (world units), you can define in which steps the 3D object should be translated. Default is null.
+
+.minX : Number
+The minimum allowed X position during translation. Default is -Infinity.
+
+.maxX : Number
+The maximum allowed X position during translation. Default is Infinity.
+
+.minY : Number
+The minimum allowed Y position during translation. Default is -Infinity.
+
+.maxY : Number
+The maximum allowed Y position during translation. Default is Infinity.
+
+.minZ : Number
+The minimum allowed Z position during translation. Default is -Infinity.
+
+.maxZ : Number
+The maximum allowed Z position during translation. Default is Infinity.
+
+Methods
+See the base Controls class for common methods.
+
+.attach ( object : Object3D ) : TransformControls
+
+object: The 3D object that should be transformed.
+
+Sets the 3D object that should be transformed and ensures the controls UI is visible.
+
+.detach () : TransformControls
+Removes the current 3D object from the controls and makes the helper UI invisible.
+
+.getHelper () : Object3D
+Returns the visual representation of the controls. Add the helper to your scene to visually transform the attached 3D object.
+
+.getRaycaster () : Raycaster
+Returns the Raycaster object that is used for user interaction. This object is shared between all instances of TransformControls. If you set the .layers property of the TransformControls, you will also want to set the .layers property on the Raycaster with a matching value, or else the TransformControls won't work as expected.
+
+.getMode () : String
+Returns the transformation mode.
+
+.reset () : undefined
+Resets the object's position, rotation and scale to when the current transform began.
+
+.setMode ( mode : String ) : undefined
+
+mode: The transformation mode.
+
+Sets the transformation mode.
+
+.setRotationSnap ( rotationSnap : Number ) : undefined
+
+rotationSnap: The rotation snap.
+
+Sets the rotation snap.
+
+.setScaleSnap ( scaleSnap : Number ) : undefined
+
+scaleSnap: The scale snap.
+
+Sets the scale snap.
+
+.setSize ( size : Number ) : undefined
+
+size: The size of the helper UI.
+
+Sets the size of the helper UI.
+
+.setSpace ( space : String ) : undefined
+
+space: The coordinate space in which transformations are applied.
+
+Sets the coordinate space in which transformations are applied.
+
+.setTranslationSnap ( translationSnap : Number ) : undefined
+
+translationSnap: The translation snap.
+
+Sets the translation snap.
+
+Source
+examples/jsm/controls/TransformControls.js
+

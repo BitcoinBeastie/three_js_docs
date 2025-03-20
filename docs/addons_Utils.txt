@@ -1,0 +1,159 @@
+BufferGeometryUtils
+A class containing utility functions for BufferGeometry instances.
+
+Import
+BufferGeometryUtils is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+Methods
+.computeMikkTSpaceTangents ( geometry : BufferGeometry, MikkTSpace : Object, negateSign : Boolean = true ) : Object
+geometry -- Instance of BufferGeometry.
+MikkTSpace -- Instance of examples/jsm/libs/mikktspace.module.js, or mikktspace npm package. Await MikkTSpace.ready before use.
+negateSign -- Whether to negate the sign component (.w) of each tangent. Required for normal map conventions in some formats, including glTF.
+Computes vertex tangents using the MikkTSpace algorithm. MikkTSpace generates the same tangents consistently, and is used in most modelling tools and normal map bakers. Use MikkTSpace for materials with normal maps, because inconsistent tangents may lead to subtle visual issues in the normal map, particularly around mirrored UV seams.
+
+In comparison to this method, BufferGeometry.computeTangents (a custom algorithm) generates tangents that probably will not match the tangents in other software. The custom algorithm is sufficient for general use with a ShaderMaterial, and may be faster than MikkTSpace.
+
+Returns the original BufferGeometry. Indexed geometries will be de-indexed. Requires position, normal, and uv attributes.
+
+.computeMorphedAttributes ( [param:Mesh | Line | Points object] ) : Object
+object -- Instance of Mesh | Line | Points.
+
+Returns the current attributes (Position and Normal) of a morphed/skinned Object3D whose geometry is a BufferGeometry, together with the original ones: An Object with 4 properties: positionAttribute, normalAttribute, morphedPositionAttribute and morphedNormalAttribute. Helpful for Raytracing or Decals (i.e. a DecalGeometry applied to a morphed Object with a BufferGeometry will use the original BufferGeometry, not the morphed/skinned one, generating an incorrect result. Using this function to create a shadow Object3D the DecalGeometry can be correctly generated).
+
+.estimateBytesUsed ( geometry : BufferGeometry ) : Number
+geometry -- Instance of BufferGeometry to estimate the memory use of.
+
+Returns the amount of bytes used by all attributes to represent the geometry.
+
+.interleaveAttributes ( attributes : Array ) : InterleavedBufferAttribute
+attributes -- Array of BufferAttribute instances.
+
+Interleaves a set of attributes and returns a new array of corresponding attributes that share a single InterleavedBuffer instance. All attributes must have compatible types. If merge does not succeed, the method returns null.
+
+.mergeAttributes ( attributes : Array ) : BufferAttribute
+attributes -- Array of BufferAttribute instances.
+
+Merges a set of attributes into a single instance. All attributes must have compatible properties and types, and InterleavedBufferAttributes are not supported. If merge does not succeed, the method returns null.
+
+.mergeGeometries ( geometries : Array, useGroups : Boolean ) : BufferGeometry
+geometries -- Array of BufferGeometry instances.
+useGroups -- Whether groups should be generated for the merged geometry or not.
+
+Merges a set of geometries into a single instance. All geometries must have compatible attributes. If merge does not succeed, the method returns null.
+
+.mergeGroups ( geometry : BufferGeometry ) : BufferGeometry
+geometry -- Instance of BufferGeometry to merge the groups of.
+
+Merges the groups for the given geometry.
+
+.mergeVertices ( geometry : BufferGeometry, tolerance : Number ) : BufferGeometry
+geometry -- Instance of BufferGeometry to merge the vertices of.
+tolerance -- The maximum allowable difference between vertex attributes to merge. Defaults to 1e-4.
+
+Returns a new BufferGeometry with vertices for which all similar vertex attributes (within tolerance) are merged.
+
+.toCreasedNormals ( geometry : BufferGeometry, creaseAngle : Number ) : BufferGeometry
+geometry -- The input geometry.
+creaseAngle -- The crease angle in radians.
+Modifies the supplied geometry if it is non-indexed, otherwise creates a new, non-indexed geometry.
+
+Returns the geometry with smooth normals everywhere except faces that meet at an angle greater than the crease angle.
+
+.toTrianglesDrawMode ( geometry : BufferGeometry, drawMode : TrianglesDrawMode ) : BufferGeometry
+geometry -- Instance of BufferGeometry.
+drawMode -- The draw mode of the given geometry. Valid inputs are THREE.TriangleStripDrawMode and THREE.TriangleFanDrawMode.
+
+Returns a new indexed geometry based on THREE.TrianglesDrawMode draw mode. This mode corresponds to the gl.TRIANGLES WebGL primitive.
+
+Source
+examples/jsm/utils/BufferGeometryUtils.js
+
+CameraUtils
+A class containing useful utility functions for camera manipulation.
+
+Import
+CameraUtils is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import * as CameraUtils from 'three/addons/utils/CameraUtils.js';
+Methods
+.frameCorners ( camera : PerspectiveCamera, bottomLeftCorner : Vector3, bottomRightCorner : Vector3, topLeftCorner : Vector3, estimateViewFrustum : boolean ) : undefined
+Set a PerspectiveCamera's projectionMatrix and quaternion to exactly frame the corners of an arbitrary rectangle using Kooima's Generalized Perspective Projection formulation. NOTE: This function ignores the standard parameters; do not call updateProjectionMatrix() after this! toJSON will also not capture the off-axis matrix generated by this function.
+
+Source
+examples/jsm/utils/CameraUtils.js
+
+SceneUtils
+A class containing useful utility functions for scene manipulation.
+
+Import
+SceneUtils is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import * as SceneUtils from 'three/addons/utils/SceneUtils.js';
+Methods
+.createMeshesFromInstancedMesh ( instancedMesh : InstancedMesh ) : Group
+instancedMesh -- The instanced mesh.
+
+Creates a new group object that contains a new mesh for each instance of the given instanced mesh.
+
+.createMeshesFromMultiMaterialMesh ( mesh : Mesh ) : Group
+mesh -- A mesh with multiple materials.
+
+Converts the given multi-material mesh into an instance of Group holding for each material a separate mesh.
+
+.createMultiMaterialObject ( geometry : BufferGeometry, materials : Array ) : Group
+geometry -- The geometry for the set of materials.
+materials -- The materials for the object.
+
+Creates a new Group that contains a new mesh for each material defined in materials. Beware that this is not the same as an array of materials which defines multiple materials for 1 mesh.
+This is mostly useful for objects that need both a material and a wireframe implementation.
+
+.reduceVertices ( object : Object3D, func : function, initialValue : T ) : T
+object -- The object to traverse (uses traverseVisible internally).
+func -- The binary function applied for the reduction. Must have the signature: (value: T, vertex: Vector3): T.
+initialValue -- The value to initialize the reduction with. This is required as it also sets the reduction type, which is not required to be Vector3.
+
+Akin to Array.prototype.reduce(), but operating on the vertices of all the visible descendant objects, in world space. Additionally, it can operate as a transform-reduce, returning a different type T than the Vector3 input. This can be useful for e.g. fitting a viewing frustum to the scene.
+
+.sortInstancedMesh ( mesh : InstancedMesh, compareFn : Function ) : undefined
+mesh -- InstancedMesh in which instances will be sorted.
+compareFn -- Comparator function defining the sort order.
+
+Sorts the instances within an InstancedMesh, according to a user-defined callback. The callback will be provided with two arguments, indexA and indexB, and must return a numerical value. See Array.prototype.sort for more information on sorting callbacks and their return values.
+
+Because of the high performance cost, three.js does not sort InstancedMesh instances automatically. Manually sorting may be helpful to improve display of alpha blended materials (back to front), and to reduce overdraw in opaque materials (front to back).
+
+.traverseGenerator ( object : Object3D ) : Generator
+object -- The 3D object to traverse.
+
+A generator based version of Object3D.traverse().
+
+.traverseVisibleGenerator ( object : Object3D ) : Generator
+object -- The 3D object to traverse.
+
+A generator based version of Object3D.traverseVisible().
+
+.traverseAncestorsGenerator ( object : Object3D ) : Generator
+object -- The 3D object to traverse.
+
+A generator based version of Object3D.traverseAncestors().
+
+Source
+examples/jsm/utils/SceneUtils.js
+
+SkeletonUtils
+Utility functions for Skeleton, SkinnedMesh, and Bone manipulation.
+
+Import
+SkeletonUtils is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+Methods
+.clone ( object : Object3D ) : Object3D
+Clones the given object and its descendants, ensuring that any SkinnedMesh instances are correctly associated with their bones. Bones are also cloned, and must be descendants of the object passed to this method. Other data, like geometries and materials, are reused by reference.
+
+.retarget ( target : SkeletonHelper, source : SkeletonHelper, options : Object ) : undefined
+.retargetClip ( target : SkeletonHelper, source : SkeletonHelper, clip : AnimationClip, options : Object ) : AnimationClip
+Source
+examples/jsm/utils/SkeletonUtils.js
+

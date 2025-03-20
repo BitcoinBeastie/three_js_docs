@@ -1,0 +1,180 @@
+BufferGeometry →
+ConvexGeometry
+ConvexGeometry can be used to generate a convex hull for a given array of 3D points. The average time complexity for this task is considered to be O(nlog(n)).
+
+Import
+ConvexGeometry is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+Code Example
+const geometry = new ConvexGeometry( points );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+Examples
+geometry / convex
+
+Constructor
+ConvexGeometry( points : Array )
+points — Array of Vector3s that the resulting convex hull will contain.
+
+Source
+examples/jsm/geometries/ConvexGeometry.js
+
+BufferGeometry →
+DecalGeometry
+DecalGeometry can be used to create a decal mesh that serves different kinds of purposes e.g. adding unique details to models, performing dynamic visual environmental changes or covering seams.
+
+Import
+DecalGeometry is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+Code Example
+const geometry =  new DecalGeometry( mesh, position, orientation, size );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+Examples
+WebGL / decals
+
+Constructor
+DecalGeometry( mesh : Mesh, position : Vector3, orientation : Euler, size : Vector3 )
+mesh — Any mesh object.
+position — Position of the decal projector.
+orientation — Orientation of the decal projector.
+size — Size of the decal projector.
+
+Source
+examples/jsm/geometries/DecalGeometry.js
+
+BufferGeometry →
+ParametricGeometry
+Generate geometry representing a parametric surface.
+
+Import
+ParametricGeometry is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
+Code Example
+const geometry = new THREE.ParametricGeometry( THREE.ParametricGeometries.klein, 25, 25 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const klein = new THREE.Mesh( geometry, material );
+scene.add( klein );
+Constructor
+ParametricGeometry(func : Function, slices : Integer, stacks : Integer)
+func — A function that takes in a u and v value each between 0 and 1 and modifies a third Vector3 argument. Default is a function that generates a curved plane surface.
+slices — The count of slices to use for the parametric function. Default is 8.
+stacks — The count of stacks to use for the parametric function. Default is 8.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+examples/jsm/geometries/ParametricGeometry.js
+
+BufferGeometry →
+TeapotGeometry
+TeapotGeometry tessellates the famous Utah teapot database by Martin Newell.
+
+Import
+TeapotGeometry is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
+Code Example
+const geometry = new TeapotGeometry( 50, 18 );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const teapot = new THREE.Mesh( geometry, material );
+scene.add( teapot );
+Constructor
+TeapotGeometry(size : Integer, segments : Integer, bottom : Boolean, lid : Boolean, body : Boolean, fitLid : Boolean, blinn : Boolean)
+size — Relative scale of the teapot. Optional; Defaults to 50.
+segments — Number of line segments to subdivide each patch edge. Optional; Defaults to 10.
+bottom — Whether the bottom of the teapot is generated or not. Optional; Defaults to true.
+lid — Whether the lid is generated or not. Optional; Defaults to true.
+body — Whether the body is generated or not. Optional; Defaults to true.
+fitLid — Whether the lid is slightly stretched to prevent gaps between the body and lid or not. Optional; Defaults to true.
+blinn — Whether the teapot is scaled vertically for better aesthetics or not. Optional; Defaults to true.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+examples/jsm/geometries/TeapotGeometry.js
+
+BufferGeometry → ExtrudeGeometry →
+TextGeometry
+A class for generating text as a single geometry. It is constructed by providing a string of text, and a set of parameters consisting of a loaded font and settings for the geometry's parent ExtrudeGeometry. See the FontLoader page for additional details.
+
+Import
+TextGeometry is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+Code Example
+const loader = new FontLoader();
+
+loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+
+	const geometry = new TextGeometry( 'Hello three.js!', {
+		font: font,
+		size: 80,
+		depth: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+	} );
+} );
+Examples
+geometry / text
+
+Constructor
+TextGeometry(text : String, parameters : Object)
+text — The text that needs to be shown.
+parameters — Object that can contains the following parameters.
+
+font — an instance of THREE.Font.
+size — Float. Size of the text. Default is 100.
+depth — Float. Thickness to extrude text. Default is 50.
+curveSegments — Integer. Number of points on the curves. Default is 12.
+bevelEnabled — Boolean. Turn on bevel. Default is False.
+bevelThickness — Float. How deep into text bevel goes. Default is 10.
+bevelSize — Float. How far from text outline is bevel. Default is 8.
+bevelOffset — Float. How far from text outline bevel starts. Default is 0.
+bevelSegments — Integer. Number of bevel segments. Default is 3.
+Available Fonts
+TextGeometry uses typeface.json generated fonts. Some existing fonts can be found located in /examples/fonts and must be included in the page.
+
+Font	Weight	Style	File Path
+helvetiker	normal	normal	/examples/fonts/helvetiker_regular.typeface.json
+helvetiker	bold	normal	/examples/fonts/helvetiker_bold.typeface.json
+optimer	normal	normal	/examples/fonts/optimer_regular.typeface.json
+optimer	bold	normal	/examples/fonts/optimer_bold.typeface.json
+gentilis	normal	normal	/examples/fonts/gentilis_regular.typeface.json
+gentilis	bold	normal	/examples/fonts/gentilis_bold.typeface.json
+droid sans	normal	normal	/examples/fonts/droid/droid_sans_regular.typeface.json
+droid sans	bold	normal	/examples/fonts/droid/droid_sans_bold.typeface.json
+droid serif	normal	normal	/examples/fonts/droid/droid_serif_regular.typeface.json
+droid serif	bold	normal	/examples/fonts/droid/droid_serif_bold.typeface.json
+Properties
+See the base ExtrudeGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base ExtrudeGeometry class for common methods.
+
+Source
+examples/jsm/geometries/TextGeometry.js
+

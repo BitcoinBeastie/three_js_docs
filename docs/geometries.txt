@@ -1,0 +1,678 @@
+BufferGeometry →
+BoxGeometry
+BoxGeometry is a geometry class for a rectangular cuboid with a given 'width', 'height', and 'depth'. On creation, the cuboid is centred on the origin, with each edge parallel to one of the axes.
+
+
+Code Example
+const geometry = new THREE.BoxGeometry( 1, 1, 1 ); 
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+const cube = new THREE.Mesh( geometry, material ); 
+scene.add( cube );
+Constructor
+BoxGeometry(width : Float, height : Float, depth : Float, widthSegments : Integer, heightSegments : Integer, depthSegments : Integer)
+width — Width; that is, the length of the edges parallel to the X axis. Optional; defaults to 1.
+height — Height; that is, the length of the edges parallel to the Y axis. Optional; defaults to 1.
+depth — Depth; that is, the length of the edges parallel to the Z axis. Optional; defaults to 1.
+widthSegments — Number of segmented rectangular faces along the width of the sides. Optional; defaults to 1.
+heightSegments — Number of segmented rectangular faces along the height of the sides. Optional; defaults to 1.
+depthSegments — Number of segmented rectangular faces along the depth of the sides. Optional; defaults to 1.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/BoxGeometry.js
+
+BufferGeometry → LatheGeometry →
+CapsuleGeometry
+CapsuleGeometry is a geometry class for a capsule with given radii and height. It is constructed using a lathe.
+
+
+Code Example
+const geometry = new THREE.CapsuleGeometry( 1, 1, 4, 8 ); 
+const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+const capsule = new THREE.Mesh( geometry, material ); scene.add( capsule );
+Constructor
+CapsuleGeometry(radius : Float, length : Float, capSegments : Integer, radialSegments : Integer)
+radius — Radius of the capsule. Optional; defaults to 1.
+length — Length of the middle section. Optional; defaults to 1.
+capSegments — Number of curve segments used to build the caps. Optional; defaults to 4.
+radialSegments — Number of segmented faces around the circumference of the capsule. Optional; defaults to 8.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/CapsuleGeometry.js
+
+BufferGeometry →
+CircleGeometry
+CircleGeometry is a simple shape of Euclidean geometry. It is constructed from a number of triangular segments that are oriented around a central point and extend as far out as a given radius. It is built counter-clockwise from a start angle and a given central angle. It can also be used to create regular polygons, where the number of segments determines the number of sides.
+
+
+Code Example
+const geometry = new THREE.CircleGeometry( 5, 32 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const circle = new THREE.Mesh( geometry, material ); scene.add( circle );
+Constructor
+CircleGeometry(radius : Float, segments : Integer, thetaStart : Float, thetaLength : Float)
+radius — Radius of the circle, default = 1.
+segments — Number of segments (triangles), minimum = 3, default = 32.
+thetaStart — Start angle for first segment, default = 0 (three o'clock position).
+thetaLength — The central angle, often called theta, of the circular sector. The default is 2*Pi, which makes for a complete circle.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/CircleGeometry.js
+
+BufferGeometry → CylinderGeometry →
+ConeGeometry
+A class for generating cone geometries.
+
+
+Code Example
+const geometry = new THREE.ConeGeometry( 5, 20, 32 ); 
+const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+const cone = new THREE.Mesh(geometry, material ); scene.add( cone );
+Constructor
+ConeGeometry(radius : Float, height : Float, radialSegments : Integer, heightSegments : Integer, openEnded : Boolean, thetaStart : Float, thetaLength : Float)
+radius — Radius of the cone base. Default is 1.
+height — Height of the cone. Default is 1.
+radialSegments — Number of segmented faces around the circumference of the cone. Default is 32
+heightSegments — Number of rows of faces along the height of the cone. Default is 1.
+openEnded — A Boolean indicating whether the base of the cone is open or capped. Default is false, meaning capped.
+thetaStart — Start angle for first segment, default = 0 (three o'clock position).
+thetaLength — The central angle, often called theta, of the circular sector. The default is 2*Pi, which makes for a complete cone.
+
+Properties
+See the base CylinderGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base CylinderGeometry class for common methods.
+
+Source
+src/geometries/ConeGeometry.js
+
+BufferGeometry →
+CylinderGeometry
+A class for generating cylinder geometries.
+
+
+Code Example
+const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 ); 
+const material = new THREE.MeshBasicMaterial( {color: 0xffff00} ); 
+const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
+Constructor
+CylinderGeometry(radiusTop : Float, radiusBottom : Float, height : Float, radialSegments : Integer, heightSegments : Integer, openEnded : Boolean, thetaStart : Float, thetaLength : Float)
+radiusTop — Radius of the cylinder at the top. Default is 1.
+radiusBottom — Radius of the cylinder at the bottom. Default is 1.
+height — Height of the cylinder. Default is 1.
+radialSegments — Number of segmented faces around the circumference of the cylinder. Default is 32
+heightSegments — Number of rows of faces along the height of the cylinder. Default is 1.
+openEnded — A Boolean indicating whether the ends of the cylinder are open or capped. Default is false, meaning capped.
+thetaStart — Start angle for first segment, default = 0 (three o'clock position).
+thetaLength — The central angle, often called theta, of the circular sector. The default is 2*Pi, which makes for a complete cylinder.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/CylinderGeometry.js
+
+BufferGeometry → PolyhedronGeometry
+DodecahedronGeometry
+A class for generating a dodecahedron geometries.
+
+
+Constructor
+DodecahedronGeometry(radius : Float, detail : Integer)
+radius — Radius of the dodecahedron. Default is 1.
+detail — Default is 0. Setting this to a value greater than 0 adds vertices making it no longer a dodecahedron.
+
+Properties
+See the base PolyhedronGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base PolyhedronGeometry class for common methods.
+
+Source
+src/geometries/DodecahedronGeometry.js
+
+BufferGeometry →
+EdgesGeometry
+This can be used as a helper object to view the edges of a geometry.
+
+Code Example
+const geometry = new THREE.BoxGeometry( 100, 100, 100 ); 
+const edges = new THREE.EdgesGeometry( geometry ); 
+const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) ); 
+scene.add( line );
+Examples
+helpers
+
+Constructor
+EdgesGeometry( geometry : BufferGeometry, thresholdAngle : Integer )
+geometry — Any geometry object.
+thresholdAngle — An edge is only rendered if the angle (in degrees) between the face normals of the adjoining faces exceeds this value. default = 1 degree.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/EdgesGeometry.js
+
+BufferGeometry →
+ExtrudeGeometry
+Creates extruded geometry from a path shape.
+
+
+Code Example
+const length = 12, width = 8;
+
+const shape = new THREE.Shape();
+shape.moveTo( 0,0 );
+shape.lineTo( 0, width );
+shape.lineTo( length, width );
+shape.lineTo( length, 0 );
+shape.lineTo( 0, 0 );
+
+const extrudeSettings = {
+	steps: 2,
+	depth: 16,
+	bevelEnabled: true,
+	bevelThickness: 1,
+	bevelSize: 1,
+	bevelOffset: 0,
+	bevelSegments: 1
+};
+
+const geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material ) ;
+scene.add( mesh );
+Constructor
+ExtrudeGeometry(shapes : Array, options : Object)
+shapes — Shape or an array of shapes.
+options — Object that can contain the following parameters.
+
+curveSegments — int. Number of points on the curves. Default is 12.
+steps — int. Number of points used for subdividing segments along the depth of the extruded spline. Default is 1.
+depth — float. Depth to extrude the shape. Default is 1.
+bevelEnabled — bool. Apply beveling to the shape. Default is true.
+bevelThickness — float. How deep into the original shape the bevel goes. Default is 0.2.
+bevelSize — float. Distance from the shape outline that the bevel extends. Default is bevelThickness - 0.1.
+bevelOffset — float. Distance from the shape outline that the bevel starts. Default is 0.
+bevelSegments — int. Number of bevel layers. Default is 3.
+extrudePath — THREE.Curve. A 3D spline path along which the shape should be extruded. Bevels not supported for path extrusion.
+UVGenerator — Object. object that provides UV generator functions
+This object extrudes a 2D shape to a 3D geometry.
+
+When creating a Mesh with this geometry, if you'd like to have a separate material used for its face and its extruded sides, you can use an array of materials. The first material will be applied to the face; the second material will be applied to the sides.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/ExtrudeGeometry.js
+
+BufferGeometry → PolyhedronGeometry →
+IcosahedronGeometry
+A class for generating an icosahedron geometry.
+
+
+Constructor
+IcosahedronGeometry(radius : Float, detail : Integer)
+radius — Default is 1.
+detail — Default is 0. Setting this to a value greater than 0 adds more vertices making it no longer an icosahedron. When detail is greater than 1, it's effectively a sphere.
+
+Properties
+See the base PolyhedronGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base PolyhedronGeometry class for common methods.
+
+Source
+src/geometries/IcosahedronGeometry.js
+
+BufferGeometry →
+LatheGeometry
+Creates meshes with axial symmetry like vases. The lathe rotates around the Y axis.
+
+
+Code Example
+const points = [];
+for ( let i = 0; i < 10; i ++ ) {
+	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+}
+const geometry = new THREE.LatheGeometry( points );
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+const lathe = new THREE.Mesh( geometry, material );
+scene.add( lathe );
+Constructor
+LatheGeometry(points : Array, segments : Integer, [param:Float phiStart], phiLength : Float)
+points — Array of Vector2s. The x-coordinate of each point must be greater than zero. Default is an array with (0,-0.5), (0.5,0) and (0,0.5) which creates a simple diamond shape.
+segments — the number of circumference segments to generate. Default is 12.
+phiStart — the starting angle in radians. Default is 0.
+phiLength — the radian (0 to 2PI) range of the lathed section 2PI is a closed lathe, less than 2PI is a portion. Default is 2PI.
+
+This creates a LatheGeometry based on the parameters.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/LatheGeometry.js
+
+BufferGeometry → PolyhedronGeometry →
+OctahedronGeometry
+A class for generating an octahedron geometry.
+
+
+Constructor
+OctahedronGeometry(radius : Float, detail : Integer)
+radius — Radius of the octahedron. Default is 1.
+detail — Default is 0. Setting this to a value greater than zero add vertices making it no longer an octahedron.
+
+Properties
+See the base PolyhedronGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base PolyhedronGeometry class for common methods.
+
+Source
+src/geometries/OctahedronGeometry.js
+
+BufferGeometry →
+PlaneGeometry
+A class for generating plane geometries.
+
+
+Code Example
+const geometry = new THREE.PlaneGeometry( 1, 1 );
+const material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+const plane = new THREE.Mesh( geometry, material );
+scene.add( plane );
+Constructor
+PlaneGeometry(width : Float, height : Float, widthSegments : Integer, heightSegments : Integer)
+width — Width along the X axis. Default is 1.
+height — Height along the Y axis. Default is 1.
+widthSegments — Optional. Default is 1.
+heightSegments — Optional. Default is 1.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/PlaneGeometry.js
+
+BufferGeometry →
+PolyhedronGeometry
+A polyhedron is a solid in three dimensions with flat faces. This class will take an array of vertices, project them onto a sphere, and then divide them up to the desired level of detail. This class is used by DodecahedronGeometry, IcosahedronGeometry, OctahedronGeometry, and TetrahedronGeometry to generate their respective geometries.
+
+Code Example
+const verticesOfCube = [
+    -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
+    -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
+];
+
+const indicesOfFaces = [
+    2,1,0,    0,3,2,
+    0,4,7,    7,3,0,
+    0,1,5,    5,4,0,
+    1,2,6,    6,5,1,
+    2,3,7,    7,6,2,
+    4,5,6,    6,7,4
+];
+
+const geometry = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 6, 2 );
+Constructor
+PolyhedronGeometry(vertices : Array, indices : Array, radius : Float, detail : Integer)
+vertices — Array of points of the form [1,1,1, -1,-1,-1, ... ]
+indices — Array of indices that make up the faces of the form [0,1,2, 2,3,0, ... ]
+radius — Float - The radius of the final shape
+detail — Integer - How many levels to subdivide the geometry. The more detail, the smoother the shape.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/PolyhedronGeometry.js
+
+BufferGeometry →
+RingGeometry
+A class for generating a two-dimensional ring geometry.
+
+
+Code Example
+const geometry = new THREE.RingGeometry( 1, 5, 32 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00, side: THREE.DoubleSide } );
+const mesh = new THREE.Mesh( geometry, material ); scene.add( mesh );
+Constructor
+RingGeometry(innerRadius : Float, outerRadius : Float, thetaSegments : Integer, phiSegments : Integer, thetaStart : Float, thetaLength : Float)
+innerRadius — Default is 0.5.
+outerRadius — Default is 1.
+thetaSegments — Number of segments. A higher number means the ring will be more round. Minimum is 3. Default is 32.
+phiSegments — Number of segments per ring segment. Minimum is 1. Default is 1.
+thetaStart — Starting angle. Default is 0.
+thetaLength — Central angle. Default is Math.PI * 2.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/RingGeometry.js
+
+BufferGeometry →
+ShapeGeometry
+Creates an one-sided polygonal geometry from one or more path shapes.
+
+
+Code Example
+const x = 0, y = 0;
+
+const heartShape = new THREE.Shape();
+
+heartShape.moveTo( x + 5, y + 5 );
+heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+
+const geometry = new THREE.ShapeGeometry( heartShape );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material ) ;
+scene.add( mesh );
+Constructor
+ShapeGeometry(shapes : Array, curveSegments : Integer)
+shapes — Array of shapes or a single shape. Default is a single triangle shape.
+curveSegments - Integer - Number of segments per shape. Default is 12.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/ShapeGeometry.js
+
+BufferGeometry →
+SphereGeometry
+A class for generating sphere geometries.
+
+
+Code Example
+const geometry = new THREE.SphereGeometry( 15, 32, 16 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const sphere = new THREE.Mesh( geometry, material ); scene.add( sphere );
+Constructor
+SphereGeometry(radius : Float, widthSegments : Integer, heightSegments : Integer, phiStart : Float, phiLength : Float, thetaStart : Float, thetaLength : Float)
+radius — sphere radius. Default is 1.
+widthSegments — number of horizontal segments. Minimum value is 3, and the default is 32.
+heightSegments — number of vertical segments. Minimum value is 2, and the default is 16.
+phiStart — specify horizontal starting angle. Default is 0.
+phiLength — specify horizontal sweep angle size. Default is Math.PI * 2.
+thetaStart — specify vertical starting angle. Default is 0.
+thetaLength — specify vertical sweep angle size. Default is Math.PI.
+
+The geometry is created by sweeping and calculating vertexes around the Y axis (horizontal sweep) and the Z axis (vertical sweep). Thus, incomplete spheres (akin to 'sphere slices') can be created through the use of different values of phiStart, phiLength, thetaStart and thetaLength, in order to define the points in which we start (or end) calculating those vertices.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/SphereGeometry.js
+
+BufferGeometry → PolyhedronGeometry →
+TetrahedronGeometry
+A class for generating a tetrahedron geometries.
+
+
+Constructor
+TetrahedronGeometry(radius : Float, detail : Integer)
+radius — Radius of the tetrahedron. Default is 1.
+detail — Default is 0. Setting this to a value greater than 0 adds vertices making it no longer a tetrahedron.
+
+Properties
+See the base PolyhedronGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base PolyhedronGeometry class for common methods.
+
+Source
+src/geometries/TetrahedronGeometry.js
+
+BufferGeometry →
+TorusGeometry
+A class for generating torus geometries.
+
+
+Code Example
+const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+Constructor
+TorusGeometry(radius : Float, tube : Float, radialSegments : Integer, tubularSegments : Integer, arc : Float)
+radius - Radius of the torus, from the center of the torus to the center of the tube. Default is 1.
+tube — Radius of the tube. Must be smaller than radius. Default is 0.4.
+radialSegments — Default is 12
+tubularSegments — Default is 48.
+arc — Central angle. Default is Math.PI * 2.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/TorusGeometry.js
+
+BufferGeometry →
+TorusKnotGeometry
+Creates a torus knot, the particular shape of which is defined by a pair of coprime integers, p and q. If p and q are not coprime, the result will be a torus link.
+
+
+Code Example
+const geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const torusKnot = new THREE.Mesh( geometry, material ); scene.add( torusKnot );
+Constructor
+TorusKnotGeometry(radius : Float, tube : Float, tubularSegments : Integer, radialSegments : Integer, p : Integer, q : Integer)
+radius - Radius of the torus. Default is 1.
+tube — Radius of the tube. Default is 0.4.
+tubularSegments — Default is 64.
+radialSegments — Default is 8.
+p — This value determines, how many times the geometry winds around its axis of rotational symmetry. Default is 2.
+q — This value determines, how many times the geometry winds around a circle in the interior of the torus. Default is 3.
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/TorusKnotGeometry.js
+
+BufferGeometry →
+TubeGeometry
+Creates a tube that extrudes along a 3d curve.
+
+
+Code Example
+class CustomSinCurve extends THREE.Curve {
+
+	constructor( scale = 1 ) {
+		super();
+		this.scale = scale;
+	}
+
+	getPoint( t, optionalTarget = new THREE.Vector3() ) {
+
+		const tx = t * 3 - 1.5;
+		const ty = Math.sin( 2 * Math.PI * t );
+		const tz = 0;
+
+		return optionalTarget.set( tx, ty, tz ).multiplyScalar( this.scale );
+	}
+}
+
+const path = new CustomSinCurve( 10 );
+const geometry = new THREE.TubeGeometry( path, 20, 2, 8, false );
+const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+const mesh = new THREE.Mesh( geometry, material );
+scene.add( mesh );
+Constructor
+TubeGeometry(path : Curve, tubularSegments : Integer, radius : Float, radialSegments : Integer, closed : Boolean)
+path — Curve - A 3D path that inherits from the Curve base class. Default is a quadratic bezier curve.
+tubularSegments — Integer - The number of segments that make up the tube. Default is 64.
+radius — Float - The radius of the tube. Default is 1.
+radialSegments — Integer - The number of segments that make up the cross-section. Default is 8.
+closed — Boolean Is the tube open or closed. Default is false.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+.parameters : Object
+An object with a property for each of the constructor parameters. Any modification after instantiation does not change the geometry.
+
+.tangents : Array
+An array of Vector3 tangents
+
+.normals : Array
+An array of Vector3 normals
+
+.binormals : Array
+An array of Vector3 binormals
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/TubeGeometry.js
+
+BufferGeometry →
+WireframeGeometry
+This can be used as a helper object to view a geometry as a wireframe.
+
+Code Example
+const geometry = new THREE.SphereGeometry( 100, 100, 100 );
+
+const wireframe = new THREE.WireframeGeometry( geometry );
+
+const line = new THREE.LineSegments( wireframe );
+line.material.depthTest = false;
+line.material.opacity = 0.25;
+line.material.transparent = true;
+
+scene.add( line );
+Examples
+helpers
+
+Constructor
+WireframeGeometry( geometry : BufferGeometry )
+geometry — any geometry object.
+
+Properties
+See the base BufferGeometry class for common properties.
+
+Methods
+See the base BufferGeometry class for common methods.
+
+Source
+src/geometries/WireframeGeometry.js
+

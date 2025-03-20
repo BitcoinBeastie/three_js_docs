@@ -1,0 +1,272 @@
+DRACOExporter
+An exporter to compress geometry with the Draco library.
+
+Draco is an open source library for compressing and decompressing 3D meshes and point clouds. Compressed geometry can be significantly smaller, at the cost of additional decoding time on the client device.
+
+Standalone Draco files have a .drc extension, and contain vertex positions, normals, colors, and other attributes. Draco files do not contain materials, textures, animation, or node hierarchies – to use these features, embed Draco geometry inside of a glTF file. A normal glTF file can be converted to a Draco-compressed glTF file using glTF-Pipeline.
+
+Import
+DRACOExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { DRACOExporter } from 'three/addons/exporters/DRACOExporter.js';
+Code Example
+// Instantiate a exporter
+const exporter = new DRACOExporter();
+
+// Parse the input and generate the DRACO encoded output
+const binaryData = exporter.parse( mesh, options );
+Examples
+misc_exporter_draco
+
+Constructor
+DRACOExporter()
+Creates a new DRACOExporter.
+
+Methods
+.parse ( object : Mesh | object : Points, options : Object ) : Int8Array
+object | object — Mesh or Points to encode.
+options — Optional export options
+
+decodeSpeed - int. Indicates how to tune the encoder regarding decode speed (0 gives better speed but worst quality). Default is 5
+encodeSpeed - int. Indicates how to tune the encoder parameters (0 gives better speed but worst quality). Default is 5.
+encoderMethod - int. Either sequential (very little compression) or Edgebreaker. Edgebreaker traverses the triangles of the mesh in a deterministic, spiral-like way which provides most of the benefits of this data format. Default is DRACOExporter.MESH_EDGEBREAKER_ENCODING.
+quantization - Array of int. Indicates the precision of each type of data stored in the draco file in the order (POSITION, NORMAL, COLOR, TEX_COORD, GENERIC). Default is [ 16, 8, 8, 8, 8 ]
+exportUvs - bool. Default is true.
+exportNormals - bool. Default is true.
+exportColor - bool. Default is false.
+Source
+examples/jsm/exporters/DRACOExporter.js
+
+EXRExporter
+An exporter for EXR.
+
+EXR ( Extended Dynamic Range) is an open format specification for professional-grade image storage format of the motion picture industry. The purpose of format is to accurately and efficiently represent high-dynamic-range scene-linear image data and associated metadata. The library is widely used in host application software where accuracy is critical, such as photorealistic rendering, texture access, image compositing, deep compositing, and DI.
+
+Import
+EXRExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { EXRExporter } from 'three/addons/exporters/EXRExporter.js';
+Code Example
+// Instantiate a exporter
+const exporter = new EXRExporter();
+
+// Parse the input render target data and generate the EXR output
+const EXR = exporter.parse( renderer, renderTarget, options );
+downloadFile( EXR );
+Constructor
+EXRExporter()
+
+Creates a new EXRExporter.
+
+Methods
+.parse ( renderer : WebGLRenderer, renderTarget : WebGLRenderTarget, options : Object ) : null
+renderTarget — WebGLRenderTarget containing data used for exporting EXR image.
+options — Export options.
+
+type - Output datatype for internal EXR data. Available options:
+THREE.HalfFloatType // default option
+THREE.FloatType
+compression - Internal compression algorithm. Available options:
+NO_COMPRESSION
+ZIP_COMPRESSION // default option
+ZIPS_COMPRESSION
+Generates a .exr output from the input render target.
+
+.parse ( dataTexture : DataTexture, options : Object ) : null
+dataTexture — DataTexture containing data used for exporting EXR image.
+options — Export options (details above).
+
+Generates a .exr output from the input data texture.
+
+Source
+examples/jsm/exporters/EXRExporter.js
+
+GLTFExporter
+An exporter for glTF 2.0.
+
+glTF (GL Transmission Format) is an open format specification for efficient delivery and loading of 3D content. Assets may be provided either in JSON (.gltf) or binary (.glb) format. External files store textures (.jpg, .png) and additional binary data (.bin). A glTF asset may deliver one or more scenes, including meshes, materials, textures, skins, skeletons, morph targets, animations, lights, and/or cameras.
+
+Import
+GLTFExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+Extensions
+GLTFExporter supports the following glTF 2.0 extensions:
+
+KHR_lights_punctual
+KHR_materials_clearcoat
+KHR_materials_dispersion
+KHR_materials_emissive_strength
+KHR_materials_ior
+KHR_materials_iridescence
+KHR_materials_specular
+KHR_materials_sheen
+KHR_materials_transmission
+KHR_materials_unlit
+KHR_materials_volume
+KHR_mesh_quantization
+KHR_texture_transform
+EXT_materials_bump
+EXT_mesh_gpu_instancing
+The following glTF 2.0 extension is supported by an external user plugin
+
+KHR_materials_variants
+Code Example
+// Instantiate a exporter
+const exporter = new GLTFExporter();
+
+// Parse the input and generate the glTF output
+exporter.parse(
+	scene,
+	// called when the gltf has been generated
+	function ( gltf ) {
+
+		console.log( gltf );
+		downloadJSON( gltf );
+
+	},
+	// called when there is an error in the generation
+	function ( error ) {
+
+		console.log( 'An error happened' );
+
+	},
+	options
+);
+Examples
+misc_exporter_gltf
+
+Constructor
+GLTFExporter()
+
+Creates a new GLTFExporter.
+
+Methods
+.parse ( input : Object3D, onCompleted : Function, onError : Function, options : Object ) : undefined
+input — Scenes or objects to export. Valid options:
+
+Export scenes
+exporter.parse( scene1, ... )
+		exporter.parse( [ scene1, scene2 ], ... )
+Export objects (It will create a new Scene to hold all the objects)
+exporter.parse( object1, ... )
+		exporter.parse( [ object1, object2 ], ... )
+Mix scenes and objects (It will export the scenes as usual but it will create a new scene to hold all the single objects).
+exporter.parse( [ scene1, object1, object2, scene2 ], ... )
+onCompleted — Will be called when the export completes. The argument will be the generated glTF JSON or binary ArrayBuffer.
+onError — Will be called if there are any errors during the gltf generation.
+options — Export options
+trs - bool. Export position, rotation and scale instead of matrix per node. Default is false
+onlyVisible - bool. Export only visible objects. Default is true.
+binary - bool. Export in binary (.glb) format, returning an ArrayBuffer. Default is false.
+maxTextureSize - int. Restricts the image maximum size (both width and height) to the given value. Default is Infinity.
+animations - Array<AnimationClip>. List of animations to be included in the export.
+includeCustomExtensions - bool. Export custom glTF extensions defined on an object's userData.gltfExtensions property. Default is false.
+Generates a .gltf (JSON) or .glb (binary) output from the input (Scenes or Objects)
+
+.parseAsync ( input : Object3D, options : Object ) : Promise
+Generates a .gltf (JSON) or .glb (binary) output from the input (Scenes or Objects).
+
+This is just like the .parse() method, but instead of accepting callbacks it returns a promise that resolves with the result, and otherwise accepts the same options.
+
+Source
+examples/jsm/exporters/GLTFExporter.js
+
+OBJExporter
+An exporter for the OBJ file format.
+
+OBJExporter is not able to export material data into MTL files so only geometry data are supported.
+
+Import
+OBJExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
+Code Example
+// Instantiate an exporter
+const exporter = new OBJExporter();
+
+// Parse the input and generate the OBJ output
+const data = exporter.parse( scene );
+downloadFile( data );
+Constructor
+OBJExporter()
+
+Creates a new OBJExporter.
+
+Methods
+.parse ( object : Object3D ) : String
+object — Object3D to be exported.
+
+Generates a string holding the OBJ data.
+
+Source
+examples/jsm/exporters/OBJExporter.js
+
+PLYExporter
+An exporter for PLY.
+
+PLY (Polygon or Stanford Triangle Format) is a file format for efficient delivery and loading of simple, static 3D content in a dense format. Both binary and ascii formats are supported. PLY can store vertex positions, colors, normals and uv coordinates. No textures or texture references are saved.
+
+Import
+PLYExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
+Code Example
+// Instantiate an exporter
+const exporter = new PLYExporter();
+
+// Parse the input and generate the ply output
+const data = exporter.parse( scene, options );
+downloadFile( data );
+Constructor
+PLYExporter()
+
+Creates a new PLYExporter.
+
+Methods
+.parse ( input : Object3D, onDone : Function, options : Object ) : Object
+input — Object3D
+onCompleted — Will be called when the export completes. The argument will be the generated ply ascii or binary ArrayBuffer.
+options — Export options
+
+excludeAttributes - array. Which properties to explicitly exclude from the exported PLY file. Valid values are 'color', 'normal', 'uv', and 'index'. If triangle indices are excluded, then a point cloud is exported. Default is an empty array.
+binary - bool. Export in binary format, returning an ArrayBuffer. Default is false.
+Generates ply file data as string or ArrayBuffer (ascii or binary) output from the input object. The data that is returned is the same that is passed into the "onCompleted" function. If the object is composed of multiple children and geometry, they are merged into a single mesh in the file.
+
+Source
+examples/jsm/exporters/PLYExporter.js
+
+STLExporter
+An exporter for the STL file format.
+
+STL files describe only the surface geometry of a three-dimensional object without any representation of color, texture or other common model attributes. The STL format specifies both ASCII and binary representations, with binary being more compact. STL files contain no scale information or indexes, and the units are arbitrary.
+
+Import
+STLExporter is an add-on, and must be imported explicitly. See Installation / Addons.
+
+import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+Code Example
+// Instantiate an exporter
+const exporter = new STLExporter();
+
+// Configure export options
+const options = { binary: true }
+
+// Parse the input and generate the STL encoded output
+const result = exporter.parse( mesh, options );
+Examples
+misc_exporter_stl
+
+Constructor
+STLExporter()
+Creates a new STLExporter.
+
+Methods
+.parse ( scene : Object3D, options : Object ) : Object
+scene — Scene, Mesh, or other Object3D based class containing Meshes to encode.
+options — Optional export options
+
+binary - bool. Return an ASCII encoded string or binary data buffer. Default is false.
+Source
+examples/jsm/exporters/STLExporter.js
+

@@ -1,0 +1,175 @@
+KeyframeTrack →
+BooleanKeyframeTrack
+A Track of boolean keyframe values.
+
+Constructor
+BooleanKeyframeTrack( name : String, times : Array, values : Array )
+name - (required) identifier for the KeyframeTrack.
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified.
+
+This keyframe track type has no interpolation parameter because the interpolation is always InterpolateDiscrete.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.DefaultInterpolation : Constant
+The default interpolation type to use. Only InterpolateDiscrete is valid for this track type.
+
+.ValueBufferType : Array
+A normal Array (no Float32Array in this case, unlike ValueBufferType of KeyframeTrack).
+
+.ValueTypeName : String
+String 'bool'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+.InterpolantFactoryMethodLinear () : undefined
+The value of this method here is 'undefined', as it does not make sense for discrete properties.
+
+.InterpolantFactoryMethodSmooth () : undefined
+The value of this method here is 'undefined', as it does not make sense for discrete properties.
+
+Source
+src/animation/tracks/BooleanKeyframeTrack.js
+
+KeyframeTrack →
+ColorKeyframeTrack
+A Track of keyframe values that represent color changes.
+
+The very basic implementation of this subclass has nothing special yet. However, this is the place for color space parameterization.
+
+Constructor
+ColorKeyframeTrack( name : String, times : Array, values : Array, interpolation : Constant )
+name - (required) identifier for the KeyframeTrack.
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified, a flat array of color components between 0 and 1.
+interpolation - the type of interpolation to use. See Animation Constants for possible values. Default is InterpolateLinear.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.ValueTypeName : String
+String 'color'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+Source
+src/animation/tracks/ColorKeyframeTrack.js
+
+KeyframeTrack →
+NumberKeyframeTrack
+A Track of numeric keyframe values.
+
+Constructor
+NumberKeyframeTrack( name : String, times : Array, values : Array, interpolation : Constant )
+name - (required) identifier for the KeyframeTrack.
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified.
+interpolation - the type of interpolation to use. See Animation Constants for possible values. Default is InterpolateLinear.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.ValueTypeName : String
+String 'number'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+Source
+src/animation/tracks/NumberKeyframeTrack.js
+
+KeyframeTrack →
+QuaternionKeyframeTrack
+A Track of quaternion keyframe values.
+
+Constructor
+QuaternionKeyframeTrack( name : String, times : Array, values : Array, interpolation : Constant )
+name - (required) identifier for the KeyframeTrack.
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified, a flat array of quaternion components.
+interpolation - the type of interpolation to use. See Animation Constants for possible values. Default is InterpolateLinear.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.DefaultInterpolation : Constant
+The default interpolation type to use, InterpolateLinear.
+
+.ValueTypeName : String
+String 'quaternion'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+.InterpolantFactoryMethodLinear () : QuaternionLinearInterpolant
+Returns a new QuaternionLinearInterpolant based on the values, times and valueSize of the keyframes.
+
+Source
+src/animation/tracks/QuaternionKeyframeTrack.js
+
+KeyframeTrack →
+StringKeyframeTrack
+A Track of string keyframe values.
+
+Constructor
+StringKeyframeTrack( name : String, times : Array, values : Array )
+name - (required) identifier for the KeyframeTrack.
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified.
+
+This keyframe track type has no interpolation parameter because the interpolation is always InterpolateDiscrete.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.DefaultInterpolation : Constant
+The default interpolation type to use. Only InterpolateDiscrete is valid for this track type.
+
+.ValueBufferType : Array
+A normal Array (no Float32Array in this case, unlike ValueBufferType of KeyframeTrack).
+
+.ValueTypeName : String
+String 'string'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+.InterpolantFactoryMethodLinear () : undefined
+The value of this method here is 'undefined', as it does not make sense for discrete properties.
+
+.InterpolantFactoryMethodSmooth () : undefined
+The value of this method here is 'undefined', as it does not make sense for discrete properties.
+
+Source
+src/animation/tracks/StringKeyframeTrack.js
+
+KeyframeTrack →
+VectorKeyframeTrack
+A Track of vector keyframe values.
+
+Constructor
+VectorKeyframeTrack( name : String, times : Array, values : Array, interpolation : Constant )
+name - (required) identifier for the KeyframeTrack.ƒ
+times - (required) array of keyframe times.
+values - values for the keyframes at the times specified, a flat array of vector components.
+interpolation - the type of interpolation to use. See Animation Constants for possible values. Default is InterpolateLinear.
+
+Properties
+See KeyframeTrack for inherited properties.
+
+.ValueTypeName : String
+String 'vector'.
+
+Methods
+See KeyframeTrack for inherited methods.
+
+Source
+src/animation/tracks/VectorKeyframeTrack.js
+
+Object3D →
+Ƒ
+

@@ -1,0 +1,3300 @@
+Box2
+Represents an axis-aligned bounding box (AABB) in 2D space.
+
+Constructor
+Box2( min : Vector2, max : Vector2 )
+min - (optional) Vector2 representing the lower (x, y) boundary of the box. Default is ( + Infinity, + Infinity ).
+max - (optional) Vector2 representing the upper (x, y) boundary of the box. Default is ( - Infinity, - Infinity ).
+
+Creates a Box2 bounded by min and max.
+
+Properties
+.min : Vector2
+Vector2 representing the lower (x, y) boundary of the box.
+Default is ( + Infinity, + Infinity ).
+
+.max : Vector2
+Vector2 representing the lower upper (x, y) boundary of the box.
+Default is ( - Infinity, - Infinity ).
+
+Methods
+.clampPoint ( point : Vector2, target : Vector2 ) : Vector2
+point - Vector2 to clamp.
+target — the result will be copied into this Vector2.
+
+Clamps the point within the bounds of this box.
+
+.clone () : Box2
+Returns a new Box2 with the same min and max as this one.
+
+.containsBox ( box : Box2 ) : Boolean
+box - Box2 to test for inclusion.
+
+Returns true if this box includes the entirety of box. If this and box are identical,
+this function also returns true.
+
+.containsPoint ( point : Vector2 ) : Boolean
+point - Vector2 to check for inclusion.
+
+Returns true if the specified point lies within or on the boundaries of this box.
+
+.copy ( box : Box2 ) : this
+Copies the min and max from box to this box.
+
+.distanceToPoint ( point : Vector2 ) : Float
+point - Vector2 to measure distance to.
+
+Returns the distance from any edge of this box to the specified point. If the point lies inside of this box, the distance will be 0.
+
+.equals ( box : Box2 ) : Boolean
+box - Box to compare with this one.
+
+Returns true if this box and box share the same lower and upper bounds.
+
+.expandByPoint ( point : Vector2 ) : this
+point - Vector2 that should be included in the box.
+
+Expands the boundaries of this box to include point.
+
+.expandByScalar ( scalar : Float ) : this
+scalar - Distance to expand the box by.
+
+Expands each dimension of the box by scalar. If negative, the dimensions of the box will be contracted.
+
+.expandByVector ( vector : Vector2 ) : this
+vector - Vector2 to expand the box by.
+
+Expands this box equilaterally by vector. The width of this box will be expanded by the x component of vector in both directions. The height of this box will be expanded by the y component of vector in both directions.
+
+.getCenter ( target : Vector2 ) : Vector2
+target — the result will be copied into this Vector2.
+
+Returns the center point of the box as a Vector2.
+
+.getParameter ( point : Vector2, target : Vector2 ) : Vector2
+point - Vector2.
+target — the result will be copied into this Vector2.
+
+Returns a point as a proportion of this box's width and height.
+
+.getSize ( target : Vector2 ) : Vector2
+target — the result will be copied into this Vector2.
+
+Returns the width and height of this box.
+
+.intersect ( box : Box2 ) : this
+box - Box to intersect with.
+
+Returns the intersection of this and box, setting the upper bound of this box to the lesser of the two boxes' upper bounds and the lower bound of this box to the greater of the two boxes' lower bounds.
+
+.intersectsBox ( box : Box2 ) : Boolean
+box - Box to check for intersection against.
+
+Determines whether or not this box intersects box.
+
+.isEmpty () : Boolean
+Returns true if this box includes zero points within its bounds.
+Note that a box with equal lower and upper bounds still includes one point, the one both bounds share.
+
+.makeEmpty () : this
+Makes this box empty.
+
+.set ( min : Vector2, max : Vector2 ) : this
+min - (required ) Vector2 representing the lower (x, y) boundary of the box.
+max - (required) Vector2 representing the upper (x, y) boundary of the box.
+
+Sets the lower and upper (x, y) boundaries of this box.
+Please note that this method only copies the values from the given objects.
+
+.setFromCenterAndSize ( center : Vector2, size : Vector2 ) : this
+center - Desired center position of the box (Vector2).
+size - Desired x and y dimensions of the box (Vector2).
+
+Centers this box on center and sets this box's width and height to the values specified in size.
+
+.setFromPoints ( points : Array ) : this
+points - Array of Vector2s that the resulting box will contain.
+
+Sets the upper and lower bounds of this box to include all of the points in points.
+
+.translate ( offset : Vector2 ) : this
+offset - Direction and distance of offset.
+
+Adds offset to both the upper and lower bounds of this box, effectively moving this box offset units in 2D space.
+
+.union ( box : Box2 ) : this
+box - Box that will be unioned with this box.
+
+Unions this box with box, setting the upper bound of this box to the greater of the two boxes' upper bounds and the lower bound of this box to the lesser of the two boxes' lower bounds.
+
+Source
+src/math/Box2.js
+
+Box3
+Represents an axis-aligned bounding box (AABB) in 3D space.
+
+Code Example
+const box = new THREE.Box3();
+
+const mesh = new THREE.Mesh(
+	new THREE.SphereGeometry(),
+	new THREE.MeshBasicMaterial()
+);
+
+// ensure the bounding box is computed for its geometry
+// this should be done only once (assuming static geometries)
+mesh.geometry.computeBoundingBox();
+
+// ...
+
+// in the animation loop, compute the current bounding box with the world matrix
+box.copy( mesh.geometry.boundingBox ).applyMatrix4( mesh.matrixWorld );
+Constructor
+Box3( min : Vector3, max : Vector3 )
+min - (optional) Vector3 representing the lower (x, y, z) boundary of the box. Default is ( + Infinity, + Infinity, + Infinity ).
+max - (optional) Vector3 representing the upper (x, y, z) boundary of the box. Default is ( - Infinity, - Infinity, - Infinity ).
+
+Creates a Box3 bounded by min and max.
+
+Properties
+.isBox3 : Boolean
+Read-only flag to check if a given object is of type Box3.
+
+.min : Vector3
+Vector3 representing the lower (x, y, z) boundary of the box.
+Default is ( + Infinity, + Infinity, + Infinity ).
+
+.max : Vector3
+Vector3 representing the upper (x, y, z) boundary of the box.
+Default is ( - Infinity, - Infinity, - Infinity ).
+
+Methods
+.applyMatrix4 ( matrix : Matrix4 ) : this
+matrix - The Matrix4 to apply
+
+Transforms this Box3 with the supplied matrix.
+
+.clampPoint ( point : Vector3, target : Vector3 ) : Vector3
+point - Vector3 to clamp.
+target — the result will be copied into this Vector3.
+
+Clamps the point within the bounds of this box.
+
+.clone () : Box3
+Returns a new Box3 with the same min and max as this one.
+
+.containsBox ( box : Box3 ) : Boolean
+box - Box3 to test for inclusion.
+
+Returns true if this box includes the entirety of box. If this and box are identical,
+this function also returns true.
+
+.containsPoint ( point : Vector3 ) : Boolean
+point - Vector3 to check for inclusion.
+
+Returns true if the specified point lies within or on the boundaries of this box.
+
+.copy ( box : Box3 ) : this
+box - Box3 to copy.
+
+Copies the min and max from box to this box.
+
+.distanceToPoint ( point : Vector3 ) : Float
+point - Vector3 to measure distance to.
+
+Returns the distance from any edge of this box to the specified point. If the point lies inside of this box, the distance will be 0.
+
+.equals ( box : Box3 ) : Boolean
+box - Box to compare with this one.
+
+Returns true if this box and box share the same lower and upper bounds.
+
+.expandByObject ( object : Object3D, precise : Boolean ) : this
+object - Object3D to expand the box by.
+precise - (optional) expand the bounding box as little as necessary at the expense of more computation. Default is false.
+
+Expands the boundaries of this box to include object and its children, accounting for the object's, and children's, world transforms. The function may result in a larger box than strictly necessary (unless the precise parameter is set to true).
+
+.expandByPoint ( point : Vector3 ) : this
+point - Vector3 that should be included in the box.
+
+Expands the boundaries of this box to include point.
+
+.expandByScalar ( scalar : Float ) : this
+scalar - Distance to expand the box by.
+
+Expands each dimension of the box by scalar. If negative, the dimensions of the box will be contracted.
+
+.expandByVector ( vector : Vector3 ) : this
+vector - Vector3 to expand the box by.
+
+Expands this box equilaterally by vector. The width of this box will be expanded by the x component of vector in both directions. The height of this box will be expanded by the y component of vector in both directions. The depth of this box will be expanded by the z component of vector in both directions.
+
+.getBoundingSphere ( target : Sphere ) : Sphere
+target — the result will be copied into this Sphere.
+
+Gets a Sphere that bounds the box.
+
+.getCenter ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns the center point of the box as a Vector3.
+
+.getParameter ( point : Vector3, target : Vector3 ) : Vector3
+point - Vector3.
+target — the result will be copied into this Vector3.
+
+Returns a point as a proportion of this box's width, height and depth.
+
+.getSize ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns the width, height and depth of this box.
+
+.intersect ( box : Box3 ) : this
+box - Box to intersect with.
+
+Computes the intersection of this and box, setting the upper bound of this box to the lesser of the two boxes' upper bounds and the lower bound of this box to the greater of the two boxes' lower bounds. If there's no overlap, makes this box empty.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - Box to check for intersection against.
+
+Determines whether or not this box intersects box.
+
+.intersectsPlane ( plane : Plane ) : Boolean
+plane - Plane to check for intersection against.
+
+Determines whether or not this box intersects plane.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere - Sphere to check for intersection against.
+
+Determines whether or not this box intersects sphere.
+
+.intersectsTriangle ( triangle : Triangle ) : Boolean
+triangle - Triangle to check for intersection against.
+
+Determines whether or not this box intersects triangle.
+
+.isEmpty () : Boolean
+Returns true if this box includes zero points within its bounds.
+Note that a box with equal lower and upper bounds still includes one point, the one both bounds share.
+
+.makeEmpty () : this
+Makes this box empty.
+
+.set ( min : Vector3, max : Vector3 ) : this
+min - Vector3 representing the lower (x, y, z) boundary of the box.
+max - Vector3 representing the upper (x, y, z) boundary of the box.
+
+Sets the lower and upper (x, y, z) boundaries of this box.
+Please note that this method only copies the values from the given objects.
+
+.setFromArray ( array : Array ) : this
+array -- An array of position data that the resulting box will envelop.
+
+Sets the upper and lower bounds of this box to include all of the data in array.
+
+.setFromBufferAttribute ( attribute : BufferAttribute ) : this
+attribute - A buffer attribute of position data that the resulting box will envelop.
+
+Sets the upper and lower bounds of this box to include all of the data in attribute.
+
+.setFromCenterAndSize ( center : Vector3, size : Vector3 ) : this
+center, - Desired center position of the box.
+size - Desired x, y and z dimensions of the box.
+
+Centers this box on center and sets this box's width, height and depth to the values specified
+in size
+
+.setFromObject ( object : Object3D, precise : Boolean ) : this
+object - Object3D to compute the bounding box of.
+precise - (optional) compute the smallest world-axis-aligned bounding box at the expense of more computation. Default is false.
+
+Computes the world-axis-aligned bounding box of an Object3D (including its children), accounting for the object's, and children's, world transforms. The function may result in a larger box than strictly necessary.
+
+.setFromPoints ( points : Array ) : this
+points - Array of Vector3s that the resulting box will contain.
+
+Sets the upper and lower bounds of this box to include all of the points in points.
+
+.translate ( offset : Vector3 ) : this
+offset - Direction and distance of offset.
+
+Adds offset to both the upper and lower bounds of this box, effectively moving this box offset units in 3D space.
+
+.union ( box : Box3 ) : this
+box - Box that will be unioned with this box.
+
+Computes the union of this box and box, setting the upper bound of this box to the greater of the two boxes' upper bounds and the lower bound of this box to the lesser of the two boxes' lower bounds.
+
+Source
+src/math/Box3.js
+
+Color
+Class representing a color.
+
+A Color instance is represented by RGB components in the linear working color space, which defaults to LinearSRGBColorSpace. Inputs conventionally using SRGBColorSpace (such as hexadecimals and CSS strings) are converted to the working color space automatically.
+
+// converted automatically from SRGBColorSpace to LinearSRGBColorSpace
+const color = new THREE.Color().setHex( 0x112233 );
+
+Source color spaces may be specified explicitly, to ensure correct conversions.
+
+// assumed already LinearSRGBColorSpace; no conversion
+const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5 );
+
+// converted explicitly from SRGBColorSpace to LinearSRGBColorSpace
+const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5, SRGBColorSpace );
+
+If THREE.ColorManagement is disabled, no conversions occur. For details, see Color management.
+
+Iterating through a Color instance will yield its components (r, g, b) in the corresponding order.
+
+Code Examples
+A Color can be initialised in any of the following ways:
+
+//empty constructor - will default white
+const color1 = new THREE.Color();
+
+//Hexadecimal color (recommended)
+const color2 = new THREE.Color( 0xff0000 );
+
+//RGB string
+const color3 = new THREE.Color("rgb(255, 0, 0)");
+const color4 = new THREE.Color("rgb(100%, 0%, 0%)");
+
+//X11 color name - all 140 color names are supported.
+//Note the lack of CamelCase in the name
+const color5 = new THREE.Color( 'skyblue' );
+
+//HSL string
+const color6 = new THREE.Color("hsl(0, 100%, 50%)");
+
+//Separate RGB values between 0 and 1
+const color7 = new THREE.Color( 1, 0, 0 );
+Constructor
+Color( r : Color_Hex_or_String, g : Float, b : Float )
+r - (optional) If arguments g and b are defined, the red component of the color. If they are not defined, it can be a hexadecimal triplet (recommended), a CSS-style string, or another Color instance.
+g - (optional) If it is defined, the green component of the color.
+b - (optional) If it is defined, the blue component of the color.
+
+Note that standard method of specifying color in three.js is with a hexadecimal triplet, and that method is used throughout the rest of the documentation.
+
+When all arguments are defined then r is the red component, g is the green component and b is the blue component of the color.
+When only r is defined:
+
+It can be a hexadecimal triplet representing the color (recommended).
+It can be an another Color instance.
+It can be a CSS-style string. For example:
+'rgb(250, 0,0)'
+'rgb(100%,0%,0%)'
+'hsl(0, 100%, 50%)'
+'#ff0000'
+'#f00'
+'red'
+Properties
+.isColor : Boolean
+Read-only flag to check if a given object is of type Color.
+
+.r : Float
+Red channel value between 0.0 and 1.0. Default is 1.
+
+.g : Float
+Green channel value between 0.0 and 1.0. Default is 1.
+
+.b : Float
+Blue channel value between 0.0 and 1.0. Default is 1.
+
+Methods
+.add ( color : Color ) : this
+Adds the RGB values of color to the RGB values of this color.
+
+.addColors ( color1 : Color, color2 : Color ) : this
+Sets this color's RGB values to the sum of the RGB values of color1 and color2.
+
+.addScalar ( s : Number ) : this
+Adds s to the RGB values of this color.
+
+.applyMatrix3 ( m : Matrix3 ) : this
+Applies the transform m to this color's RGB components.
+
+.clone () : Color
+Returns a new Color with the same r, g and b values as this one.
+
+.copy ( color : Color ) : this
+Copies the r, g and b parameters from color in to this color.
+
+.convertLinearToSRGB () : this
+Converts this color from LinearSRGBColorSpace to SRGBColorSpace.
+
+.convertSRGBToLinear () : this
+Converts this color from SRGBColorSpace to LinearSRGBColorSpace.
+
+.copyLinearToSRGB ( color : Color ) : this
+color — Color to copy.
+Copies the given color into this color, and then converts this color from LinearSRGBColorSpace to SRGBColorSpace.
+
+.copySRGBToLinear ( color : Color ) : this
+color — Color to copy.
+Copies the given color into this color, and then converts this color from SRGBColorSpace to LinearSRGBColorSpace.
+
+.equals ( color : Color ) : Boolean
+Compares the RGB values of color with those of this object. Returns true if they are the same, false otherwise.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - Array of floats in the form [ r, g, b ].
+offset - An optional offset into the array.
+
+Sets this color's components based on an array formatted like [ r, g, b ].
+
+.fromBufferAttribute ( attribute : BufferAttribute, index : Integer ) : this
+attribute - the source attribute.
+index - index in the attribute.
+
+Sets this color's components from the attribute.
+
+.getHex ( colorSpace : string = SRGBColorSpace ) : Integer
+Returns the hexadecimal value of this color.
+
+.getHexString ( colorSpace : string = SRGBColorSpace ) : String
+Returns the hexadecimal value of this color as a string (for example, 'FFFFFF').
+
+.getHSL ( target : Object, colorSpace : string = LinearSRGBColorSpace ) : Object
+target — the result will be copied into this Object. Adds h, s and l keys to the object (if not already present).
+
+Convert this Color's r, g and b values to HSL format and returns an object of the form:
+{
+	h: 0,
+	s: 0,
+	l: 0
+}
+
+.getRGB ( target : Color, colorSpace : string = LinearSRGBColorSpace ) : Color
+target — the result will be copied into this object.
+
+Returns the RGB values of this color as an instance of Color.
+
+.getStyle ( colorSpace : string = SRGBColorSpace ) : String
+Returns the value of this color as a CSS style string. Example: rgb(255,0,0).
+
+.lerp ( color : Color, alpha : Float ) : this
+color - color to converge on.
+alpha - interpolation factor in the closed interval [0, 1].
+
+Linearly interpolates this color's RGB values toward the RGB values of the passed argument. The alpha argument can be thought of as the ratio between the two colors, where 0.0 is this color and 1.0 is the first argument.
+
+.lerpColors ( color1 : Color, color2 : Color, alpha : Float ) : this
+color1 - the starting Color.
+color2 - Color to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Sets this color to be the color linearly interpolated between color1 and color2 where alpha is the percent distance along the line connecting the two colors - alpha = 0 will be color1, and alpha = 1 will be color2.
+
+.lerpHSL ( color : Color, alpha : Float ) : this
+color - color to converge on.
+alpha - interpolation factor in the closed interval [0, 1].
+
+Linearly interpolates this color's HSL values toward the HSL values of the passed argument. It differs from the classic .lerp by not interpolating straight from one color to the other, but instead going through all the hues in between those two colors. The alpha argument can be thought of as the ratio between the two colors, where 0.0 is this color and 1.0 is the first argument.
+
+.multiply ( color : Color ) : this
+Multiplies this color's RGB values by the given color's RGB values.
+
+.multiplyScalar ( s : Number ) : this
+Multiplies this color's RGB values by s.
+
+.offsetHSL ( h : Float, s : Float, l : Float ) : this
+Adds the given h, s, and l to this color's values. Internally, this converts the color's r, g and b values to HSL, adds h, s, and l, and then converts the color back to RGB.
+
+.set ( r : Color_Hex_or_String, g : Float, b : Float ) : this
+r - (optional) If arguments g and b are defined, the red component of the color. If they are not defined, it can be a hexadecimal triplet (recommended), a CSS-style string, or another Color instance.
+g - (optional) If it is defined, the green component of the color.
+b - (optional) If it is defined, the blue component of the color.
+
+See the Constructor above for full details about possible arguments. Delegates to .copy, .setStyle, .setRGB or .setHex depending on input type.
+
+.setFromVector3 ( vector : Vector3 ) : this
+Sets this colors's r, g and b components from the x, y, and z components of the specified vector.
+
+.setHex ( hex : Integer, colorSpace : string = SRGBColorSpace ) : this
+hex — hexadecimal triplet format.
+
+Sets this color from a hexadecimal value.
+
+.setHSL ( h : Float, s : Float, l : Float, colorSpace : string = LinearSRGBColorSpace ) : this
+h — hue value between 0.0 and 1.0
+s — saturation value between 0.0 and 1.0
+l — lightness value between 0.0 and 1.0
+
+Sets color from HSL values.
+
+.setRGB ( r : Float, g : Float, b : Float, colorSpace : string = LinearSRGBColorSpace ) : this
+r — Red channel value between 0.0 and 1.0.
+g — Green channel value between 0.0 and 1.0.
+b — Blue channel value between 0.0 and 1.0.
+
+Sets this color from RGB values.
+
+.setScalar ( scalar : Float ) : this
+scalar — a value between 0.0 and 1.0.
+
+Sets all three color components to the value scalar.
+
+.setStyle ( style : String, colorSpace : string = SRGBColorSpace ) : this
+style — color as a CSS-style string.
+
+Sets this color from a CSS-style string. For example, "rgb(250, 0,0)", "rgb(100%, 0%, 0%)", "hsl(0, 100%, 50%)", "#ff0000", "#f00", or "red" ( or any X11 color name - all 140 color names are supported ).
+Translucent colors such as "rgba(255, 0, 0, 0.5)" and "hsla(0, 100%, 50%, 0.5)" are also accepted, but the alpha-channel coordinate will be discarded.
+
+Note that for X11 color names, multiple words such as Dark Orange become the string 'darkorange'.
+
+.setColorName ( style : String, colorSpace : string = SRGBColorSpace ) : this
+style — color name ( from X11 color names ).
+
+Sets this color from a color name. Faster than .setStyle method if you don't need the other CSS-style formats.
+
+For convenience, the list of names is exposed in Color.NAMES as a hash:
+Color.NAMES.aliceblue // returns 0xF0F8FF
+
+.sub ( color : Color ) : this
+Subtracts the RGB components of the given color from the RGB components of this color. If this results in a negative component, that component is set to zero.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - An optional array to store the color to.
+offset - An optional offset into the array.
+
+Returns an array of the form [ r, g, b ].
+
+.toJSON () : Number
+This methods defines the serialization result of Color. Returns the color as a hexadecimal value.
+
+Source
+src/math/Color.js
+
+Cylindrical
+A point's cylindrical coordinates.
+
+Constructor
+Cylindrical( radius : Float, theta : Float, y : Float )
+radius - distance from the origin to a point in the x-z plane. Default is 1.0.
+theta - counterclockwise angle in the x-z plane measured in radians from the positive z-axis. Default is 0.
+y - height above the x-z plane. Default is 0.
+
+Properties
+.radius : Float
+.theta : Float
+.y : Float
+Methods
+.clone () : Cylindrical
+Returns a new cylindrical with the same radius, theta and y properties as this one.
+
+.copy ( other : Cylindrical ) : this
+Copies the values of the passed Cylindrical's radius, theta and y properties to this cylindrical.
+
+.set ( radius : Float, theta : Float, y : Float ) : this
+Sets values of this cylindrical's radius, theta and y properties.
+
+.setFromVector3 ( vec3 : Vector3 ) : this
+Sets values of this cylindrical's radius, theta and y properties from the Vector3.
+
+.setFromCartesianCoords ( x : Float, y : Float, z : Float ) : this
+Sets values of this cylindrical's radius, theta and y properties from Cartesian coordinates.
+
+Source
+src/math/Cylindrical.js
+
+Euler
+A class representing Euler Angles.
+
+Euler angles describe a rotational transformation by rotating an object on its various axes in specified amounts per axis, and a specified axis order.
+
+Iterating through a Euler instance will yield its components (x, y, z, order) in the corresponding order.
+
+Code Example
+const a = new THREE.Euler( 0, 1, 1.57, 'XYZ' );
+const b = new THREE.Vector3( 1, 0, 1 );
+b.applyEuler(a);
+Constructor
+Euler( x : Float, y : Float, z : Float, order : String )
+x - (optional) the angle of the x axis in radians. Default is 0.
+y - (optional) the angle of the y axis in radians. Default is 0.
+z - (optional) the angle of the z axis in radians. Default is 0.
+order - (optional) a string representing the order that the rotations are applied, defaults to 'XYZ' (must be upper case).
+
+
+Properties
+.isEuler : Boolean
+Read-only flag to check if a given object is of type Euler.
+
+.order : String
+The order in which to apply rotations. Default is 'XYZ', which means that the object will first be rotated around its X axis, then its Y axis and finally its Z axis. Other possibilities are: 'YZX', 'ZXY', 'XZY', 'YXZ' and 'ZYX'. These must be in upper case.
+
+Three.js uses intrinsic Tait-Bryan angles. This means that rotations are performed with respect to the local coordinate system. That is, for order 'XYZ', the rotation is first around the local-X axis (which is the same as the world-X axis), then around local-Y (which may now be different from the world Y-axis), then local-Z (which may be different from the world Z-axis).
+
+
+.x : Float
+The current value of the x component.
+
+
+.y : Float
+The current value of the y component.
+
+
+.z : Float
+The current value of the z component.
+
+
+Methods
+.copy ( euler : Euler ) : this
+Copies value of euler to this euler.
+
+.clone () : Euler
+Returns a new Euler with the same parameters as this one.
+
+.equals ( euler : Euler ) : Boolean
+Checks for strict equality of this euler and euler.
+
+.fromArray ( array : Array ) : this
+array of length 3 or 4. The optional 4th argument corresponds to the order.
+
+Assigns this euler's x angle to array[0].
+Assigns this euler's y angle to array[1].
+Assigns this euler's z angle to array[2].
+Optionally assigns this euler's order to array[3].
+
+.reorder ( newOrder : String ) : this
+Resets the euler angle with a new order by creating a quaternion from this euler angle and then setting this euler angle with the quaternion and the new order.
+
+Warning: this discards revolution information.
+
+.set ( x : Float, y : Float, z : Float, order : String ) : this
+x - the angle of the x axis in radians.
+y - the angle of the y axis in radians.
+z - the angle of the z axis in radians.
+order - (optional) a string representing the order that the rotations are applied.
+
+Sets the angles of this euler transform and optionally the order.
+
+.setFromRotationMatrix ( m : Matrix4, order : String ) : this
+m - a Matrix4 of which the upper 3x3 of matrix is a pure rotation matrix (i.e. unscaled).
+order - (optional) a string representing the order that the rotations are applied.
+Sets the angles of this euler transform from a pure rotation matrix based on the orientation specified by order.
+
+.setFromQuaternion ( q : Quaternion, order : String ) : this
+q - a normalized quaternion.
+order - (optional) a string representing the order that the rotations are applied.
+Sets the angles of this euler transform from a normalized quaternion based on the orientation specified by order.
+
+.setFromVector3 ( vector : Vector3, order : String ) : this
+vector - Vector3.
+order - (optional) a string representing the order that the rotations are applied.
+
+Set the x, y and z, and optionally update the order.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store the euler in.
+offset (optional) offset in the array.
+Returns an array of the form [x, y, z, order ].
+
+Source
+src/math/Euler.js
+
+Frustum
+Frustums are used to determine what is inside the camera's field of view. They help speed up the rendering process - objects which lie outside a camera's frustum can safely be excluded from rendering.
+
+This class is mainly intended for use internally by a renderer for calculating a camera or shadowCamera's frustum.
+
+Constructor
+Frustum(p0 : Plane, p1 : Plane, p2 : Plane, p3 : Plane, p4 : Plane, p5 : Plane)
+p0 - (optional) defaults to a new Plane.
+p1 - (optional) defaults to a new Plane.
+p2 - (optional) defaults to a new Plane.
+p3 - (optional) defaults to a new Plane.
+p4 - (optional) defaults to a new Plane.
+p5 - (optional) defaults to a new Plane.
+
+Creates a new Frustum.
+
+Properties
+.planes : Array
+Array of 6 planes.
+
+Methods
+.clone () : Frustum
+Return a new Frustum with the same parameters as this one.
+
+.containsPoint ( point : Vector3 ) : Boolean
+point - Vector3 to test.
+
+Checks to see if the frustum contains the point.
+
+.copy ( frustum : Frustum ) : this
+frustum - The frustum to copy
+
+Copies the properties of the passed frustum into this one.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - Box3 to check for intersection.
+
+Return true if box intersects with this frustum.
+
+.intersectsObject ( object : Object3D ) : Boolean
+Checks whether the object's bounding sphere is intersecting the Frustum.
+
+Note that the object must have a geometry so that the bounding sphere can be calculated.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere - Sphere to check for intersection.
+
+Return true if sphere intersects with this frustum.
+
+.intersectsSprite ( sprite : Sprite ) : Boolean
+Checks whether the sprite is intersecting the Frustum.
+
+
+.set ( p0 : Plane, p1 : Plane, p2 : Plane, p3 : Plane, p4 : Plane, p5 : Plane ) : this
+Sets the frustum from the passed planes. No plane order is implied.
+Note that this method only copies the values from the given objects.
+
+.setFromProjectionMatrix ( matrix : Matrix4 ) : this
+matrix - Projection Matrix4 used to set the planes
+
+Sets the frustum planes from the projection matrix.
+
+Source
+src/math/Frustum.js
+
+Interpolant
+Abstract base class of interpolants over parametric samples.
+
+The parameter domain is one dimensional, typically the time or a path along a curve defined by the data.
+
+The sample values can have any dimensionality and derived classes may apply special interpretations to the data.
+
+This class provides the interval seek in a Template Method, deferring the actual interpolation to derived classes.
+
+Time complexity is O(1) for linear access crossing at most two points and O(log N) for random access, where N is the number of positions.
+
+References: http://www.oodesign.com/template-method-pattern.html
+
+Constructor
+Interpolant( parameterPositions, sampleValues, sampleSize, resultBuffer )
+parameterPositions -- array of positions
+sampleValues -- array of samples
+sampleSize -- number of samples
+resultBuffer -- buffer to store the interpolation results.
+
+Note: This is not designed to be called directly.
+
+Properties
+.parameterPositions : null
+.resultBuffer : null
+.sampleValues : null
+.settings : Object
+Optional, subclass-specific settings structure.
+
+.valueSize : null
+Methods
+.evaluate ( t : Number ) : Array
+Evaluate the interpolant at position t.
+
+Source
+src/math/Interpolant.js
+
+Line3
+A geometric line segment represented by a start and end point.
+
+Constructor
+Line3( start : Vector3, end : Vector3 )
+start - Start of the line segment. Default is (0, 0, 0).
+end - End of the line segment. Default is (0, 0, 0).
+
+Creates a new Line3.
+
+Properties
+.start : Vector3
+Vector3 representing the start point of the line.
+
+.end : Vector3
+Vector3 representing the end point of the line.
+
+Methods
+.applyMatrix4 ( matrix : Matrix4 ) : this
+Applies a matrix transform to the line segment.
+
+.at ( t : Float, target : Vector3 ) : Vector3
+t - Use values 0-1 to return a position along the line segment.
+target — the result will be copied into this Vector3.
+
+Returns a vector at a certain position along the line. When t = 0, it returns the start vector, and when t = 1 it returns the end vector.
+
+.clone () : Line3
+Returns a new Line3 with the same start and end vectors as this one.
+
+.closestPointToPoint ( point : Vector3, clampToLine : Boolean, target : Vector3 ) : Vector3
+point - return the closest point on the line to this point.
+clampToLine - whether to clamp the returned value to the line segment.
+target — the result will be copied into this Vector3.
+
+Returns the closets point on the line. If clampToLine is true, then the returned value will be clamped to the line segment.
+
+.closestPointToPointParameter ( point : Vector3, clampToLine : Boolean ) : Float
+point - the point for which to return a point parameter.
+clampToLine - Whether to clamp the result to the range [0, 1].
+
+Returns a point parameter based on the closest point as projected on the line segment. If clampToLine is true, then the returned value will be between 0 and 1.
+
+.copy ( line : Line3 ) : this
+Copies the passed line's start and end vectors to this line.
+
+.delta ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns the delta vector of the line segment ( end vector minus the start vector).
+
+.distance () : Float
+Returns the Euclidean distance (straight-line distance) between the line's start and end points.
+
+.distanceSq () : Float
+Returns the square of the Euclidean distance (straight-line distance) between the line's start and end vectors.
+
+.equals ( line : Line3 ) : Boolean
+line - Line3 to compare with this one.
+
+Returns true if both line's start and end points are equal.
+
+.getCenter ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns the center of the line segment.
+
+.set ( start : Vector3, end : Vector3 ) : this
+start - set the start point of the line.
+end - set the end point of the line.
+
+Sets the start and end values by copying the provided vectors.
+
+Source
+src/math/Line3.js
+
+MathUtils
+An object with several math utility functions.
+
+Functions
+.clamp ( value : Float, min : Float, max : Float ) : Float
+value — Value to be clamped.
+min — Minimum value.
+max — Maximum value.
+
+Clamps the value to be between min and max.
+
+.degToRad ( degrees : Float ) : Float
+Converts degrees to radians.
+
+.euclideanModulo ( n : Integer, m : Integer ) : Integer
+n, m - Integers
+
+Computes the Euclidean modulo of m % n, that is:
+( ( n % m ) + m ) % m
+
+.generateUUID ( ) : UUID
+Generate a UUID (universally unique identifier).
+
+.isPowerOfTwo ( n : Number ) : Boolean
+Return true if n is a power of 2.
+
+.inverseLerp ( x : Float, y : Float, value : Float ) : Float
+x - Start point.
+y - End point.
+value - A value between start and end.
+
+Returns the percentage in the closed interval [0, 1] of the given value between the start and end point.
+
+.lerp ( x : Float, y : Float, t : Float ) : Float
+x - Start point.
+y - End point.
+t - interpolation factor in the closed interval [0, 1].
+
+Returns a value linearly interpolated from two known points based on the given interval - t = 0 will return x and t = 1 will return y.
+
+.damp ( x : Float, y : Float, lambda : Float, dt : Float ) : Float
+x - Current point.
+y - Target point.
+lambda - A higher lambda value will make the movement more sudden, and a lower value will make the movement more gradual.
+dt - Delta time in seconds.
+
+Smoothly interpolate a number from x toward y in a spring-like manner using the dt to maintain frame rate independent movement. For details, see Frame rate independent damping using lerp.
+
+.mapLinear ( x : Float, a1 : Float, a2 : Float, b1 : Float, b2 : Float ) : Float
+x — Value to be mapped.
+a1 — Minimum value for range A.
+a2 — Maximum value for range A.
+b1 — Minimum value for range B.
+b2 — Maximum value for range B.
+
+Linear mapping of x from range [a1, a2] to range [b1, b2].
+
+.pingpong ( x : Float, length : Float ) : Float
+x — The value to pingpong.
+length — The positive value the function will pingpong to. Default is 1.
+
+Returns a value that alternates between 0 and length : Float.
+
+.ceilPowerOfTwo ( n : Number ) : Integer
+Returns the smallest power of 2 that is greater than or equal to n.
+
+.floorPowerOfTwo ( n : Number ) : Integer
+Returns the largest power of 2 that is less than or equal to n.
+
+.radToDeg ( radians : Float ) : Float
+Converts radians to degrees.
+
+.randFloat ( low : Float, high : Float ) : Float
+Random float in the interval [low, high].
+
+.randFloatSpread ( range : Float ) : Float
+Random float in the interval [- range / 2, range / 2].
+
+.randInt ( low : Integer, high : Integer ) : Integer
+Random integer in the interval [low, high].
+
+.seededRandom ( seed : Integer ) : Float
+Deterministic pseudo-random float in the interval [0, 1]. The integer seed is optional.
+
+.smoothstep ( x : Float, min : Float, max : Float ) : Float
+x - The value to evaluate based on its position between min and max.
+min - Any x value below min will be 0.
+max - Any x value above max will be 1.
+
+Returns a value between 0-1 that represents the percentage that x has moved between min and max, but smoothed or slowed down the closer X is to the min and max.
+
+See Smoothstep for details.
+
+.smootherstep ( x : Float, min : Float, max : Float ) : Float
+x - The value to evaluate based on its position between min and max.
+min - Any x value below min will be 0.
+max - Any x value above max will be 1.
+
+Returns a value between 0-1. A variation on smoothstep that has zero 1st and 2nd order derivatives at x=0 and x=1.
+
+.setQuaternionFromProperEuler ( q : Quaternion, a : Float, b : Float, c : Float, order : String ) : undefined
+q - the quaternion to be set
+a - the rotation applied to the first axis, in radians
+b - the rotation applied to the second axis, in radians
+c - the rotation applied to the third axis, in radians
+order - a string specifying the axes order: 'XYX', 'XZX', 'YXY', 'YZY', 'ZXZ', or 'ZYZ'
+
+Sets quaternion q from the intrinsic Proper Euler Angles defined by angles a, b, and c, and order order.
+Rotations are applied to the axes in the order specified by order: rotation by angle a is applied first, then by angle b, then by angle c. Angles are in radians.
+
+Source
+src/math/MathUtils.js
+
+Matrix2
+A class representing a 2x2 matrix.
+
+Code Example
+const m = new Matrix2();
+A Note on Row-Major and Column-Major Ordering
+The constructor and set() method take arguments in row-major order, while internally they are stored in the elements array in column-major order.
+
+This means that calling
+m.set( 11, 12,
+       21, 22 );
+will result in the elements array containing:
+m.elements = [ 11, 21,
+			   12, 22 ];
+and internally all calculations are performed using column-major ordering. However, as the actual ordering makes no difference mathematically and most people are used to thinking about matrices in row-major order, the three.js documentation shows matrices in row-major order. Just bear in mind that if you are reading the source code, you'll have to take the transpose of any matrices outlined here to make sense of the calculations.
+
+Constructor
+Matrix2( n11 : Number, n12 : Number, n21 : Number, n22 : Number )
+Creates a 2x2 matrix with the given arguments in row-major order. If no arguments are provided, the constructor initializes the Matrix2 to the 3x3 identity matrix.
+
+Properties
+.elements : Array
+A column-major list of matrix values.
+
+Methods
+.fromArray ( array : Array, offset : Integer ) : this
+array - the array to read the elements from.
+offset - (optional) index of first element in the array. Default is 0.
+
+Sets the elements of this matrix based on an array in column-major format.
+
+.identity () : this
+Resets this matrix to the 2x2 identity matrix:
+
+[
+1
+0
+0
+1
+]
+.set ( n11 : Float, n12 : Float, n21 : Float, n22 : Float ) : this
+Sets the 2x2 matrix values to the given row-major sequence of values:
+
+[
+n11
+n12
+n21
+n22
+]
+Source
+src/math/Matrix2.js
+
+Matrix3
+A class representing a 3x3 matrix.
+
+Code Example
+const m = new Matrix3();
+A Note on Row-Major and Column-Major Ordering
+The constructor and set() method take arguments in row-major order, while internally they are stored in the elements array in column-major order.
+
+This means that calling
+m.set( 11, 12, 13,
+       21, 22, 23,
+       31, 32, 33 );
+will result in the elements array containing:
+m.elements = [ 11, 21, 31,
+			   12, 22, 32, 
+			   13, 23, 33 ];
+and internally all calculations are performed using column-major ordering. However, as the actual ordering makes no difference mathematically and most people are used to thinking about matrices in row-major order, the three.js documentation shows matrices in row-major order. Just bear in mind that if you are reading the source code, you'll have to take the transpose of any matrices outlined here to make sense of the calculations.
+
+Constructor
+Matrix3( n11 : Number, n12 : Number, n13 : Number, n21 : Number, n22 : Number, n23 : Number, n31 : Number, n32 : Number, n33 : Number )
+Creates a 3x3 matrix with the given arguments in row-major order. If no arguments are provided, the constructor initializes the Matrix3 to the 3x3 identity matrix.
+
+Properties
+.elements : Array
+A column-major list of matrix values.
+
+Methods
+.clone () : Matrix3
+Creates a new Matrix3 and with identical elements to this one.
+
+.copy ( m : Matrix3 ) : this
+Copies the elements of matrix m into this matrix.
+
+.determinant () : Float
+Computes and returns the determinant of this matrix.
+
+.equals ( m : Matrix3 ) : Boolean
+Return true if this matrix and m are equal.
+
+.extractBasis ( xAxis : Vector3, yAxis : Vector3, zAxis : Vector3 ) : this
+Extracts the basis of this matrix into the three axis vectors provided. If this matrix is:
+
+[
+a
+b
+c
+d
+e
+f
+g
+h
+i
+]
+then the xAxis, yAxis, zAxis will be set to:
+
+xAxis
+=
+[
+a
+d
+g
+]
+, 
+yAxis
+=
+[
+b
+e
+h
+]
+, and 
+zAxis
+=
+[
+c
+f
+i
+]
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - the array to read the elements from.
+offset - (optional) index of first element in the array. Default is 0.
+
+Sets the elements of this matrix based on an array in column-major format.
+
+.invert () : this
+Inverts this matrix, using the analytic method. You can not invert with a determinant of zero. If you attempt this, the method produces a zero matrix instead.
+
+.getNormalMatrix ( m : Matrix4 ) : this
+m - Matrix4
+
+Sets this matrix as the upper left 3x3 of the normal matrix of the passed matrix4. The normal matrix is the inverse transpose of the matrix m.
+
+.identity () : this
+Resets this matrix to the 3x3 identity matrix:
+
+[
+1
+0
+0
+0
+1
+0
+0
+0
+1
+]
+.makeRotation ( theta : Float ) : this
+theta — Rotation angle in radians. Positive values rotate counterclockwise.
+
+Sets this matrix as a 2D rotational transformation by theta radians. The resulting matrix will be:
+
+[
+cos
+θ
+-sin
+θ
+0
+sin
+θ
+cos
+θ
+0
+0
+0
+1
+]
+.makeScale ( x : Float, y : Float ) : this
+x - the amount to scale in the X axis.
+y - the amount to scale in the Y axis.
+Sets this matrix as a 2D scale transform:
+
+[
+x
+0
+0
+0
+y
+0
+0
+0
+1
+]
+.makeTranslation ( v : Vector2 ) : this
+.makeTranslation ( x : Float, y : Float ) : this
+v a translation transform from vector.
+or
+x - the amount to translate in the X axis.
+y - the amount to translate in the Y axis.
+Sets this matrix as a 2D translation transform:
+
+[
+1
+0
+x
+0
+1
+y
+0
+0
+1
+]
+.multiply ( m : Matrix3 ) : this
+Post-multiplies this matrix by m.
+
+.multiplyMatrices ( a : Matrix3, b : Matrix3 ) : this
+Sets this matrix to a x b.
+
+.multiplyScalar ( s : Float ) : this
+Multiplies every component of the matrix by the scalar value s.
+
+.rotate ( theta : Float ) : this
+Rotates this matrix by the given angle (in radians).
+
+.scale ( sx : Float, sy : Float ) : this
+Scales this matrix with the given scalar values.
+
+.set ( n11 : Float, n12 : Float, n13 : Float, n21 : Float, n22 : Float, n23 : Float, n31 : Float, n32 : Float, n33 : Float ) : this
+Sets the 3x3 matrix values to the given row-major sequence of values:
+
+[
+n11
+n12
+n13
+n21
+n22
+n23
+n31
+n32
+n33
+]
+.premultiply ( m : Matrix3 ) : this
+Pre-multiplies this matrix by m.
+
+.setFromMatrix4 ( m : Matrix4 ) : this
+Set this matrix to the upper 3x3 matrix of the Matrix4 m.
+
+.setUvTransform ( tx : Float, ty : Float, sx : Float, sy : Float, rotation : Float, cx : Float, cy : Float ) : this
+tx - offset x
+ty - offset y
+sx - repeat x
+sy - repeat y
+rotation - rotation, in radians. Positive values rotate counterclockwise
+cx - center x of rotation
+cy - center y of rotation
+
+Sets the UV transform matrix from offset, repeat, rotation, and center.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store the resulting vector in. If not given a new array will be created.
+offset - (optional) offset in the array at which to put the result.
+
+Writes the elements of this matrix to an array in column-major format.
+
+.translate ( tx : Float, ty : Float ) : this
+Translates this matrix by the given scalar values.
+
+.transpose () : this
+Transposes this matrix in place.
+
+.transposeIntoArray ( array : Array ) : this
+array - array to store the resulting vector in.
+
+Transposes this matrix into the supplied array, and returns itself unchanged.
+
+Source
+src/math/Matrix3.js
+
+Matrix4
+A class representing a 4x4 matrix.
+
+The most common use of a 4x4 matrix in 3D computer graphics is as a Transformation Matrix. For an introduction to transformation matrices as used in WebGL, check out this tutorial.
+
+This allows a Vector3 representing a point in 3D space to undergo transformations such as translation, rotation, shear, scale, reflection, orthogonal or perspective projection and so on, by being multiplied by the matrix. This is known as applying the matrix to the vector.
+
+Every Object3D has three associated Matrix4s:
+
+Object3D.matrix: This stores the local transform of the object. This is the object's transformation relative to its parent.
+Object3D.matrixWorld: The global or world transform of the object. If the object has no parent, then this is identical to the local transform stored in matrix.
+Object3D.modelViewMatrix: This represents the object's transformation relative to the camera's coordinate system. An object's modelViewMatrix is the object's matrixWorld pre-multiplied by the camera's matrixWorldInverse.
+Cameras have three additional Matrix4s:
+Camera.matrixWorldInverse: The view matrix - the inverse of the Camera's matrixWorld.
+Camera.projectionMatrix: Represents the information how to project the scene to clip space.
+Camera.projectionMatrixInverse: The inverse of projectionMatrix.
+Note: Object3D.normalMatrix is not a Matrix4, but a Matrix3.
+A Note on Row-Major and Column-Major Ordering
+The constructor and set() method take arguments in row-major order, while internally they are stored in the elements array in column-major order.
+
+This means that calling
+const m = new THREE.Matrix4(); 
+m.set( 11, 12, 13, 14, 
+	   21, 22, 23, 24,
+	   31, 32, 33, 34, 
+	   41, 42, 43, 44 );
+will result in the elements array containing:
+m.elements = [ 11, 21, 31, 41, 
+			   12, 22, 32, 42, 
+			   13, 23, 33, 43, 
+			   14, 24, 34, 44 ];
+and internally all calculations are performed using column-major ordering. However, as the actual ordering makes no difference mathematically and most people are used to thinking about matrices in row-major order, the three.js documentation shows matrices in row-major order. Just bear in mind that if you are reading the source code, you'll have to take the transpose of any matrices outlined here to make sense of the calculations.
+
+Extracting position, rotation and scale
+There are several options available for extracting position, rotation and scale from a Matrix4.
+
+Vector3.setFromMatrixPosition: can be used to extract the translation component.
+Vector3.setFromMatrixScale: can be used to extract the scale component.
+Quaternion.setFromRotationMatrix, Euler.setFromRotationMatrix or extractRotation can be used to extract the rotation component from a pure (unscaled) matrix.
+decompose can be used to extract position, rotation and scale all at once.
+Constructor
+Matrix4( n11 : Number, n12 : Number, n13 : Number, n14 : Number, n21 : Number, n22 : Number, n23 : Number, n24 : Number, n31 : Number, n32 : Number, n33 : Number, n34 : Number, n41 : Number, n42 : Number, n43 : Number, n44 : Number )
+Creates a 4x4 matrix with the given arguments in row-major order. If no arguments are provided, the constructor initializes the Matrix4 to the 4x4 identity matrix.
+
+Properties
+.elements : Array
+A column-major list of matrix values.
+
+Methods
+.clone () : Matrix4
+Creates a new Matrix4 with identical elements to this one.
+
+.compose ( position : Vector3, quaternion : Quaternion, scale : Vector3 ) : this
+Sets this matrix to the transformation composed of position, quaternion and scale.
+
+.copy ( m : Matrix4 ) : this
+Copies the elements of matrix m into this matrix.
+
+.copyPosition ( m : Matrix4 ) : this
+Copies the translation component of the supplied matrix m into this matrix's translation component.
+
+.decompose ( position : Vector3, quaternion : Quaternion, scale : Vector3 ) : this
+Decomposes this matrix into its position, quaternion and scale components.
+
+Note: Not all matrices are decomposable in this way. For example, if an object has a non-uniformly scaled parent, then the object's world matrix may not be decomposable, and this method may not be appropriate.
+
+.determinant () : Float
+Computes and returns the determinant of this matrix.
+
+Based on the method outlined here.
+
+.equals ( m : Matrix4 ) : Boolean
+Return true if this matrix and m are equal.
+
+.extractBasis ( xAxis : Vector3, yAxis : Vector3, zAxis : Vector3 ) : this
+Extracts the basis of this matrix into the three axis vectors provided. If this matrix is:
+
+[
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+]
+then the xAxis, yAxis, zAxis will be set to:
+
+xAxis
+=
+[
+a
+e
+i
+]
+, 
+yAxis
+=
+[
+b
+f
+j
+]
+, and 
+zAxis
+=
+[
+c
+g
+k
+]
+.extractRotation ( m : Matrix4 ) : this
+Extracts the rotation component of the supplied matrix m into this matrix's rotation component.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - the array to read the elements from.
+offset - ( optional ) offset into the array. Default is 0.
+
+Sets the elements of this matrix based on an array in column-major format.
+
+.invert () : this
+Inverts this matrix, using the analytic method. You can not invert with a determinant of zero. If you attempt this, the method produces a zero matrix instead.
+
+.getMaxScaleOnAxis () : Float
+Gets the maximum scale value of the 3 axes.
+
+.identity () : this
+Resets this matrix to the identity matrix.
+
+.lookAt ( eye : Vector3, target : Vector3, up : Vector3 ) : this
+Sets the rotation component of the transformation matrix, looking from eye towards target, and oriented by the up-direction up.
+
+.makeRotationAxis ( axis : Vector3, theta : Float ) : this
+axis — Rotation axis, should be normalized.
+theta — Rotation angle in radians.
+
+Sets this matrix as rotation transform around axis by theta radians.
+This is a somewhat controversial but mathematically sound alternative to rotating via Quaternions. See the discussion here.
+
+.makeBasis ( xAxis : Vector3, yAxis : Vector3, zAxis : Vector3 ) : this
+Set this to the basis matrix consisting of the three provided basis vectors:
+
+[
+xAxis.x
+yAxis.x
+zAxis.x
+0
+xAxis.y
+yAxis.y
+zAxis.y
+0
+xAxis.z
+yAxis.z
+zAxis.z
+0
+0
+0
+0
+1
+]
+.makePerspective ( left : Float, right : Float, top : Float, bottom : Float, near : Float, far : Float ) : this
+Creates a perspective projection matrix. This is used internally by PerspectiveCamera.updateProjectionMatrix()
+
+.makeOrthographic ( left : Float, right : Float, top : Float, bottom : Float, near : Float, far : Float ) : this
+Creates an orthographic projection matrix. This is used internally by OrthographicCamera.updateProjectionMatrix().
+
+.makeRotationFromEuler ( euler : Euler ) : this
+Sets the rotation component (the upper left 3x3 matrix) of this matrix to the rotation specified by the given Euler Angle. The rest of the matrix is set to the identity. Depending on the order of the euler, there are six possible outcomes. See this page for a complete list.
+
+.makeRotationFromQuaternion ( q : Quaternion ) : this
+Sets the rotation component of this matrix to the rotation specified by q, as outlined here. The rest of the matrix is set to the identity. So, given q = w + xi + yj + zk, the resulting matrix will be:
+
+[
+1
+-
+2
+y
+2
+-
+2
+z
+2
+2
+x
+y
+-
+2
+z
+w
+2
+x
+z
++
+2
+y
+w
+0
+2
+x
+y
++
+2
+z
+w
+1
+-
+2
+x
+2
+-
+2
+z
+2
+2
+y
+z
+-
+2
+x
+w
+0
+2
+x
+z
+-
+2
+y
+w
+2
+y
+z
++
+2
+x
+w
+1
+-
+2
+x
+2
+-
+2
+y
+2
+0
+0
+0
+0
+1
+]
+.makeRotationX ( theta : Float ) : this
+theta — Rotation angle in radians.
+
+Sets this matrix as a rotational transformation around the X axis by theta (θ) radians. The resulting matrix will be:
+
+[
+1
+0
+0
+0
+0
+cos
+θ
+-
+sin
+θ
+0
+0
+sin
+θ
+cos
+θ
+0
+0
+0
+0
+1
+]
+.makeRotationY ( theta : Float ) : this
+theta — Rotation angle in radians.
+
+Sets this matrix as a rotational transformation around the Y axis by theta (θ) radians. The resulting matrix will be:
+
+[
+cos
+θ
+0
+sin
+θ
+0
+0
+1
+0
+0
+-
+sin
+θ
+0
+cos
+θ
+0
+0
+0
+0
+1
+]
+.makeRotationZ ( theta : Float ) : this
+theta — Rotation angle in radians.
+
+Sets this matrix as a rotational transformation around the Z axis by theta (θ) radians. The resulting matrix will be:
+
+[
+cos
+θ
+-
+sin
+θ
+0
+0
+sin
+θ
+cos
+θ
+0
+0
+0
+0
+1
+0
+0
+0
+0
+1
+]
+.makeScale ( x : Float, y : Float, z : Float ) : this
+x - the amount to scale in the X axis.
+y - the amount to scale in the Y axis.
+z - the amount to scale in the Z axis.
+
+Sets this matrix as scale transform:
+
+[
+x
+0
+0
+0
+0
+y
+0
+0
+0
+0
+z
+0
+0
+0
+0
+1
+]
+.makeShear ( xy : Float, xz : Float, yx : Float, yz : Float, zx : Float, zy : Float ) : this
+xy - the amount to shear X by Y.
+xz - the amount to shear X by Z.
+yx - the amount to shear Y by X.
+yz - the amount to shear Y by Z.
+zx - the amount to shear Z by X.
+zy - the amount to shear Z by Y.
+
+Sets this matrix as a shear transform:
+
+[
+1
+y
+x
+z
+x
+0
+x
+y
+1
+z
+y
+0
+x
+z
+y
+z
+1
+0
+0
+0
+0
+1
+]
+.makeTranslation ( v : Vector3 ) : this
+.makeTranslation ( x : Float, y : Float, z : Float ) : this // optional API
+Sets this matrix as a translation transform from vector v, or numbers x, y and z:
+
+[
+1
+0
+0
+x
+0
+1
+0
+y
+0
+0
+1
+z
+0
+0
+0
+1
+]
+.multiply ( m : Matrix4 ) : this
+Post-multiplies this matrix by m.
+
+.multiplyMatrices ( a : Matrix4, b : Matrix4 ) : this
+Sets this matrix to a x b.
+
+.multiplyScalar ( s : Float ) : this
+Multiplies every component of the matrix by a scalar value s.
+
+.premultiply ( m : Matrix4 ) : this
+Pre-multiplies this matrix by m.
+
+.scale ( v : Vector3 ) : this
+Multiplies the columns of this matrix by vector v.
+
+.set ( n11 : Float, n12 : Float, n13 : Float, n14 : Float, n21 : Float, n22 : Float, n23 : Float, n24 : Float, n31 : Float, n32 : Float, n33 : Float, n34 : Float, n41 : Float, n42 : Float, n43 : Float, n44 : Float ) : this
+Set the elements of this matrix to the supplied row-major values n11, n12, ... n44.
+
+.setFromMatrix3 ( m : Matrix3 ) : this
+Set the upper 3x3 elements of this matrix to the values of the Matrix3 m.
+
+.setPosition ( v : Vector3 ) : this
+.setPosition ( x : Float, y : Float, z : Float ) : this // optional API
+Sets the position component for this matrix from vector v, without affecting the rest of the matrix - i.e. if the matrix is currently:
+
+[
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+]
+This becomes:
+
+[
+a
+b
+c
+v.x
+e
+f
+g
+v.y
+i
+j
+k
+v.z
+m
+n
+o
+p
+]
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store the resulting vector in.
+offset - (optional) offset in the array at which to put the result.
+
+Writes the elements of this matrix to an array in column-major format.
+
+.transpose () : this
+Transposes this matrix.
+
+Source
+src/math/Matrix4.js
+
+Plane
+A two dimensional surface that extends infinitely in 3d space, represented in Hessian normal form by a unit length normal vector and a constant.
+
+Constructor
+Plane( normal : Vector3, constant : Float )
+normal - (optional) a unit length Vector3 defining the normal of the plane. Default is (1, 0, 0).
+constant - (optional) the signed distance from the origin to the plane. Default is 0.
+
+Properties
+.isPlane : Boolean
+Read-only flag to check if a given object is of type Plane.
+
+.normal : Vector3
+.constant : Float
+Methods
+.applyMatrix4 ( matrix : Matrix4, optionalNormalMatrix : Matrix3 ) : this
+matrix - the Matrix4 to apply.
+optionalNormalMatrix - (optional) pre-computed normal Matrix3 of the Matrix4 being applied.
+
+Apply a Matrix4 to the plane. The matrix must be an affine, homogeneous transform.
+If supplying an optionalNormalMatrix, it can be created like so:
+const optionalNormalMatrix = new THREE.Matrix3().getNormalMatrix( matrix );
+
+.clone () : Plane
+Returns a new plane with the same normal and constant as this one.
+
+.coplanarPoint ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Returns a Vector3 coplanar to the plane, by calculating the projection of the normal vector at the origin onto the plane.
+
+.copy ( plane : Plane ) : this
+Copies the values of the passed plane's normal and constant properties to this plane.
+
+.distanceToPoint ( point : Vector3 ) : Float
+Returns the signed distance from the point to the plane.
+
+.distanceToSphere ( sphere : Sphere ) : Float
+Returns the signed distance from the sphere to the plane.
+
+.equals ( plane : Plane ) : Boolean
+Checks to see if two planes are equal (their normal and constant properties match).
+
+.intersectLine ( line : Line3, target : Vector3 ) : Vector3
+line - the Line3 to check for intersection.
+target — the result will be copied into this Vector3.
+
+Returns the intersection point of the passed line and the plane. Returns null if the line does not intersect. Returns the line's starting point if the line is coplanar with the plane.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - the Box3 to check for intersection.
+
+Determines whether or not this plane intersects box.
+
+.intersectsLine ( line : Line3 ) : Boolean
+line - the Line3 to check for intersection.
+
+Tests whether a line segment intersects with (passes through) the plane.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere - the Sphere to check for intersection.
+
+Determines whether or not this plane intersects sphere.
+
+.negate () : this
+Negates both the normal vector and the constant.
+
+.normalize () : this
+Normalizes the normal vector, and adjusts the constant value accordingly.
+
+.projectPoint ( point : Vector3, target : Vector3 ) : Vector3
+point - the Vector3 to project onto the plane.
+target — the result will be copied into this Vector3.
+
+Projects a point onto the plane.
+
+.set ( normal : Vector3, constant : Float ) : this
+normal - a unit length Vector3 defining the normal of the plane.
+constant - the signed distance from the origin to the plane.
+
+Sets this plane's normal and constant properties by copying the values from the given normal.
+
+.setComponents ( x : Float, y : Float, z : Float, w : Float ) : this
+x - x value of the unit length normal vector.
+y - y value of the unit length normal vector.
+z - z value of the unit length normal vector.
+w - the value of the plane's constant property.
+
+Set the individual components that define the plane.
+
+.setFromCoplanarPoints ( a : Vector3, b : Vector3, c : Vector3 ) : this
+a - first point on the plane.
+b - second point on the plane.
+c - third point on the plane.
+
+Defines the plane based on the 3 provided points. The winding order is assumed to be counter-clockwise, and determines the direction of the normal.
+
+.setFromNormalAndCoplanarPoint ( normal : Vector3, point : Vector3 ) : this
+normal - a unit length Vector3 defining the normal of the plane.
+point - Vector3
+
+Sets the plane's properties as defined by a normal and an arbitrary coplanar point.
+
+.translate ( offset : Vector3 ) : this
+offset - the amount to move the plane by.
+
+Translates the plane by the distance defined by the offset vector. Note that this only affects the plane constant and will not affect the normal vector.
+
+Source
+src/math/Plane.js
+
+Quaternion
+Implementation of a quaternion.
+Quaternions are used in three.js to represent rotations.
+
+Iterating through a Quaternion instance will yield its components (x, y, z, w) in the corresponding order.
+
+Note that three.js expects Quaternions to be normalized.
+
+Code Example
+const quaternion = new THREE.Quaternion();
+quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), Math.PI / 2 );
+
+const vector = new THREE.Vector3( 1, 0, 0 );
+vector.applyQuaternion( quaternion );
+Constructor
+Quaternion( x : Float, y : Float, z : Float, w : Float )
+x - x coordinate
+y - y coordinate
+z - z coordinate
+w - w coordinate
+
+Properties
+.isQuaternion : Boolean
+Read-only flag to check if a given object is of type Quaternion.
+
+.x : Float
+.y : Float
+.z : Float
+.w : Float
+Methods
+.angleTo ( q : Quaternion ) : Float
+Returns the angle between this quaternion and quaternion q in radians.
+
+.clone () : Quaternion
+Creates a new Quaternion with identical x, y, z and w properties to this one.
+
+.conjugate () : this
+Returns the rotational conjugate of this quaternion. The conjugate of a quaternion represents the same rotation in the opposite direction about the rotational axis.
+
+.copy ( q : Quaternion ) : this
+Copies the x, y, z and w properties of q into this quaternion.
+
+.equals ( v : Quaternion ) : Boolean
+v - Quaternion that this quaternion will be compared to.
+
+Compares the x, y, z and w properties of v to the equivalent properties of this quaternion to determine if they represent the same rotation.
+
+.dot ( v : Quaternion ) : Float
+Calculates the dot product of quaternions v and this one.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - array of format (x, y, z, w) used to construct the quaternion.
+offset - (optional) an offset into the array.
+
+Sets this quaternion's x, y, z and w properties from an array.
+
+.identity () : this
+Sets this quaternion to the identity quaternion; that is, to the quaternion that represents "no rotation".
+
+.invert () : this
+Inverts this quaternion - calculates the conjugate. The quaternion is assumed to have unit length.
+
+.length () : Float
+Computes the Euclidean length (straight-line length) of this quaternion, considered as a 4 dimensional vector.
+
+.lengthSq () : Float
+Computes the squared Euclidean length (straight-line length) of this quaternion, considered as a 4 dimensional vector. This can be useful if you are comparing the lengths of two quaternions, as this is a slightly more efficient calculation than length().
+
+.normalize () : this
+Normalizes this quaternion - that is, calculated the quaternion that performs the same rotation as this one, but has length equal to 1.
+
+.multiply ( q : Quaternion ) : this
+Multiplies this quaternion by q.
+
+.multiplyQuaternions ( a : Quaternion, b : Quaternion ) : this
+Sets this quaternion to a x b.
+Adapted from the method outlined here.
+
+.premultiply ( q : Quaternion ) : this
+Pre-multiplies this quaternion by q.
+
+.random () : this
+Sets this quaternion to a uniformly random, normalized quaternion.
+
+.rotateTowards ( q : Quaternion, step : Float ) : this
+q - The target quaternion.
+step - The angular step in radians.
+
+Rotates this quaternion by a given angular step to the defined quaternion q. The method ensures that the final quaternion will not overshoot q.
+
+.slerp ( qb : Quaternion, t : Float ) : this
+qb - The other quaternion rotation
+t - interpolation factor in the closed interval [0, 1].
+
+Handles the spherical linear interpolation between quaternions. t represents the amount of rotation between this quaternion (where t is 0) and qb (where t is 1). This quaternion is set to the result. Also see the static version of the slerp below.
+// rotate a mesh towards a target quaternion 
+mesh.quaternion.slerp( endQuaternion, 0.01 );
+
+.slerpQuaternions ( qa : Quaternion, qb : Quaternion, t : Float ) : this
+Performs a spherical linear interpolation between the given quaternions and stores the result in this quaternion.
+
+.set ( x : Float, y : Float, z : Float, w : Float ) : this
+Sets x, y, z, w properties of this quaternion.
+
+.setFromAxisAngle ( axis : Vector3, angle : Float ) : this
+Sets this quaternion from rotation specified by axis and angle.
+Adapted from the method here.
+Axis is assumed to be normalized, angle is in radians.
+
+.setFromEuler ( euler : Euler ) : this
+Sets this quaternion from the rotation specified by Euler angle.
+
+.setFromRotationMatrix ( m : Matrix4 ) : this
+m - a Matrix4 of which the upper 3x3 of matrix is a pure rotation matrix (i.e. unscaled).
+Sets this quaternion from rotation component of m.
+Adapted from the method here.
+
+.setFromUnitVectors ( vFrom : Vector3, vTo : Vector3 ) : this
+Sets this quaternion to the rotation required to rotate direction vector vFrom to direction vector vTo.
+Adapted from the method here.
+vFrom and vTo are assumed to be normalized.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - An optional array to store the quaternion. If not specified, a new array will be created.
+offset - (optional) if specified, the result will be copied into this Array.
+
+Returns the numerical elements of this quaternion in an array of format [x, y, z, w].
+
+.toJSON () : Array
+This methods defines the serialization result of Quaternion. Returns the numerical elements of this quaternion in an array of format [x, y, z, w].
+
+.fromBufferAttribute ( attribute : BufferAttribute, index : Integer ) : this
+attribute - the source attribute.
+index - index in the attribute.
+
+Sets x, y, z, w properties of this quaternion from the attribute.
+
+Static Methods
+.slerpFlat ( dst : Array, dstOffset : Integer, src0 : Array, srcOffset0 : Integer, src1 : Array, srcOffset1 : Integer, t : Float ) : undefined
+dst - The output array.
+dstOffset - An offset into the output array.
+src0 - The source array of the starting quaternion.
+srcOffset0 - An offset into the array src0.
+src1 - The source array of the target quaternion.
+srcOffset1 - An offset into the array src1.
+t - Normalized interpolation factor (between 0 and 1).
+
+This SLERP implementation assumes the quaternion data are managed in flat arrays.
+
+.multiplyQuaternionsFlat ( dst : Array, dstOffset : Integer, src0 : Array, srcOffset0 : Integer, src1 : Array, srcOffset1 : Integer ) : Array
+dst - The output array.
+dstOffset - An offset into the output array.
+src0 - The source array of the starting quaternion.
+srcOffset0 - An offset into the array src0.
+src1 - The source array of the target quaternion.
+srcOffset1 - An offset into the array src1.
+
+This multiplication implementation assumes the quaternion data are managed in flat arrays.
+
+Source
+src/math/Quaternion.js
+
+Ray
+A ray that emits from an origin in a certain direction. This is used by the Raycaster to assist with raycasting. Raycasting is used for mouse picking (working out what objects in the 3D space the mouse is over) amongst other things.
+
+Constructor
+Ray( origin : Vector3, direction : Vector3 )
+origin - (optional) the origin of the Ray. Default is a Vector3 at (0, 0, 0).
+direction - Vector3 The direction of the Ray. This must be normalized (with Vector3.normalize) for the methods to operate properly. Default is a Vector3 at (0, 0, -1).
+
+Creates a new Ray.
+
+Properties
+.origin : Vector3
+The origin of the Ray. Default is a Vector3 at (0, 0, 0).
+
+.direction : Vector3
+The direction of the Ray. This must be normalized (with Vector3.normalize) for the methods to operate properly. Default is a Vector3 at (0, 0, -1).
+
+Methods
+.applyMatrix4 ( matrix4 : Matrix4 ) : this
+matrix4 - the Matrix4 to apply to this Ray.
+
+Transform this Ray by the Matrix4.
+
+.at ( t : Float, target : Vector3 ) : Vector3
+t - the distance along the Ray to retrieve a position for.
+target — the result will be copied into this Vector3.
+
+Get a Vector3 that is a given distance along this Ray.
+
+.clone () : Ray
+Creates a new Ray with identical origin and direction to this one.
+
+.closestPointToPoint ( point : Vector3, target : Vector3 ) : Vector3
+point - the point to get the closest approach to.
+target — the result will be copied into this Vector3.
+
+Get the point along this Ray that is closest to the Vector3 provided.
+
+.copy ( ray : Ray ) : this
+Copies the origin and direction properties of ray into this ray.
+
+.distanceSqToPoint ( point : Vector3 ) : Float
+point - the Vector3 to compute a distance to.
+
+Get the squared distance of the closest approach between the Ray and the Vector3.
+
+.distanceSqToSegment ( v0 : Vector3, v1 : Vector3, optionalPointOnRay : Vector3, optionalPointOnSegment : Vector3 ) : Float
+v0 - the start of the line segment.
+v1 - the end of the line segment.
+optionalPointOnRay - (optional) if this is provided, it receives the point on this Ray that is closest to the segment.
+optionalPointOnSegment - (optional) if this is provided, it receives the point on the line segment that is closest to this Ray.
+
+Get the squared distance between this Ray and a line segment.
+
+.distanceToPlane ( plane : Plane ) : Float
+plane - the Plane to get the distance to.
+
+Get the distance from origin to the Plane, or null if the Ray doesn't intersect the Plane.
+
+.distanceToPoint ( point : Vector3 ) : Float
+point - Vector3 The Vector3 to compute a distance to.
+
+Get the distance of the closest approach between the Ray and the point.
+
+.equals ( ray : Ray ) : Boolean
+ray - the Ray to compare to.
+
+Returns true if this and the other ray have equal origin and direction.
+
+.intersectBox ( box : Box3, target : Vector3 ) : Vector3
+box - the Box3 to intersect with.
+target — the result will be copied into this Vector3.
+
+Intersect this Ray with a Box3, returning the intersection point or null if there is no intersection.
+
+.intersectPlane ( plane : Plane, target : Vector3 ) : Vector3
+plane - the Plane to intersect with.
+target — the result will be copied into this Vector3.
+
+Intersect this Ray with a Plane, returning the intersection point or null if there is no intersection.
+
+.intersectSphere ( sphere : Sphere, target : Vector3 ) : Vector3
+sphere - the Sphere to intersect with.
+target — the result will be copied into this Vector3.
+
+Intersect this Ray with a Sphere, returning the intersection point or null if there is no intersection.
+
+.intersectTriangle ( a : Vector3, b : Vector3, c : Vector3, backfaceCulling : Boolean, target : Vector3 ) : Vector3
+a, b, c - The Vector3 points making up the triangle.
+backfaceCulling - whether to use backface culling.
+target — the result will be copied into this Vector3.
+
+Intersect this Ray with a triangle, returning the intersection point or null if there is no intersection.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - the Box3 to intersect with.
+
+Return true if this Ray intersects with the Box3.
+
+.intersectsPlane ( plane : Plane ) : Boolean
+plane - the Plane to intersect with.
+
+Return true if this Ray intersects with the Plane.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere - the Sphere to intersect with.
+
+Return true if this Ray intersects with the Sphere.
+
+.lookAt ( v : Vector3 ) : this
+v - The Vector3 to look at.
+
+Adjusts the direction of the ray to point at the vector in world coordinates.
+
+.recast ( t : Float ) : this
+t - The distance along the Ray to interpolate.
+
+Shift the origin of this Ray along its direction by the distance given.
+
+.set ( origin : Vector3, direction : Vector3 ) : this
+origin - the origin of the Ray.
+direction - the direction of the Ray. This must be normalized (with Vector3.normalize) for the methods to operate properly.
+
+Sets this ray's origin and direction properties by copying the values from the given objects.
+
+Source
+src/math/Ray.js
+
+Sphere
+A sphere defined by a center and radius.
+
+Constructor
+Sphere( center : Vector3, radius : Float )
+center - center of the sphere. Default is a Vector3 at (0, 0, 0).
+radius - radius of the sphere. Default is -1.
+
+Creates a new Sphere.
+
+Properties
+.center : Vector3
+A Vector3 defining the center of the sphere. Default is (0, 0, 0).
+
+.isSphere : Boolean
+Read-only flag to check if a given object is of type Sphere.
+
+.radius : Float
+The radius of the sphere. Default is -1.
+
+Methods
+.applyMatrix4 ( matrix : Matrix4 ) : this
+matrix - the Matrix4 to apply
+
+Transforms this sphere with the provided Matrix4.
+
+.clampPoint ( point : Vector3, target : Vector3 ) : Vector3
+point - Vector3 The point to clamp.
+target — the result will be copied into this Vector3.
+
+Clamps a point within the sphere. If the point is outside the sphere, it will clamp it to the closest point on the edge of the sphere. Points already inside the sphere will not be affected.
+
+.clone () : Sphere
+Returns a new sphere with the same center and radius as this one.
+
+.containsPoint ( point : Vector3 ) : Boolean
+point - the Vector3 to be checked
+
+Checks to see if the sphere contains the provided point inclusive of the surface of the sphere.
+
+.copy ( sphere : Sphere ) : this
+Copies the values of the passed sphere's center and radius properties to this sphere.
+
+.distanceToPoint ( point : Vector3 ) : Float
+Returns the closest distance from the boundary of the sphere to the point. If the sphere contains the point, the distance will be negative.
+
+.expandByPoint ( point : Vector3 ) : this
+point - Vector3 that should be included in the sphere.
+
+Expands the boundaries of this sphere to include point.
+
+.isEmpty () : Boolean
+Checks to see if the sphere is empty (the radius set to a negative number).
+Spheres with a radius of 0 contain only their center point and are not considered to be empty.
+
+.makeEmpty () : this
+Makes the sphere empty by setting center to (0, 0, 0) and radius to -1.
+
+.equals ( sphere : Sphere ) : Boolean
+Checks to see if the two spheres' centers and radii are equal.
+
+.getBoundingBox ( target : Box3 ) : Box3
+target — the result will be copied into this Box3.
+
+Returns aMinimum Bounding Box for the sphere.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - Box3 to check for intersection against.
+
+Determines whether or not this sphere intersects a given box.
+
+.intersectsPlane ( plane : Plane ) : Boolean
+plane - Plane to check for intersection against.
+
+Determines whether or not this sphere intersects a given plane.
+
+.intersectsSphere ( sphere : Sphere ) : Boolean
+sphere - Sphere to check for intersection against.
+
+Checks to see if two spheres intersect.
+
+.set ( center : Vector3, radius : Float ) : this
+center - center of the sphere.
+radius - radius of the sphere.
+
+Sets the center and radius properties of this sphere.
+Please note that this method only copies the values from the given center.
+
+.setFromPoints ( points : Array, optionalCenter : Vector3 ) : this
+points - an Array of Vector3 positions.
+optionalCenter - Optional Vector3 position for the sphere's center.
+
+Computes the minimum bounding sphere for an array of points. If optionalCenteris given, it is used as the sphere's center. Otherwise, the center of the axis-aligned bounding box encompassing points is calculated.
+
+.translate ( offset : Vector3 ) : this
+Translate the sphere's center by the provided offset Vector3.
+
+.union ( sphere : Sphere ) : this
+sphere - Bounding sphere that will be unioned with this sphere.
+
+Expands this sphere to enclose both the original sphere and the given sphere.
+
+Source
+src/math/Sphere.js
+
+Spherical
+A point's spherical coordinates.
+
+Constructor
+Spherical( radius : Float, phi : Float, theta : Float )
+radius - the radius, or the Euclidean distance (straight-line distance) from the point to the origin. Default is 1.0.
+phi - polar angle in radians from the y (up) axis. Default is 0.
+theta - equator angle in radians around the y (up) axis. Default is 0.
+
+The poles (phi) are at the positive and negative y axis. The equator (theta) starts at positive z.
+
+Properties
+.radius : Float
+.phi : Float
+.theta : Float
+Methods
+.clone () : Spherical
+Returns a new spherical with the same radius, phi and theta properties as this one.
+
+.copy ( s : Spherical ) : this
+Copies the values of the passed Spherical's radius, phi and theta properties to this spherical.
+
+.makeSafe () : this
+Restricts the polar angle phi to be between 0.000001 and pi - 0.000001.
+
+.set ( radius : Float, phi : Float, theta : Float ) : this
+Sets values of this spherical's radius, phi and theta properties.
+
+.setFromVector3 ( vec3 : Vector3 ) : this
+Sets values of this spherical's radius, phi and theta properties from the Vector3.
+
+.setFromCartesianCoords ( x : Float, y : Float, z : Float ) : this
+Sets values of this spherical's radius, phi and theta properties from Cartesian coordinates.
+
+Source
+src/math/Spherical.js
+
+SphericalHarmonics3
+Represents a third-order spherical harmonics (SH). Light probes use this class to encode lighting information.
+
+Constructor
+SphericalHarmonics3()
+Creates a new instance of SphericalHarmonics3.
+
+Properties
+.coefficients : Array
+An array holding the (9) SH coefficients. A single coefficient is represented as an instance of Vector3.
+
+.isSphericalHarmonics3 : Boolean
+Read-only flag to check if a given object is of type SphericalHarmonics3.
+
+Methods
+.add ( sh : SphericalHarmonics3 ) : this
+sh - The SH to add.
+
+Adds the given SH to this instance.
+
+.addScaledSH ( sh : SphericalHarmonics3, scale : Number ) : this
+sh - The SH to add.
+scale - The scale factor.
+
+A convenience method for performing .add() and .scale() at once.
+
+.clone () : SphericalHarmonics3
+Returns a new instance of SphericalHarmonics3 with equal coefficients.
+
+.copy ( sh : SphericalHarmonics3 ) : this
+sh - The SH to copy.
+
+Copies the given SH to this instance.
+
+.equals ( sh : SphericalHarmonics3 ) : Boolean
+sh - The SH to compare with.
+
+Returns true if the given SH and this instance have equal coefficients.
+
+.fromArray ( array : Array, offset : Number ) : this
+array - The array holding the numbers of the SH coefficients.
+offset - (optional) The array offset.
+
+Sets the coefficients of this instance from the given array.
+
+.getAt ( normal : Vector3, target : Vector3 ) : Vector3
+normal - The normal vector (assumed to be unit length).
+target - The result vector.
+
+Returns the radiance in the direction of the given normal.
+
+.getIrradianceAt ( normal : Vector3, target : Vector3 ) : Vector3
+normal - The normal vector (assumed to be unit length).
+target - The result vector.
+
+Returns the irradiance (radiance convolved with cosine lobe) in the direction of the given normal.
+
+.lerp ( sh : SphericalHarmonics3, alpha : Number ) : this
+sh - The SH to interpolate with.
+alpha - The alpha factor.
+
+Linear interpolates between the given SH and this instance by the given alpha factor.
+
+.scale ( scale : Number ) : this
+scale - The scale factor.
+
+Scales this SH by the given scale factor.
+
+.set ( coefficients : Array ) : this
+coefficients - An array of SH coefficients.
+
+Sets the given SH coefficients to this instance.
+
+.toArray ( array : Array, offset : Number ) : Array
+array - (optional) The target array.
+offset - (optional) The array offset.
+
+Returns an array with the coefficients, or copies them into the provided array. The coefficients are represented as numbers.
+
+.zero () : this
+Sets all SH coefficients to 0.
+
+Static Methods
+.getBasisAt ( normal : Vector3, shBasis : Array ) : undefined
+normal - The normal vector (assumed to be unit length).
+shBasis - The resulting SH basis.
+
+Computes the SH basis for the given normal vector.
+
+Source
+src/math/SphericalHarmonics3.js
+
+Triangle
+A geometric triangle as defined by three Vector3s representing its three corners.
+
+Constructor
+Triangle( a : Vector3, b : Vector3, c : Vector3 )
+a - the first corner of the triangle. Default is a Vector3 at (0, 0, 0).
+b - the second corner of the triangle. Default is a Vector3 at (0, 0, 0).
+c - the final corner of the triangle. Default is a Vector3 at (0, 0, 0).
+
+Creates a new Triangle.
+
+Properties
+.a : Vector3
+The first corner of the triangle. Default is a Vector3 at (0, 0, 0).
+
+.b : Vector3
+The second corner of the triangle. Default is a Vector3 at (0, 0, 0).
+
+.c : Vector3
+The final corner of the triangle. Default is a Vector3 at (0, 0, 0).
+
+Methods
+.clone () : Triangle
+Returns a new triangle with the same a, b and c properties as this one.
+
+.closestPointToPoint ( point : Vector3, target : Vector3 ) : Vector3
+point - Vector3
+target — the result will be copied into this Vector3.
+
+Returns the closest point on the triangle to point.
+
+.containsPoint ( point : Vector3 ) : Boolean
+point - Vector3 to check.
+
+Returns true if the passed point, when projected onto the plane of the triangle, lies within the triangle.
+
+.copy ( triangle : Triangle ) : this
+Copies the values of the passed triangles's a, b and c properties to this triangle.
+
+.equals ( triangle : Triangle ) : Boolean
+Returns true if the two triangles have identical a, b and c properties.
+
+.getArea () : Float
+Return the area of the triangle.
+
+.getBarycoord ( point : Vector3, target : Vector3 ) : Vector3
+point - Vector3
+target — the result will be copied into this Vector3.
+
+Return a barycentric coordinate from the given vector. Returns null if the triangle is degenerate.
+
+Picture of barycentric coordinates
+
+.getMidpoint ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Calculate the midpoint of the triangle.
+
+.getNormal ( target : Vector3 ) : Vector3
+target — the result will be copied into this Vector3.
+
+Calculate the normal vector of the triangle.
+
+.getPlane ( target : Plane ) : Plane
+target — the result will be copied into this Plane.
+
+Calculate a plane based on the triangle. .
+
+.getInterpolation ( point : Vector3, p1 : Vector3, p2 : Vector3, p3 : Vector3, v1 : Vector, v2 : Vector, v3 : Vector, target : Vector ) : Vector
+point - Position of interpolated point.
+p1 - Position of first vertex.
+p2 - Position of second vertex.
+p3 - Position of third vertex.
+v1 - Value of first vertex.
+v2 - Value of second vertex.
+v3 - Value of third vertex.
+target — Result will be copied into this Vector.
+
+Returns the value barycentrically interpolated for the given point on the triangle. Returns null if the triangle is degenerate.
+
+.getInterpolatedAttribute ( attribute : BufferAttribute, i1 : Number, i2 : Vector3, i3 : Number, barycoord : Vector3, target : Vector3 ) : Vector
+attribute - The attribute to interpolate.
+p1 - Index of first vertex.
+p2 - Index of second vertex.
+p3 - Index of third vertex.
+barycoord - The barycoordinate value to use to interpolate.
+target — Result will be copied into this Vector.
+
+Returns the value barycentrically interpolated for the given attribute and indices.
+
+.intersectsBox ( box : Box3 ) : Boolean
+box - Box to check for intersection against.
+
+Determines whether or not this triangle intersects box.
+
+.isFrontFacing ( direction : Vector3 ) : Boolean
+direction - The direction to test.
+
+Whether the triangle is oriented towards the given direction or not.
+
+.set ( a : Vector3, b : Vector3, c : Vector3 ) : this
+Sets the triangle's a, b and c properties to the passed vector3s.
+Please note that this method only copies the values from the given objects.
+
+.setFromAttributeAndIndices ( attribute : BufferAttribute, i0 : Integer, i1 : Integer, i2 : Integer ) : this
+attribute - BufferAttribute of vertex data
+i0 - Integer index
+i1 - Integer index
+i2 - Integer index
+
+Sets the triangle's vertices from the buffer attribute vertex data.
+
+.setFromPointsAndIndices ( points : Array, i0 : Integer, i1 : Integer, i2 : Integer ) : this
+points - Array of Vector3s
+i0 - Integer index
+i1 - Integer index
+i2 - Integer index
+
+Sets the triangle's vectors to the vectors in the array.
+
+Source
+src/math/Triangle.js
+
+Vector2
+Class representing a 2D vector. A 2D vector is an ordered pair of numbers (labeled x and y), which can be used to represent a number of things, such as:
+
+A point in 2D space (i.e. a position on a plane).
+A direction and length across a plane. In three.js the length will always be the Euclidean distance (straight-line distance) from (0, 0) to (x, y) and the direction is also measured from (0, 0) towards (x, y).
+Any arbitrary ordered pair of numbers.
+There are other things a 2D vector can be used to represent, such as momentum vectors, complex numbers and so on, however these are the most common uses in three.js.
+
+Iterating through a Vector2 instance will yield its components (x, y) in the corresponding order.
+
+Code Example
+const a = new THREE.Vector2( 0, 1 );
+
+//no arguments; will be initialised to (0, 0)
+const b = new THREE.Vector2( );
+
+const d = a.distanceTo( b );
+Constructor
+Vector2( x : Float, y : Float )
+x - the x value of this vector. Default is 0.
+y - the y value of this vector. Default is 0.
+
+Creates a new Vector2.
+
+Properties
+.height : Float
+Alias for y.
+
+.isVector2 : Boolean
+Read-only flag to check if a given object is of type Vector2.
+
+.width : Float
+Alias for x.
+
+.x : Float
+.y : Float
+Methods
+.add ( v : Vector2 ) : this
+Adds v to this vector.
+
+.addScalar ( s : Float ) : this
+Adds the scalar value s to this vector's x and y values.
+
+.addScaledVector ( v : Vector2, s : Float ) : this
+Adds the multiple of v and s to this vector.
+
+.addVectors ( a : Vector2, b : Vector2 ) : this
+Sets this vector to a + b.
+
+.angle () : Float
+Computes the angle in radians of this vector with respect to the positive x-axis.
+
+.angleTo ( v : Vector2 ) : Float
+Returns the angle between this vector and vector v in radians.
+
+.applyMatrix3 ( m : Matrix3 ) : this
+Multiplies this vector (with an implicit 1 as the 3rd component) by m.
+
+.ceil () : this
+The x and y components of this vector are rounded up to the nearest integer value.
+
+.clamp ( min : Vector2, max : Vector2 ) : this
+min - the minimum x and y values.
+max - the maximum x and y values in the desired range
+
+If this vector's x or y value is greater than the max vector's x or y value, it is replaced by the corresponding value.
+
+If this vector's x or y value is less than the min vector's x or y value, it is replaced by the corresponding value.
+
+.clampLength ( min : Float, max : Float ) : this
+min - the minimum value the length will be clamped to
+max - the maximum value the length will be clamped to
+
+If this vector's length is greater than the max value, it is replaced by the max value.
+
+If this vector's length is less than the min value, it is replaced by the min value.
+
+.clampScalar ( min : Float, max : Float ) : this
+min - the minimum value the components will be clamped to
+max - the maximum value the components will be clamped to
+
+If this vector's x or y values are greater than the max value, they are replaced by the max value.
+
+If this vector's x or y values are less than the min value, they are replaced by the min value.
+
+.clone () : Vector2
+Returns a new Vector2 with the same x and y values as this one.
+
+.copy ( v : Vector2 ) : this
+Copies the values of the passed Vector2's x and y properties to this Vector2.
+
+.distanceTo ( v : Vector2 ) : Float
+Computes the distance from this vector to v.
+
+.manhattanDistanceTo ( v : Vector2 ) : Float
+Computes the Manhattan distance from this vector to v.
+
+.distanceToSquared ( v : Vector2 ) : Float
+Computes the squared distance from this vector to v. If you are just comparing the distance with another distance, you should compare the distance squared instead as it is slightly more efficient to calculate.
+
+.divide ( v : Vector2 ) : this
+Divides this vector by v.
+
+.divideScalar ( s : Float ) : this
+Divides this vector by scalar s.
+
+.dot ( v : Vector2 ) : Float
+Calculates the dot product of this vector and v.
+
+.cross ( v : Vector2 ) : Float
+Calculates the cross product of this vector and v. Note that a 'cross-product' in 2D is not well-defined. This function computes a geometric cross-product often used in 2D graphics
+
+.equals ( v : Vector2 ) : Boolean
+Returns true if the components of this vector and v are strictly equal; false otherwise.
+
+.floor () : this
+The components of this vector are rounded down to the nearest integer value.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - the source array.
+offset - (optional) offset into the array. Default is 0.
+
+Sets this vector's x value to be array[ offset ] and y value to be array[ offset + 1 ].
+
+.fromBufferAttribute ( attribute : BufferAttribute, index : Integer ) : this
+attribute - the source attribute.
+index - index in the attribute.
+
+Sets this vector's x and y values from the attribute.
+
+.getComponent ( index : Integer ) : Float
+index - 0 or 1.
+
+If index equals 0 returns the x value.
+If index equals 1 returns the y value.
+
+.length () : Float
+Computes the Euclidean length (straight-line length) from (0, 0) to (x, y).
+
+.manhattanLength () : Float
+Computes the Manhattan length of this vector.
+
+.lengthSq () : Float
+Computes the square of the Euclidean length (straight-line length) from (0, 0) to (x, y). If you are comparing the lengths of vectors, you should compare the length squared instead as it is slightly more efficient to calculate.
+
+.lerp ( v : Vector2, alpha : Float ) : this
+v - Vector2 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Linearly interpolates between this vector and v, where alpha is the percent distance along the line - alpha = 0 will be this vector, and alpha = 1 will be v.
+
+.lerpVectors ( v1 : Vector2, v2 : Vector2, alpha : Float ) : this
+v1 - the starting Vector2.
+v2 - Vector2 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Sets this vector to be the vector linearly interpolated between v1 and v2 where alpha is the percent distance along the line connecting the two vectors - alpha = 0 will be v1, and alpha = 1 will be v2.
+
+.negate () : this
+Inverts this vector - i.e. sets x = -x and y = -y.
+
+.normalize () : this
+Converts this vector to a unit vector - that is, sets it equal to a vector with the same direction as this one, but length 1.
+
+.max ( v : Vector2 ) : this
+If this vector's x or y value is less than v's x or y value, replace that value with the corresponding max value.
+
+.min ( v : Vector2 ) : this
+If this vector's x or y value is greater than v's x or y value, replace that value with the corresponding min value.
+
+.multiply ( v : Vector2 ) : this
+Multiplies this vector by v.
+
+.multiplyScalar ( s : Float ) : this
+Multiplies this vector by scalar s.
+
+.rotateAround ( center : Vector2, angle : Float ) : this
+center - the point around which to rotate.
+angle - the angle to rotate, in radians.
+
+Rotates this vector around center by angle radians.
+
+.round () : this
+The components of this vector are rounded to the nearest integer value.
+
+.roundToZero () : this
+The components of this vector are rounded towards zero (up if negative, down if positive) to an integer value.
+
+.set ( x : Float, y : Float ) : this
+Sets the x and y components of this vector.
+
+.setComponent ( index : Integer, value : Float ) : this
+index - 0 or 1.
+value - Float
+
+If index equals 0 set x to value.
+If index equals 1 set y to value
+
+.setLength ( l : Float ) : this
+Sets this vector to a vector with the same direction as this one, but length l.
+
+.setScalar ( scalar : Float ) : this
+Sets the x and y values of this vector both equal to scalar.
+
+.setX ( x : Float ) : this
+Replaces this vector's x value with x.
+
+.setY ( y : Float ) : this
+Replaces this vector's y value with y.
+
+.sub ( v : Vector2 ) : this
+Subtracts v from this vector.
+
+.subScalar ( s : Float ) : this
+Subtracts s from this vector's x and y components.
+
+.subVectors ( a : Vector2, b : Vector2 ) : this
+Sets this vector to a - b.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store this vector to. If this is not provided, a new array will be created.
+offset - (optional) optional offset into the array.
+
+Returns an array [x, y], or copies x and y into the provided array.
+
+.random () : this
+Sets each component of this vector to a pseudo-random value between 0 and 1, excluding 1.
+
+Source
+src/math/Vector2.js
+
+Vector3
+Class representing a 3D vector. A 3D vector is an ordered triplet of numbers (labeled x, y, and z), which can be used to represent a number of things, such as:
+
+A point in 3D space.
+A direction and length in 3D space. In three.js the length will always be the Euclidean distance (straight-line distance) from (0, 0, 0) to (x, y, z) and the direction is also measured from (0, 0, 0) towards (x, y, z).
+Any arbitrary ordered triplet of numbers.
+There are other things a 3D vector can be used to represent, such as momentum vectors and so on, however these are the most common uses in three.js.
+
+Iterating through a Vector3 instance will yield its components (x, y, z) in the corresponding order.
+
+Code Example
+const a = new THREE.Vector3( 0, 1, 0 );
+
+//no arguments; will be initialised to (0, 0, 0)
+const b = new THREE.Vector3( );
+
+const d = a.distanceTo( b );
+Constructor
+Vector3( x : Float, y : Float, z : Float )
+x - the x value of this vector. Default is 0.
+y - the y value of this vector. Default is 0.
+z - the z value of this vector. Default is 0.
+
+Creates a new Vector3.
+
+Properties
+.isVector3 : Boolean
+Read-only flag to check if a given object is of type Vector3.
+
+.x : Float
+.y : Float
+.z : Float
+Methods
+.add ( v : Vector3 ) : this
+Adds v to this vector.
+
+.addScalar ( s : Float ) : this
+Adds the scalar value s to this vector's x, y and z values.
+
+.addScaledVector ( v : Vector3, s : Float ) : this
+Adds the multiple of v and s to this vector.
+
+.addVectors ( a : Vector3, b : Vector3 ) : this
+Sets this vector to a + b.
+
+.applyAxisAngle ( axis : Vector3, angle : Float ) : this
+axis - A normalized Vector3.
+angle - An angle in radians.
+
+Applies a rotation specified by an axis and an angle to this vector.
+
+.applyEuler ( euler : Euler ) : this
+Applies euler transform to this vector by converting the Euler object to a Quaternion and applying.
+
+.applyMatrix3 ( m : Matrix3 ) : this
+Multiplies this vector by m
+
+.applyMatrix4 ( m : Matrix4 ) : this
+Multiplies this vector (with an implicit 1 in the 4th dimension) by m, and divides by perspective.
+
+.applyNormalMatrix ( m : Matrix3 ) : this
+Multiplies this vector by normal matrix m and normalizes the result.
+
+.applyQuaternion ( quaternion : Quaternion ) : this
+Applies a Quaternion transform to this vector.
+
+.angleTo ( v : Vector3 ) : Float
+Returns the angle between this vector and vector v in radians.
+
+.ceil () : this
+The x, y and z components of this vector are rounded up to the nearest integer value.
+
+.clamp ( min : Vector3, max : Vector3 ) : this
+min - the minimum x, y and z values.
+max - the maximum x, y and z values in the desired range
+
+If this vector's x, y or z value is greater than the max vector's x, y or z value, it is replaced by the corresponding value.
+
+If this vector's x, y or z value is less than the min vector's x, y or z value, it is replaced by the corresponding value.
+
+.clampLength ( min : Float, max : Float ) : this
+min - the minimum value the length will be clamped to
+max - the maximum value the length will be clamped to
+
+If this vector's length is greater than the max value, the vector will be scaled down so its length is the max value.
+
+If this vector's length is less than the min value, the vector will be scaled up so its length is the min value.
+
+.clampScalar ( min : Float, max : Float ) : this
+min - the minimum value the components will be clamped to
+max - the maximum value the components will be clamped to
+
+If this vector's x, y or z values are greater than the max value, they are replaced by the max value.
+
+If this vector's x, y or z values are less than the min value, they are replaced by the min value.
+
+.clone () : Vector3
+Returns a new vector3 with the same x, y and z values as this one.
+
+.copy ( v : Vector3 ) : this
+Copies the values of the passed vector3's x, y and z properties to this vector3.
+
+.cross ( v : Vector3 ) : this
+Sets this vector to cross product of itself and v.
+
+.crossVectors ( a : Vector3, b : Vector3 ) : this
+Sets this vector to cross product of a and b.
+
+.distanceTo ( v : Vector3 ) : Float
+Computes the distance from this vector to v.
+
+.manhattanDistanceTo ( v : Vector3 ) : Float
+Computes the Manhattan distance from this vector to v.
+
+.distanceToSquared ( v : Vector3 ) : Float
+Computes the squared distance from this vector to v. If you are just comparing the distance with another distance, you should compare the distance squared instead as it is slightly more efficient to calculate.
+
+.divide ( v : Vector3 ) : this
+Divides this vector by v.
+
+.divideScalar ( s : Float ) : this
+Divides this vector by scalar s.
+
+.dot ( v : Vector3 ) : Float
+Calculate the dot product of this vector and v.
+
+.equals ( v : Vector3 ) : Boolean
+Returns true if the components of this vector and v are strictly equal; false otherwise.
+
+.floor () : this
+The components of this vector are rounded down to the nearest integer value.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - the source array.
+offset - ( optional) offset into the array. Default is 0.
+
+Sets this vector's x value to be array[ offset + 0 ], y value to be array[ offset + 1 ] and z value to be array[ offset + 2 ].
+
+.fromBufferAttribute ( attribute : BufferAttribute, index : Integer ) : this
+attribute - the source attribute.
+index - index in the attribute.
+
+Sets this vector's x, y and z values from the attribute.
+
+.getComponent ( index : Integer ) : Float
+index - 0, 1 or 2.
+
+If index equals 0 returns the x value.
+If index equals 1 returns the y value.
+If index equals 2 returns the z value.
+
+.length () : Float
+Computes the Euclidean length (straight-line length) from (0, 0, 0) to (x, y, z).
+
+.manhattanLength () : Float
+Computes the Manhattan length of this vector.
+
+.lengthSq () : Float
+Computes the square of the Euclidean length (straight-line length) from (0, 0, 0) to (x, y, z). If you are comparing the lengths of vectors, you should compare the length squared instead as it is slightly more efficient to calculate.
+
+.lerp ( v : Vector3, alpha : Float ) : this
+v - Vector3 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Linearly interpolate between this vector and v, where alpha is the percent distance along the line - alpha = 0 will be this vector, and alpha = 1 will be v.
+
+.lerpVectors ( v1 : Vector3, v2 : Vector3, alpha : Float ) : this
+v1 - the starting Vector3.
+v2 - Vector3 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Sets this vector to be the vector linearly interpolated between v1 and v2 where alpha is the percent distance along the line connecting the two vectors - alpha = 0 will be v1, and alpha = 1 will be v2.
+
+.max ( v : Vector3 ) : this
+If this vector's x, y or z value is less than v's x, y or z value, replace that value with the corresponding max value.
+
+.min ( v : Vector3 ) : this
+If this vector's x, y or z value is greater than v's x, y or z value, replace that value with the corresponding min value.
+
+.multiply ( v : Vector3 ) : this
+Multiplies this vector by v.
+
+.multiplyScalar ( s : Float ) : this
+Multiplies this vector by scalar s.
+
+.multiplyVectors ( a : Vector3, b : Vector3 ) : this
+Sets this vector equal to a * b, component-wise.
+
+.negate () : this
+Inverts this vector - i.e. sets x = -x, y = -y and z = -z.
+
+.normalize () : this
+Convert this vector to a unit vector - that is, sets it equal to a vector with the same direction as this one, but length 1.
+
+.project ( camera : Camera ) : this
+camera — camera to use in the projection.
+
+Projects this vector from world space into the camera's normalized device coordinate (NDC) space.
+
+.projectOnPlane ( planeNormal : Vector3 ) : this
+planeNormal - A vector representing a plane normal.
+
+Projects this vector onto a plane by subtracting this vector projected onto the plane's normal from this vector.
+
+.projectOnVector ( v : Vector3 ) : this
+Projects this vector onto v.
+
+.reflect ( normal : Vector3 ) : this
+normal - the normal to the reflecting plane
+
+Reflect this vector off of plane orthogonal to normal. Normal is assumed to have unit length.
+
+.round () : this
+The components of this vector are rounded to the nearest integer value.
+
+.roundToZero () : this
+The components of this vector are rounded towards zero (up if negative, down if positive) to an integer value.
+
+.set ( x : Float, y : Float, z : Float ) : this
+Sets the x, y and z components of this vector.
+
+.setComponent ( index : Integer, value : Float ) : this
+index - 0, 1 or 2.
+value - Float
+
+If index equals 0 set x to value.
+If index equals 1 set y to value.
+If index equals 2 set z to value
+
+.setFromColor ( color : Color ) : this
+Sets this vector's x, y and z components from the r, g, and b components of the specified color.
+
+.setFromCylindrical ( c : Cylindrical ) : this
+Sets this vector from the cylindrical coordinates c.
+
+.setFromCylindricalCoords ( radius : Float, theta : Float, y : Float ) : this
+Sets this vector from the cylindrical coordinates radius, theta and y.
+
+.setFromEuler ( euler : Euler ) : this
+Sets this vector's x, y and z components from the x, y, and z components of the specified Euler Angle.
+
+.setFromMatrixColumn ( matrix : Matrix4, index : Integer ) : this
+Sets this vector's x, y and z components from index column of matrix.
+
+.setFromMatrix3Column ( matrix : Matrix3, index : Integer ) : this
+Sets this vector's x, y and z components from index column of matrix.
+
+.setFromMatrixPosition ( m : Matrix4 ) : this
+Sets this vector to the position elements of the transformation matrix m.
+
+.setFromMatrixScale ( m : Matrix4 ) : this
+Sets this vector to the scale elements of the transformation matrix m.
+
+.setFromSpherical ( s : Spherical ) : this
+Sets this vector from the spherical coordinates s.
+
+.setFromSphericalCoords ( radius : Float, phi : Float, theta : Float ) : this
+Sets this vector from the spherical coordinates radius, phi and theta.
+
+.setLength ( l : Float ) : this
+Set this vector to a vector with the same direction as this one, but length l.
+
+.setScalar ( scalar : Float ) : this
+Set the x, y and z values of this vector both equal to scalar.
+
+.setX ( x : Float ) : this
+Replace this vector's x value with x.
+
+.setY ( y : Float ) : this
+Replace this vector's y value with y.
+
+.setZ ( z : Float ) : this
+Replace this vector's z value with z.
+
+.sub ( v : Vector3 ) : this
+Subtracts v from this vector.
+
+.subScalar ( s : Float ) : this
+Subtracts s from this vector's x, y and z components.
+
+.subVectors ( a : Vector3, b : Vector3 ) : this
+Sets this vector to a - b.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store this vector to. If this is not provided a new array will be created.
+offset - (optional) optional offset into the array.
+
+Returns an array [x, y, z], or copies x, y and z into the provided array.
+
+.transformDirection ( m : Matrix4 ) : this
+Transforms the direction of this vector by a matrix (the upper left 3 x 3 subset of a m) and then normalizes the result.
+
+.unproject ( camera : Camera ) : this
+camera — camera to use in the projection.
+
+Projects this vector from the camera's normalized device coordinate (NDC) space into world space.
+
+.random () : this
+Sets each component of this vector to a pseudo-random value between 0 and 1, excluding 1.
+
+.randomDirection () : this
+Sets this vector to a uniformly random point on a unit sphere.
+
+Source
+src/math/Vector3.js
+
+Vector4
+Class representing a 4D vector. A 4D vector is an ordered quadruplet of numbers (labeled x, y, z, and w), which can be used to represent a number of things, such as:
+
+A point in 4D space.
+A direction and length in 4D space. In three.js the length will always be the Euclidean distance (straight-line distance) from (0, 0, 0, 0) to (x, y, z, w) and the direction is also measured from (0, 0, 0, 0) towards (x, y, z, w).
+Any arbitrary ordered quadruplet of numbers.
+There are other things a 4D vector can be used to represent, however these are the most common uses in three.js.
+
+Iterating through a Vector4 instance will yield its components (x, y, z, w) in the corresponding order.
+
+Code Example
+const a = new THREE.Vector4( 0, 1, 0, 0 );
+
+//no arguments; will be initialised to (0, 0, 0, 1)
+const b = new THREE.Vector4( );
+
+const d = a.dot( b );
+Constructor
+Vector4( x : Float, y : Float, z : Float, w : Float )
+x - the x value of this vector. Default is 0.
+y - the y value of this vector. Default is 0.
+z - the z value of this vector. Default is 0.
+w - the w value of this vector. Default is 1.
+
+Creates a new Vector4.
+
+Properties
+.isVector4 : Boolean
+Read-only flag to check if a given object is of type Vector4.
+
+.x : Float
+.y : Float
+.z : Float
+.w : Float
+.width : Float
+Alias for z.
+
+.height : Float
+Alias for w.
+
+Methods
+.add ( v : Vector4 ) : this
+Adds v to this vector.
+
+.addScalar ( s : Float ) : this
+Adds the scalar value s to this vector's x, y, z and w values.
+
+.addScaledVector ( v : Vector4, s : Float ) : this
+Adds the multiple of v and s to this vector.
+
+.addVectors ( a : Vector4, b : Vector4 ) : this
+Sets this vector to a + b.
+
+.applyMatrix4 ( m : Matrix4 ) : this
+Multiplies this vector by 4 x 4 m.
+
+.ceil () : this
+The x, y, z and w components of this vector are rounded up to the nearest integer value.
+
+.clamp ( min : Vector4, max : Vector4 ) : this
+min - the minimum x, y, z and w values.
+max - the maximum x, y, z and w values in the desired range
+
+If this vector's x, y, z or w value is greater than the max vector's x, y, z or w value, it is replaced by the corresponding value.
+
+If this vector's x, y, z or w value is less than the min vector's x, y, z or w value, it is replaced by the corresponding value.
+
+.clampLength ( min : Float, max : Float ) : this
+min - the minimum value the length will be clamped to
+max - the maximum value the length will be clamped to
+
+If this vector's length is greater than the max value, it is replaced by the max value.
+
+If this vector's length is less than the min value, it is replaced by the min value.
+
+.clampScalar ( min : Float, max : Float ) : this
+min - the minimum value the components will be clamped to
+max - the maximum value the components will be clamped to
+
+If this vector's x, y, z or w values are greater than the max value, they are replaced by the max value.
+
+If this vector's x, y, z or w values are less than the min value, they are replaced by the min value.
+
+.clone () : Vector4
+Returns a new Vector4 with the same x, y, z and w values as this one.
+
+.copy ( v : Vector4 ) : this
+Copies the values of the passed Vector4's x, y, z and w properties to this Vector4.
+
+.divide ( v : Vector4 ) : this
+Divides this vector by v.
+
+.divideScalar ( s : Float ) : this
+Divides this vector by scalar s.
+
+.dot ( v : Vector4 ) : Float
+Calculates the dot product of this vector and v.
+
+.equals ( v : Vector4 ) : Boolean
+Returns true if the components of this vector and v are strictly equal; false otherwise.
+
+.floor () : this
+The components of this vector are rounded down to the nearest integer value.
+
+.fromArray ( array : Array, offset : Integer ) : this
+array - the source array.
+offset - (optional) offset into the array. Default is 0.
+
+Sets this vector's x value to be array[ offset + 0 ], y value to be array[ offset + 1 ] z value to be array[ offset + 2 ] and w value to be array[ offset + 3 ].
+
+.fromBufferAttribute ( attribute : BufferAttribute, index : Integer ) : this
+attribute - the source attribute.
+index - index in the attribute.
+
+Sets this vector's x, y, z and w values from the attribute.
+
+.getComponent ( index : Integer ) : Float
+index - 0, 1, 2 or 3.
+
+If index equals 0 returns the x value.
+If index equals 1 returns the y value.
+If index equals 2 returns the z value.
+If index equals 3 returns the w value.
+
+.length () : Float
+Computes the Euclidean length (straight-line length) from (0, 0, 0, 0) to (x, y, z, w).
+
+.manhattanLength () : Float
+Computes the Manhattan length of this vector.
+
+.lengthSq () : Float
+Computes the square of the Euclidean length (straight-line length) from (0, 0, 0, 0) to (x, y, z, w). If you are comparing the lengths of vectors, you should compare the length squared instead as it is slightly more efficient to calculate.
+
+.lerp ( v : Vector4, alpha : Float ) : this
+v - Vector4 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Linearly interpolates between this vector and v, where alpha is the percent distance along the line - alpha = 0 will be this vector, and alpha = 1 will be v.
+
+.lerpVectors ( v1 : Vector4, v2 : Vector4, alpha : Float ) : this
+v1 - the starting Vector4.
+v2 - Vector4 to interpolate towards.
+alpha - interpolation factor, typically in the closed interval [0, 1].
+
+Sets this vector to be the vector linearly interpolated between v1 and v2 where alpha is the percent distance along the line connecting the two vectors - alpha = 0 will be v1, and alpha = 1 will be v2.
+
+.negate () : this
+Inverts this vector - i.e. sets x = -x, y = -y, z = -z and w = -w.
+
+.normalize () : this
+Converts this vector to a unit vector - that is, sets it equal to a vector with the same direction as this one, but length 1.
+
+.max ( v : Vector4 ) : this
+If this vector's x, y, z or w value is less than v's x, y, z or w value, replace that value with the corresponding max value.
+
+.min ( v : Vector4 ) : this
+If this vector's x, y, z or w value is greater than v's x, y, z or w value, replace that value with the corresponding min value.
+
+.multiply ( v : Vector4 ) : this
+Multiplies this vector by v.
+
+.multiplyScalar ( s : Float ) : this
+Multiplies this vector by scalar s.
+
+.round () : this
+The components of this vector are rounded to the nearest integer value.
+
+.roundToZero () : this
+The components of this vector are rounded towards zero (up if negative, down if positive) to an integer value.
+
+.set ( x : Float, y : Float, z : Float, w : Float ) : this
+Sets the x, y, z and w components of this vector.
+
+.setAxisAngleFromQuaternion ( q : Quaternion ) : this
+q - a normalized Quaternion
+
+Sets the x, y and z components of this vector to the quaternion's axis and w to the angle.
+
+.setAxisAngleFromRotationMatrix ( m : Matrix4 ) : this
+m - a Matrix4 of which the upper left 3x3 matrix is a pure rotation matrix.
+
+Sets the x, y and z to the axis of rotation and w to the angle.
+
+.setFromMatrixPosition ( m : Matrix4 ) : this
+Sets this vector to the position elements of the transformation matrix m.
+
+.setComponent ( index : Integer, value : Float ) : this
+index - 0, 1, 2 or 3.
+value - Float
+
+If index equals 0 set x to value.
+If index equals 1 set y to value.
+If index equals 2 set z to value.
+If index equals 3 set w to value.
+
+.setLength ( l : Float ) : this
+Sets this vector to a vector with the same direction as this one, but length l.
+
+.setScalar ( scalar : Float ) : this
+Sets the x, y, z and w values of this vector both equal to scalar.
+
+.setX ( x : Float ) : this
+Replaces this vector's x value with x.
+
+.setY ( y : Float ) : this
+Replaces this vector's y value with y.
+
+.setZ ( z : Float ) : this
+Replaces this vector's z value with z.
+
+.setW ( w : Float ) : this
+Replaces this vector's w value with w.
+
+.sub ( v : Vector4 ) : this
+Subtracts v from this vector.
+
+.subScalar ( s : Float ) : this
+Subtracts s from this vector's x, y, z and w components.
+
+.subVectors ( a : Vector4, b : Vector4 ) : this
+Sets this vector to a - b.
+
+.toArray ( array : Array, offset : Integer ) : Array
+array - (optional) array to store this vector to. If this is not provided, a new array will be created.
+offset - (optional) optional offset into the array.
+
+Returns an array [x, y, z, w], or copies x, y, z and w into the provided array.
+
+.random () : this
+Sets each component of this vector to a pseudo-random value between 0 and 1, excluding 1.
+
+Source
+src/math/Vector4.js
+
